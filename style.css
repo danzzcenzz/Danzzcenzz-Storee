@@ -206,11 +206,16 @@ button:active, .btn-join:active, .menu-icon:active {
 
 .popup-body { display: flex; align-items: center; margin-bottom: 25px; }
 
-.wa-icon-img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-    vertical-align: middle;
+/* Wadah Emoji WA Besar */
+.wa-icon-container {
+    background-color: #25d366;
+    border-radius: 16px; width: 65px; height: 65px;
+    display: flex; align-items: center; justify-content: center; margin-right: 15px;
+}
+
+.wa-emoji-large {
+    font-size: 36px;
+    line-height: 1;
 }
 
 .wa-text h3 { font-size: 17px; font-weight: 700; color: #000000; }
@@ -222,6 +227,13 @@ button:active, .btn-join:active, .menu-icon:active {
     text-decoration: none; font-weight: 700; font-size: 15px;
     border-radius: 16px; padding: 14px 0; width: 100%;
     box-shadow: 0px 5px 0px #000000;
+}
+
+/* Emoji WA Kecil di Dalam Tombol */
+.wa-emoji-btn {
+    font-size: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
 }
 
 /* --- HALAMAN 3 (DASHBOARD UTAMA) --- */
@@ -258,9 +270,9 @@ button:active, .btn-join:active, .menu-icon:active {
     display: flex; align-items: center; justify-content: center;
 }
 .add-story { background-color: #ffffff; font-size: 24px; box-shadow: 2px 2px 0px #000000; }
-.profile-pic { background-color: #e74c3c; }
-.empty-story { background-color: #ffffff; }
-.qr-story { background-color: #ffffff; display: flex; align-items: center; justify-content: center;}
+.profile-pic { background-color: #e74c3c; font-size: 28px; }
+.empty-story { background-color: #ffffff; font-size: 28px; }
+.qr-story { background-color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 26px; }
 
 .dashboard-title { font-size: 26px; font-weight: 700; margin-bottom: 20px; }
 .dashboard-title span { color: #2980b9; }
@@ -282,7 +294,7 @@ button:active, .btn-join:active, .menu-icon:active {
 }
 .card-small h2 { font-size: 24px; margin-top: 8px; }
 
-/* FIXED MENU NAVIGATION BAWAH */
+/* BOTTOM NAV BAR FIXED */
 .bottom-nav {
     position: fixed; bottom: 20px; left: 20px; right: 20px;
     background-color: #ffffff; border-radius: 24px; 
