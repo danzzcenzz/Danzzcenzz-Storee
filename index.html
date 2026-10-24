@@ -3,191 +3,274 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#a3e4d7">
     <title>DANZZCENZZ-STORE</title>
-    <!-- Memuat pustaka animasi eksternal agar gerakan membalnya smooth -->
-    <link rel="stylesheet" href="https://cloudflare.com"/>
-    <!-- Menghubungkan ke file CSS terpisah -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- HALAMAN 1: LOADING OPENING SCREEN -->
+    <!-- OPENING LOADING -->
     <div id="loading-screen">
         <div class="top-bar">
-            <button type="button" class="btn-skip" onclick="skipLoading()">SKIP ➔</button>
+            <button type="button" class="btn-skip" id="skip-btn">
+                SKIP &gt;
+            </button>
         </div>
+
         <div class="main-content">
-            <!-- Lingkaran Loader Spinner yang akan diputar oleh CSS -->
             <div class="spinner-loader"></div>
-            
-            <h1 class="store-name-title">DANZZCENZZ-STORE</h1>
-            <div class="loading-box-blue">
-                MOHON TUNGGU SEBENTAR<br>SEDANG LOADING<span class="pulse-dot">...</span>
+
+            <h1 class="store-name-title">
+                DANZZCENZZ-STORE
+            </h1>
+
+            <div class="loading-box">
+                <span>MOHON TUNGGU SEBENTAR</span>
+                <span>SEDANG LOADING<span class="pulse-dot">...</span></span>
             </div>
         </div>
     </div>
 
-    <!-- WADAH UTAMA KONTEN TOKO -->
-    <div id="store-container" class="hidden">
-        
-        <!-- ================= HALAMAN TAB 1: BERANDA ================= -->
-        <div id="tab-beranda" class="tab-content active-tab">
+    <!-- KONTEN WEBSITE -->
+    <main id="store-container" class="hidden">
+
+        <!-- BERANDA -->
+        <section id="tab-beranda" class="tab-content active-tab">
             <div class="store-avatar-box">DZ</div>
+
             <h2 class="store-username">@danzzcenzz.store</h2>
-            <p class="store-bio">⚡ Pusat Top Up & Layanan Digital Terpercaya dengan Gaya Pop Art Brutal ⚡</p>
-            
+
+            <p class="store-bio">
+                ⚡ Pusat Top Up &amp; Layanan Digital ⚡
+            </p>
+
             <div class="list-container">
-                <a href="https://whatsapp.com" target="_blank" class="product-item-link">
+
+                <a href="https://whatsapp.com/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="product-item-link">
                     <div class="product-icon-frame">🚀</div>
                     <div class="product-text-details">
                         <span class="prod-title">Order Video Khusus</span>
                         <span class="prod-price">Hubungi Admin Langsung</span>
                     </div>
-                    <div class="arrow-indicator">➔</div>
+                    <span class="arrow-indicator">➜</span>
                 </a>
 
-                <a href="https://whatsapp.com" target="_blank" class="product-item-link">
+                <a href="https://whatsapp.com/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="product-item-link">
                     <div class="product-icon-frame">👥</div>
                     <div class="product-text-details">
-                        <span class="prod-title">Suntik Followers Sosmed</span>
+                        <span class="prod-title">Layanan Followers Sosmed</span>
                         <span class="prod-price">Mulai dari Rp 5.000</span>
                     </div>
-                    <div class="arrow-indicator">➔</div>
+                    <span class="arrow-indicator">➜</span>
                 </a>
 
-                <a href="https://whatsapp.com" target="_blank" class="product-item-link">
+                <a href="https://whatsapp.com/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="product-item-link">
                     <div class="product-icon-frame">🎮</div>
                     <div class="product-text-details">
-                        <span class="prod-title">Top Up Game (MLBB, FF, Pubg)</span>
-                        <span class="prod-price">Harga Bersaing & Legal</span>
+                        <span class="prod-title">Top Up Game</span>
+                        <span class="prod-price">MLBB, Free Fire, PUBG</span>
                     </div>
-                    <div class="arrow-indicator">➔</div>
+                    <span class="arrow-indicator">➜</span>
                 </a>
-            </div>
-        </div>
 
-        <!-- ================= HALAMAN TAB 2: RIWAYAT ================= -->
-        <div id="tab-riwayat" class="tab-content">
+            </div>
+        </section>
+
+        <!-- RIWAYAT -->
+        <section id="tab-riwayat" class="tab-content">
             <div class="tab-header-title">📜 RIWAYAT TRANSAKSI</div>
-            <div class="list-container">
-                <div class="empty-state border-brutal">
-                    <span class="empty-icon">📂</span>
-                    <p class="empty-text">Belum ada riwayat pesanan.</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- ================= HALAMAN TAB 3: PROFIL ================= -->
-        <div id="tab-profil" class="tab-content">
+            <div class="empty-state border-brutal">
+                <span class="empty-icon">📂</span>
+                <p class="empty-text">Belum ada riwayat pesanan.</p>
+            </div>
+        </section>
+
+        <!-- PROFIL -->
+        <section id="tab-profil" class="tab-content">
             <div class="tab-header-title">👤 PROFIL TOKO</div>
-            <div class="list-container">
-                <div class="profile-card border-brutal">
-                    <h3>DANZZCENZZ STORE</h3>
-                    <p>Status Akutansi: <strong>Verified Partner</strong></p>
-                    <div class="divider-dots" style="margin: 10px 0;"></div>
-                    <p>Terima kasih telah mempercayai layanan digital kami!</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- MENU NAVIGASI BAWAH (BOTTOM NAVIGATION BAR) -->
-        <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('beranda')">
+            <div class="profile-card border-brutal">
+                <h3>DANZZCENZZ STORE</h3>
+                <p>Status Toko: <strong>Online</strong></p>
+                <div class="divider-dots"></div>
+                <p>Terima kasih telah mempercayai layanan kami!</p>
+            </div>
+        </section>
+
+        <!-- NAVIGASI BAWAH -->
+        <nav class="bottom-nav" aria-label="Navigasi utama">
+
+            <button type="button"
+                    class="nav-item active"
+                    data-tab="beranda">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-label">Beranda</span>
             </button>
-            <button class="nav-item" onclick="switchTab('riwayat')">
+
+            <button type="button"
+                    class="nav-item"
+                    data-tab="riwayat">
                 <span class="nav-icon">⏱️</span>
                 <span class="nav-label">Riwayat</span>
             </button>
-            <button class="nav-item" onclick="switchTab('profil')">
+
+            <button type="button"
+                    class="nav-item"
+                    data-tab="profil">
                 <span class="nav-icon">👤</span>
                 <span class="nav-label">Profil</span>
             </button>
-        </nav>
-    </div>
 
-    <!-- HALAMAN 3: JENDELA MENGAMBANG SALURAN WA -->
-    <div id="wa-popup" class="popup-overlay-active">
-        <div class="popup-card">
-            <button type="button" class="close-btn" onclick="closePopup()">×</button>
+        </nav>
+    </main>
+
+    <!-- POPUP CHANNEL WHATSAPP -->
+    <div id="wa-popup" class="popup-overlay" hidden>
+        <div class="popup-card" role="dialog"
+             aria-modal="true"
+             aria-labelledby="popup-title">
+
+            <button type="button"
+                    class="close-btn"
+                    id="close-popup"
+                    aria-label="Tutup popup">×</button>
+
             <div class="popup-header">
                 <span class="sub-title">UNDANGAN EKSKLUSIF</span>
-                <div class="status-badge">
-                    <span class="dot"></span>ACTIVE
-                </div>
+
+                <span class="status-badge">
+                    <span class="status-dot"></span>
+                    ACTIVE
+                </span>
             </div>
+
             <div class="divider-dots"></div>
+
             <div class="popup-body">
-                <!-- Wadah Ikon Bulat Hijau dengan Animasi Ombak CSS -->
-                <div class="wa-icon-svg-container wa-wave">
-                    <svg viewBox="0 0 24 24" width="42" height="42" fill="#FFFFFF">
-                        <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.73.43 3.42 1.27 4.93L2.03 21.8c-.08.28.01.58.23.77.14.12.32.18.51.18.08 0 .16-.01.24-.04l5.08-1.35c1.47.76 3.11 1.15 4.79 1.15 5.52 0 10-4.48 10-10S17.52 2 12.004 2zm4.95 14.19c-.21.29-.82.56-1.12.59-.28.03-.57.05-1.72-.34-1.42-.48-2.73-1.43-3.66-2.36-.93-.93-1.88-2.24-2.36-3.66-.39-1.15-.37-1.44-.34-1.72.03-.3.3-.91.59-1.12.19-.14.38-.2.53-.2.11 0 .21.01.3.06.18.09.43.51.52.74.09.22.14.43-.01.71-.11.2-.23.33-.36.49-.11.14-.24.29-.1.52.28.47.74.96 1.25 1.38.56.46 1.15.79 1.69 1.01.18.07.32.05.44-.06.15-.14.33-.37.5-.58.11-.14.24-.16.39-.1.15.06.94.44 1.1.52.16.08.27.12.31.2.04.09.04.7-.17 1z"/>
+                <div class="wa-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill="currentColor"
+                              d="M12 2a10 10 0 0 0-8.66 15L2 22l5.18-1.36A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.12l-.3-.18-3.08.81.82-3-.2-.31A8 8 0 1 1 12 20zm4.4-5.98c-.24-.12-1.43-.71-1.65-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-.24-.12-1.03-.38-1.96-1.2-.73-.65-1.22-1.45-1.36-1.69-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.24 1.02.39 1.37.5.58.18 1.1.16 1.51.1.46-.07 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/>
                     </svg>
                 </div>
+
                 <div class="wa-text">
-                    <h3>Gabung Channel WhatsApp</h3>
+                    <h3 id="popup-title">Gabung Channel WhatsApp</h3>
                     <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
                 </div>
             </div>
-            <a href="https://whatsapp.com" target="_blank" class="btn-join-green">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="#000000" style="margin-right:8px; vertical-align:middle;">
-                    <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.73.43 3.42 1.27 4.93L2.03 21.8c-.08.28.01.58.23.77.14.12.32.18.51.18.08 0 .16-.01.24-.04l5.08-1.35c1.47.76 3.11 1.15 4.79 1.15 5.52 0 10-4.48 10-10S17.52 2 12.004 2zm4.95 14.19c-.21.29-.82.56-1.12.59-.28.03-.57.05-1.72-.34-1.42-.48-2.73-1.43-3.66-2.36-.93-.93-1.88-2.24-2.36-3.66-.39-1.15-.37-1.44-.34-1.72.03-.3.3-.91.59-1.12.19-.14.38-.2.53-.2.11 0 .21.01.3.06.18.09.43.51.52.74.09.22.14.43-.01.71-.11.2-.23.33-.36.49-.11.14-.24.29-.1.52.28.47.74.96 1.25 1.38.56.46 1.15.79 1.69 1.01.18.07.32.05.44-.06.15-.14.33-.37.5-.58.11-.14.24-.16.39-.1.15.06.94.44 1.1.52.16.08.27.12.31.2.04.09.04.7-.17 1z"/>
-                </svg>MASUK CHANNEL
+
+            <!-- GANTI LINK DI BAWAH DENGAN LINK CHANNEL MILIKMU -->
+            <a href="https://whatsapp.com/"
+               target="_blank"
+               rel="noopener noreferrer"
+               class="btn-join">
+                <span>➤</span>
+                MASUK CHANNEL
             </a>
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA JAVASCRIPT AMAN -->
     <script>
+    (() => {
         const loadingScreen = document.getElementById('loading-screen');
-        const waPopup = document.getElementById('wa-popup');
         const storeContainer = document.getElementById('store-container');
+        const waPopup = document.getElementById('wa-popup');
+        const skipButton = document.getElementById('skip-btn');
+        const closeButton = document.getElementById('close-popup');
 
-        // Otomatis hilangkan loading setelah 4 detik berjalan
-        const autoLoading = setTimeout(function() {
-            clearLoading();
-        }, 4000);
+        let loadingFinished = false;
+        let popupShown = false;
+        let loadingTimer;
 
-        // Fungsi Tombol SKIP
-        function skipLoading() {
-            clearTimeout(autoLoading); 
-            clearLoading();
-        }
+        // Selesaikan opening hanya satu kali.
+        function finishLoading() {
+            if (loadingFinished) return;
 
-        function clearLoading() {
-            if (loadingScreen) {
-                // Memicu gerakan meluncur halus ke atas sesuai requesmu
-                loadingScreen.style.animation = "slideOutUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards";
-            }
-            setTimeout(function() {
-                if (loadingScreen) loadingScreen.style.display = 'none';
-                if (storeContainer) {
-                    storeContainer.style.setProperty('display', 'flex', 'important');
-                    storeContainer.classList.add('animate__animated', 'animate__fadeIn');
+            loadingFinished = true;
+            clearTimeout(loadingTimer);
+
+            loadingScreen.classList.add('loading-exit');
+
+            setTimeout(() => {
+                loadingScreen.hidden = true;
+                storeContainer.classList.remove('hidden');
+                storeContainer.classList.add('store-visible');
+            }, 450);
+
+            // Popup muncul setelah halaman utama terbuka.
+            setTimeout(() => {
+                if (!popupShown) {
+                    waPopup.hidden = false;
+                    popupShown = true;
                 }
-                setTimeout(function() {
-                    if (waPopup) {
-                        waPopup.style.display = 'flex';
-                        waPopup.querySelector('.popup-card').classList.add('animate__animated', 'animate__jackInTheBox');
-                    }
-                }, 500);
-            }, 800);
+            }, 650);
         }
 
-        function closePopup() {
-            if (waPopup) {
-                const card = waPopup.querySelector('.popup-card');
-                card.classList.remove('animate__jackInTheBox');
-                card.classList.add('animate__zoomOut');
-                setTimeout(function() {
-                    waPopup.style.display = 'none';
-                }, 400);
-            }
-        }
+        // Tombol SKIP.
+        skipButton.addEventListener('click', finishLoading);
 
-        function switchTab(tabId) {
-            const tabs = document.querySelectorAll('.tab-content');
+        // Loading otomatis selesai setelah 4 detik.
+        loadingTimer = setTimeout(finishLoading, 4000);
+
+        // Navigasi tab.
+        const navButtons = document.querySelectorAll('.nav-item');
+        const tabs = document.querySelectorAll('.tab-content');
+
+        function switchTab(tabName) {
             tabs.forEach(tab => {
-                tab.style.setProperty('display', 'none', 'important');
+                const selected = tab.id === 'tab-' + tabName;
+                tab.classList.toggle('active-tab', selected);
+                tab.hidden = !selected;
             });
+
+            navButtons.forEach(button => {
+                const selected = button.dataset.tab === tabName;
+                button.classList.toggle('active', selected);
+                button.setAttribute('aria-current',
+                    selected ? 'page' : 'false');
+            });
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                switchTab(button.dataset.tab);
+            });
+        });
+
+        // Tombol tutup popup.
+        closeButton.addEventListener('click', () => {
+            waPopup.hidden = true;
+        });
+
+        // Tutup popup ketika pengguna menekan area gelap.
+        waPopup.addEventListener('click', event => {
+            if (event.target === waPopup) {
+                waPopup.hidden = true;
+            }
+        });
+
+        // Tutup popup dengan tombol Escape.
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                waPopup.hidden = true;
+            }
+        });
+
+        // Pastikan tab awal benar.
+        switchTab('beranda');
+    })();
+    </script>
+
+</body>
+</html>
