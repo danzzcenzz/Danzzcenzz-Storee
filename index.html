@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANZZCENZZ-STORE</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body class="bg-grid-telur-asin">
+
+    <!-- ================= HALAMAN 1: LOADING SCREEN ================= -->
+    <div id="loading-screen" class="page-layout anim-fade-in">
+        <div class="top-bar">
+            <button class="btn-skip" onclick="triggerPopup()">SKIP ⏭</button>
+        </div>
+
+        <div class="main-content anim-bounce-up">
+            <div class="logo-circle-outer">
+                <div class="logo-circle-inner">
+                    <span class="logo-text">D</span>
+                </div>
+            </div>
+            <h1 class="store-name-title">DANZZCENZZ-STOREE</h1>
+            <div class="loading-box border-brutal">
+                MOHON TUNGGU SEBENTAR<br>SEDANG LOADING
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= HALAMAN 2: POP-UP WA ================= -->
+    <div id="popup-container" class="hidden">
+        <div class="popup-card anim-pop-in border-brutal">
+            <button class="close-btn" onclick="goToDashboard()">×</button>
+            
+            <div class="popup-header">
+                <span class="sub-title">UNDANGAN EKSKLUSIF</span>
+                <span class="status-badge border-brutal"><span class="dot pulse-dot"></span> ACTIVE</span>
+            </div>
+            
+            <div class="divider-dots"></div>
+            
+            <div class="popup-body">
+                <div class="wa-icon-container border-brutal">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="#ffffff">
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.176.001 6.165 1.236 8.412 3.483 2.247 2.247 3.48 5.237 3.48 8.419 0 6.554-5.337 11.902-11.89 11.902-1.996-.001-3.956-.5-5.698-1.452L0 24zm6.59-4.846c1.66.986 3.288 1.48 4.968 1.486 5.4 0 9.79-4.366 9.794-9.73 0-2.599-1.011-5.042-2.85-6.882-1.84-1.84-4.287-2.85-6.887-2.852-5.404 0-9.8 4.366-9.805 9.735-.002 1.8.483 3.55 1.397 5.106L1.87 22.13l4.777-1.258z"/>
+                    </svg>
+                </div>
+                <div class="wa-text">
+                    <h3>Gabung Channel WhatsApp</h3>
+                    <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
+                </div>
+            </div>
+            
+            <a href="https://whatsapp.com" target="_blank" class="btn-join border-brutal" onclick="goToDashboard()">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="#000000" style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.948 0c3.176.001 6.165 1.236 8.412 3.483 2.247 2.247 3.48 5.237 3.48 8.419 0 6.554-5.337 11.902-11.89 11.902-1.996-.001-3.956-.5-5.698-1.452L0 24zm6.59-4.846c1.66.986 3.288 1.48 4.968 1.486 5.4 0 9.79-4.366 9.794-9.73 0-2.599-1.011-5.042-2.85-6.882-1.84-1.84-4.287-2.85-6.887-2.852-5.404 0-9.8 4.366-9.805 9.735-.002 1.8.483 3.55 1.397 5.106L1.87 22.13l4.777-1.258z"/>
+                </svg>
+                MASUK CHANNEL
+            </a>
+        </div>
+    </div>
+
+
+    <!-- ================= HALAMAN 3: MAIN DASHBOARD ================= -->
+    <div id="dashboard-screen" class="hidden">
+        <div class="navbar-top">
+            <div class="menu-icon border-brutal">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="status-banner border-brutal">
+                <span class="dot-green"></span> DANZZCENZZ-STORE • AM PREMIUM <span class="text-online">ONLINE</span>
+            </div>
+        </div>
+
+        <div class="story-container">
+            <div class="story-item">
+                <div class="story-circle add-story border-brutal">+</div>
+                <span>Story Saya</span>
+            </div>
+            <div class="story-item">
+                <div class="story-circle profile-pic border-brutal"></div>
+                <span>FS-03E78...</span>
+            </div>
+            <div class="story-item">
+                <div class="story-circle empty-story border-brutal"></div>
+                <span>FS-E7DYE...</span>
+            </div>
+            <div class="story-item">
+                <div class="story-circle qr-story border-brutal">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="#000000"><path d="M3 3h6v6H3zm2 2v2h2V5zm8-2h6v6h-6zm2 2v2h2V5zM3 15h6v6H3zm2 2v2h2v-2zm10 2h2v2h-2zm2-2h2v2h-2zm-2-2h2v2h-2zm4 2h2v2h-2zm0-4h2v2h-2z"/></svg>
+                </div>
+                <span>FS-A9B37...</span>
+            </div>
+        </div>
+
+        <h2 class="dashboard-title">Dashboard <span>DANZZCENZZ-STORE</span></h2>
+
+        <div class="card-large border-brutal">
+            <p class="card-subtitle">WAKTU ASIA/JAKARTA</p>
+            <h1 id="live-clock" class="time-display">00.00.00</h1>
+            <p id="live-date" class="date-display">Memuat tanggal...</p>
+        </div>
+
+        <div class="card-row">
+            <div class="card-small border-brutal">
+                <p class="card-subtitle">TOTAL USER</p>
+                <h2>732.425</h2>
+            </div>
+            <div class="card-small border-brutal">
+                <p class="card-subtitle">TOTAL USER VIP</p>
+                <h2>3</h2>
+            </div>
+        </div>
+
+        <div class="bottom-nav border-brutal">
+            <div class="nav-item active">
+                <div class="nav-icon">🏡</div>
+                <span>Beranda</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">🌀</div>
+                <span>AM PREM</span>
+            </div>
+            
+            <div class="nav-item-center">
+                <div class="ai-button border-brutal">🤖</div>
+                <span class="ai-text">AI</span>
+            </div>
+
+            <div class="nav-item">
+                <div class="nav-icon">🕒</div>
+                <span>Riwayat</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">👤</div>
+                <span>Profil</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let autoLoadTimer = setTimeout(triggerPopup, 4000); 
+
+        function triggerPopup() {
+            clearTimeout(autoLoadTimer);
+            document.getElementById('loading-screen').classList.add('hidden');
+            document.getElementById('popup-container').className = "popup-overlay-active anim-fade-in";
+            document.body.className = "bg-grid-abu-abu"; 
+        }
+
+        function goToDashboard() {
+            document.getElementById('popup-container').className = "hidden";
+            const dbScreen = document.getElementById('dashboard-screen');
+            dbScreen.classList.remove('hidden');
+            dbScreen.classList.add('anim-fade-in'); 
+            
+            document.body.className = "bg-grid-telur-asin"; 
+            startClock(); 
+        }
+
+        function startClock() {
+            setInterval(() => {
+                const now = new Date();
+                let hours = String(now.getHours()).padStart(2, '0');
+                let minutes = String(now.getMinutes()).padStart(2, '0');
+                let seconds = String(now.getSeconds()).padStart(2, '0');
+                document.getElementById('live-clock').innerText = `${hours}.${minutes}.${seconds}`;
+
+                const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                
+                document.getElementById('live-date').innerText = `${days[now.getDay()]} , ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
