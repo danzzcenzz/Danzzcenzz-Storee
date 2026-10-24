@@ -17,11 +17,9 @@
             <button type="button" class="btn-skip" onclick="skipLoading()">SKIP ➔</button>
         </div>
         <div class="main-content">
-            <div class="logo-circle-outer fade-in-2">
-                <div class="logo-circle-inner">
-                    <span class="logo-text">DZ</span>
-                </div>
-            </div>
+            <!-- Spinner lingkaran berputar otomatis lewat CSS murni -->
+            <div class="spinner-loader fade-in-2"></div>
+            
             <h1 class="store-name-title fade-in-3">DANZZCENZZ-STORE</h1>
             <div class="loading-box-blue fade-in-4">
                 MOHON TUNGGU SEBENTAR<br>SEDANG LOADING<span class="pulse-dot">...</span>
@@ -114,20 +112,30 @@
         <div class="popup-card">
             <button type="button" class="close-btn" onclick="closePopup()">×</button>
             <div class="popup-header">
-                <span class="sub-title">JOIN OUR COMMUNITY</span>
+                <span class="sub-title">UNDANGAN EKSKLUSIF</span>
                 <div class="status-badge">
-                    <span class="dot"></span>Online
+                    <span class="dot"></span>ACTIVE
                 </div>
             </div>
             <div class="divider-dots"></div>
             <div class="popup-body">
-                <div class="wa-icon-container wa-wave">💬</div>
+                <!-- Ikon SVG WhatsApp Hijau Asli dengan Efek Ombak -->
+                <div class="wa-icon-svg-container wa-wave">
+                    <svg viewBox="0 0 24 24" width="45" height="45" fill="#FFFFFF">
+                        <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.73.43 3.42 1.27 4.93L2.03 21.8c-.08.28.01.58.23.77.14.12.32.18.51.18.08 0 .16-.01.24-.04l5.08-1.35c1.47.76 3.11 1.15 4.79 1.15 5.52 0 10-4.48 10-10S17.52 2 12.004 2zm4.95 14.19c-.21.29-.82.56-1.12.59-.28.03-.57.05-1.72-.34-1.42-.48-2.73-1.43-3.66-2.36-.93-.93-1.88-2.24-2.36-3.66-.39-1.15-.37-1.44-.34-1.72.03-.3.3-.91.59-1.12.19-.14.38-.2.53-.2.11 0 .21.01.3.06.18.09.43.51.52.74.09.22.14.43-.01.71-.11.2-.23.33-.36.49-.11.14-.24.29-.1.52.28.47.74.96 1.25 1.38.56.46 1.15.79 1.69 1.01.18.07.32.05.44-.06.15-.14.33-.37.5-.58.11-.14.24-.16.39-.1.15.06.94.44 1.1.52.16.08.27.12.31.2.04.09.04.7-.17 1z"/>
+                    </svg>
+                </div>
                 <div class="wa-text">
-                    <h3>Saluran WhatsApp Resmi</h3>
-                    <p>Dapatkan info restock & promo menarik setiap harinya!</p>
+                    <h3>Gabung Channel WhatsApp</h3>
+                    <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
                 </div>
             </div>
-            <a href="https://whatsapp.com" target="_blank" class="btn-join">GABUNG SALURAN SEKARANG</a>
+            <a href="https://whatsapp.com" target="_blank" class="btn-join-green">
+                <!-- Ikon WhatsApp Kecil di Tombol -->
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="#000000" style="margin-right:8px; vertical-align:middle;">
+                    <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.73.43 3.42 1.27 4.93L2.03 21.8c-.08.28.01.58.23.77.14.12.32.18.51.18.08 0 .16-.01.24-.04l5.08-1.35c1.47.76 3.11 1.15 4.79 1.15 5.52 0 10-4.48 10-10S17.52 2 12.004 2zm4.95 14.19c-.21.29-.82.56-1.12.59-.28.03-.57.05-1.72-.34-1.42-.48-2.73-1.43-3.66-2.36-.93-.93-1.88-2.24-2.36-3.66-.39-1.15-.37-1.44-.34-1.72.03-.3.3-.91.59-1.12.19-.14.38-.2.53-.2.11 0 .21.01.3.06.18.09.43.51.52.74.09.22.14.43-.01.71-.11.2-.23.33-.36.49-.11.14-.24.29-.1.52.28.47.74.96 1.25 1.38.56.46 1.15.79 1.69 1.01.18.07.32.05.44-.06.15-.14.33-.37.5-.58.11-.14.24-.16.39-.1.15.06.94.44 1.1.52.16.08.27.12.31.2.04.09.04.7-.17 1z"/>
+                </svg>MASUK CHANNEL
+            </a>
         </div>
     </div>
 
@@ -137,7 +145,7 @@
         const waPopup = document.getElementById('wa-popup');
         const storeContainer = document.getElementById('store-container');
 
-        // Durasi putaran loading opening 4.5 detik
+        // Otomatis hilangkan loading setelah 4.5 detik
         const autoLoading = setTimeout(function() {
             clearLoading();
         }, 4500);
@@ -154,7 +162,7 @@
             setTimeout(function() {
                 if (loadingScreen) loadingScreen.style.display = 'none';
                 if (storeContainer) {
-                    storeContainer.classList.remove('hidden');
+                    storeContainer.style.setProperty('display', 'flex', 'important');
                     storeContainer.classList.add('animate__animated', 'animate__fadeIn');
                 }
                 setTimeout(function() {
@@ -180,21 +188,6 @@
         function switchTab(tabId) {
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => {
-                tab.classList.remove('active-tab');
+                tab.style.setProperty('display', 'none', 'important');
             });
 
-            const targetTab = document.getElementById('tab-' + tabId);
-            if(targetTab) {
-                targetTab.classList.add('active-tab');
-            }
-
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
-
-            event.currentTarget.classList.add('active');
-        }
-    </script>
-</body>
-</html>
