@@ -1,15 +1,15 @@
-/* ===============================
+/* =========================================
    DANZZCENZZ-STORE
    NEOBRUTALISM POP-ART
-================================ */
+========================================= */
 
 :root {
     --mint: #a3e4d7;
     --mint-dark: #72cbbb;
     --yellow: #f4d03f;
     --blue: #3498db;
-    --black: #000000;
-    --white: #ffffff;
+    --black: #000;
+    --white: #fff;
     --green: #25d366;
 }
 
@@ -57,9 +57,9 @@ button {
     display: none !important;
 }
 
-/* ===============================
+/* =========================================
    OPENING SCREEN
-================================ */
+========================================= */
 
 #loading-screen {
     position: fixed;
@@ -73,6 +73,10 @@ button {
         linear-gradient(to right, #0000000d 1px, transparent 1px),
         linear-gradient(to bottom, #0000000d 1px, transparent 1px);
     background-size: 25px 25px;
+}
+
+#loading-screen[hidden] {
+    display: none !important;
 }
 
 .top-bar {
@@ -165,21 +169,9 @@ button {
     }
 }
 
-.loading-exit {
-    animation: slide-out 0.45s ease-in forwards;
-    pointer-events: none;
-}
-
-@keyframes slide-out {
-    to {
-        transform: translateY(-100%);
-        visibility: hidden;
-    }
-}
-
-/* ===============================
-   KONTEN UTAMA
-================================ */
+/* =========================================
+   HALAMAN UTAMA
+========================================= */
 
 #store-container {
     position: relative;
@@ -188,11 +180,17 @@ button {
     min-height: 100vh;
     margin: 0 auto;
     padding-bottom: 115px;
+    display: flex;
     flex-direction: column;
 }
 
+#store-container.hidden,
+#store-container[hidden] {
+    display: none !important;
+}
+
 #store-container.store-visible {
-    display: flex;
+    display: flex !important;
     animation: fade-in 0.45s ease both;
 }
 
@@ -224,9 +222,9 @@ button {
     animation: fade-in 0.25s ease;
 }
 
-/* ===============================
-   BERANDA
-================================ */
+/* =========================================
+   PROFIL TOKO DI BERANDA
+========================================= */
 
 .store-avatar-box {
     display: flex;
@@ -254,12 +252,16 @@ button {
 .store-bio {
     max-width: 320px;
     margin-bottom: 24px;
-    color: #333333;
+    color: #333;
     font-size: 12px;
     font-weight: 650;
     line-height: 1.6;
     text-align: center;
 }
+
+/* =========================================
+   DAFTAR PRODUK
+========================================= */
 
 .list-container {
     display: flex;
@@ -331,9 +333,67 @@ button {
     font-weight: 900;
 }
 
-/* ===============================
+/* =========================================
+   KARTU CHANNEL
+========================================= */
+
+.channel-card {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    color: var(--black);
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 13px;
+    box-shadow: 4px 4px 0 var(--black);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.channel-card:active {
+    transform: translate(2px, 2px);
+}
+
+.channel-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    color: var(--white);
+    background: var(--green);
+    border: 2px solid var(--black);
+    border-radius: 11px;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.channel-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.channel-text strong {
+    font-size: 11px;
+    font-weight: 950;
+}
+
+.channel-text span {
+    color: #444;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+/* =========================================
    RIWAYAT DAN PROFIL
-================================ */
+========================================= */
 
 .tab-header-title {
     width: 100%;
@@ -368,7 +428,7 @@ button {
 }
 
 .empty-text {
-    color: #555555;
+    color: #555;
     font-size: 12px;
     font-weight: 750;
 }
@@ -395,9 +455,24 @@ button {
     border-bottom: 3px dashed var(--black);
 }
 
-/* ===============================
+.profile-contact {
+    display: block;
+    margin-top: 18px;
+    padding: 12px;
+    color: var(--black);
+    background: var(--yellow);
+    border: 3px solid var(--black);
+    border-radius: 10px;
+    box-shadow: 3px 3px 0 var(--black);
+    font-size: 12px;
+    font-weight: 950;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* =========================================
    NAVIGASI BAWAH
-================================ */
+========================================= */
 
 .bottom-nav {
     position: fixed;
@@ -453,9 +528,9 @@ button {
     font-weight: 900;
 }
 
-/* ===============================
+/* =========================================
    POPUP WHATSAPP
-================================ */
+========================================= */
 
 .popup-overlay {
     position: fixed;
@@ -468,6 +543,10 @@ button {
     background: #00000099;
     backdrop-filter: blur(3px);
     animation: fade-in 0.2s ease;
+}
+
+.popup-overlay[hidden] {
+    display: none !important;
 }
 
 .popup-card {
@@ -547,11 +626,6 @@ button {
     border-radius: 50%;
 }
 
-.popup-card .divider-dots {
-    margin: 13px 0;
-    border-bottom-width: 3px;
-}
-
 .popup-body {
     display: flex;
     align-items: center;
@@ -598,7 +672,7 @@ button {
 
 .wa-text p {
     margin-top: 5px;
-    color: #444444;
+    color: #444;
     font-size: 9px;
     font-weight: 750;
     line-height: 1.5;
@@ -627,9 +701,9 @@ button {
     box-shadow: 1px 1px 0 var(--black);
 }
 
-/* ===============================
+/* =========================================
    LAYAR KECIL
-================================ */
+========================================= */
 
 @media (max-width: 360px) {
     .tab-content {
@@ -655,6 +729,10 @@ button {
         font-size: 9px;
     }
 }
+
+/* =========================================
+   AKSESIBILITAS
+========================================= */
 
 @media (prefers-reduced-motion: reduce) {
     *,
