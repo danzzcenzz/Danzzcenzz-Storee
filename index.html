@@ -12,66 +12,78 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: background 0.3s ease;
-        }
-        /* Latar Belakang Kotak-Kotak Biru Telur Asin */
-        .bg-grid-telur-asin {
-            background-color: #a3e4d7;
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.08) 2px, transparent 2px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 2px, transparent 2px);
-            background-size: 25px 25px;
-        }
-        .bg-grid-abu-abu {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
             background-color: #9e9e9e;
             background-image: 
                 linear-gradient(to right, rgba(0, 0, 0, 0.12) 2px, transparent 2px),
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 2px, transparent 2px);
             background-size: 25px 25px;
+            overflow-x: hidden;
         }
         .border-brutal {
             border: 4px solid #000000 !important;
         }
-        
-        /* Menggunakan display none yang aman untuk transisi js */
-        .hidden {
-            display: none !important;
-        }
-        
-        .page-layout {
-            width: 100%;
-            height: 100vh;
+
+        /* ----- SISTEM TRANSISI CSS MURNI (ANTI LAYAR PUTIH / BEKU) ----- */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background-color: #a3e4d7;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.08) 2px, transparent 2px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 2px, transparent 2px);
+            background-size: 25px 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 9999;
+            animation: hideLoading 0.5s ease 3s forwards;
         }
-        
-        /* Animasi Murni */
-        .anim-fade-in { animation: fadeIn 0.6s ease forwards; }
-        .anim-bounce-up { animation: bounceUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .anim-pop-in { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        @keyframes hideLoading {
+            to { opacity: 0; visibility: hidden; pointer-events: none; }
+        }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes bounceUp {
-            from { opacity: 0; transform: translateY(40px); }
+        #store-screen {
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            animation: showStore 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.2s forwards;
+        }
+        @keyframes showStore {
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.7); }
-            to { opacity: 1; transform: scale(1); }
+
+        .popup-overlay-active {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 999;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            visibility: hidden;
+            animation: showPopup 0.5s ease 4.5s forwards;
         }
-        .pulse-dot { animation: dotPulse 1.5s infinite ease-in-out; }
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.5; }
-        }
-        button:active, .btn-join:active, .product-item-link:active {
-            transform: translateY(3px) translateX(2px) !important;
-            box-shadow: 1px 1px 0px #000000 !important;
+        @keyframes showPopup {
+            to { opacity: 1; visibility: visible; }
         }
         
-        /* Halaman 1: Loading Screen */
+        /* Trik Jendela Mengambang Bekerja Akurat Tanpa JS */
+        #wa-popup:target {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        /* ---------------- ELEMEN & GAYA VISUAL ---------------- */
         .top-bar {
             width: 100%;
             display: flex;
@@ -87,7 +99,9 @@
             border-radius: 12px;
             cursor: pointer;
             box-shadow: 4px 4px 0px #000000;
-            transition: all 0.1s ease;
+        }
+        .btn-skip-link {
+            text-decoration: none;
         }
         .main-content {
             display: flex;
@@ -129,7 +143,7 @@
             font-size: 26px;
             color: #000000;
             letter-spacing: 1px;
-            font-weight: 800;
+            font-weight: 850;
         }
         .loading-box {
             margin-top: 45px;
@@ -143,18 +157,13 @@
             box-shadow: 0px 8px 0px rgba(0, 0, 0, 0.2);
             width: 320px;
         }
-
-        /* Halaman 2: Pop-up WA Awal */
-        .popup-overlay-active {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 999;
-            background-color: rgba(0, 0, 0, 0.6);
+        .pulse-dot { animation: dotPulse 1.5s infinite ease-in-out; }
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
         }
+
+        /* Komponen Jendela Mengambang (Popup) */
         .popup-card {
             background-color: #ffffff;
             border-radius: 32px;
@@ -178,7 +187,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 2px 2px 0px #000000;
-            z-index: 1001;
+            text-decoration: none;
         }
         .popup-header { display: flex; justify-content: space-between; align-items: center; }
         .sub-title { font-size: 11px; font-weight: 700; color: #7f8c8d; }
@@ -209,19 +218,9 @@
             font-weight: 700; font-size: 15px; border-radius: 16px; padding: 14px 0;
             width: 100%; box-shadow: 0px 5px 0px #000000;
             border: 3px solid #000000;
-            transition: all 0.1s ease;
         }
 
-        /* Halaman Utama Toko */
-        #store-screen {
-            width: 100%;
-            max-width: 420px;
-            margin: 0 auto;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        /* Komponen List Menu Utama */
         .store-avatar-box {
             width: 100px;
             height: 100px;
@@ -268,6 +267,10 @@
             border: 3px solid #000000;
             transition: all 0.1s ease;
         }
+        .product-item-link:active, .btn-join:active {
+            transform: translateY(3px) translateX(2px);
+            box-shadow: 1px 1px 0px #000000;
+        }
         .product-icon-frame {
             width: 45px;
             height: 45px;
@@ -286,5 +289,3 @@
             flex-direction: column;
             flex-grow: 1;
         }
-        .prod-title {
-            font-size: 13px;
