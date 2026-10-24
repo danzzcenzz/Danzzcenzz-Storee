@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DANZZCENZZ-STORE</title>
+    <!-- Memuat pustaka animasi eksternal untuk efek smooth -->
+    <link rel="stylesheet" href="https://cloudflare.com"/>
     <!-- Menghubungkan ke file CSS terpisah -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,65 +13,100 @@
 
     <!-- HALAMAN 1: LOADING OPENING SCREEN -->
     <div id="loading-screen">
-        <div class="top-bar">
+        <div class="top-bar fade-in-1">
             <button type="button" class="btn-skip" onclick="skipLoading()">SKIP ➔</button>
         </div>
         <div class="main-content">
-            <div class="logo-circle-outer">
+            <div class="logo-circle-outer fade-in-2">
                 <div class="logo-circle-inner">
                     <span class="logo-text">DZ</span>
                 </div>
             </div>
-            <h1 class="store-name-title">DANZZCENZZ-STORE</h1>
-            <div class="loading-box-blue">
+            <h1 class="store-name-title fade-in-3">DANZZCENZZ GENERATED STORE</h1>
+            <div class="loading-box-blue fade-in-4">
                 MOHON TUNGGU SEBENTAR<br>SEDANG LOADING<span class="pulse-dot">...</span>
             </div>
         </div>
     </div>
 
-    <!-- HALAMAN 2: UTAMA TOKO (SELALU SIAP DI BACKGROUND) -->
-    <div id="store-screen">
-        <div class="store-avatar-box">DZ</div>
-        <h2 class="store-username">@danzzcenzz-store</h2>
-        <p class="store-bio">⚡ Sell video viral terbaru/hot tentu harga murah meriah⚡</p>
+    <!-- WADAH HALAMAN UTAMA TOKO (DENGAN NAVIGASI BAWAH) -->
+    <div id="store-container" class="hidden">
         
-        <div class="list-container">
-            <a href="https://wa.me/62882000379621?text=min%20mau%20order%20video%20" target="_blank" class="product-item-link">
-                <div class="product-icon-frame">🚀</div>
-                <div class="product-text-details">
-                    <span class="prod-title">Order Video Khusus</span>
-                    <span class="prod-price">Hubungi Admin Langsung</span>
-                </div>
-                <div class="arrow-indicator">➔</div>
-            </a>
+        <!-- ================= HALAMAN TAB 1: BERANDA ================= -->
+        <div id="tab-beranda" class="tab-content active-tab">
+            <div class="store-avatar-box">DZ</div>
+            <h2 class="store-username">@danzzcenzz.store</h2>
+            <p class="store-bio">⚡ Pusat Top Up & Layanan Digital Terpercaya dengan Gaya Pop Art Brutal ⚡</p>
+            
+            <div class="list-container">
+                <a href="https://whatsapp.com" target="_blank" class="product-item-link">
+                    <div class="product-icon-frame">🚀</div>
+                    <div class="product-text-details">
+                        <span class="prod-title">Order Video Khusus</span>
+                        <span class="prod-price">Hubungi Admin Langsung</span>
+                    </div>
+                    <div class="arrow-indicator">➔</div>
+                </a>
 
-            <a href="https://wa.me/62882000379621?text=min%20mau%20order%20video%20" target="_blank" class="product-item-link">
-                <div class="product-icon-frame">👥</div>
-                <div class="product-text-details">
-                    <span class="prod-title">Suntik Followers Sosmed</span>
-                    <span class="prod-price">Mulai dari Rp 5.000</span>
-                </div>
-                <div class="arrow-indicator">➔</div>
-            </a>
+                <a href="https://whatsapp.com" target="_blank" class="product-item-link">
+                    <div class="product-icon-frame">👥</div>
+                    <div class="product-text-details">
+                        <span class="prod-title">Suntik Followers Sosmed</span>
+                        <span class="prod-price">Mulai dari Rp 5.000</span>
+                    </div>
+                    <div class="arrow-indicator">➔</div>
+                </a>
 
-            <a href="https://wa.me/62882000379621?text=min%20mau%20order%20video%20" target="_blank" class="product-item-link">
-                <div class="product-icon-frame">🎮</div>
-                <div class="product-text-details">
-                    <span class="prod-title">Top Up Game (MLBB, FF, Pubg)</span>
-                    <span class="prod-price">Harga Bersaing & Legal</span>
-                </div>
-                <div class="arrow-indicator">➔</div>
-            </a>
-
-            <a href="https://wa.me/62882000379621?text=min%20mau%20order%20video%20" target="_blank" class="product-item-link">
-                <div class="product-icon-frame">⭐️</div>
-                <div class="product-text-details">
-                    <span class="prod-title">Testimoni Pelanggan</span>
-                    <span class="prod-price">Cek Kepercayaan Toko Kami</span>
-                </div>
-                <div class="arrow-indicator">➔</div>
-            </a>
+                <a href="https://whatsapp.com" target="_blank" class="product-item-link">
+                    <div class="product-icon-frame">🎮</div>
+                    <div class="product-text-details">
+                        <span class="prod-title">Top Up Game (MLBB, FF, Pubg)</span>
+                        <span class="prod-price">Harga Bersaing & Legal</span>
+                    </div>
+                    <div class="arrow-indicator">➔</div>
+                </a>
+            </div>
         </div>
+
+        <!-- ================= HALAMAN TAB 2: RIWAYAT ================= -->
+        <div id="tab-riwayat" class="tab-content">
+            <div class="tab-header-title">📜 RIWAYAT TRANSAKSI</div>
+            <div class="list-container">
+                <div class="empty-state border-brutal">
+                    <span class="empty-icon">📂</span>
+                    <p class="empty-text">Belum ada riwayat pesanan.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= HALAMAN TAB 3: PROFIL ================= -->
+        <div id="tab-profil" class="tab-content">
+            <div class="tab-header-title">👤 PROFIL TOKO</div>
+            <div class="list-container">
+                <div class="profile-card border-brutal">
+                    <h3>DANZZCENZZ STORE</h3>
+                    <p>Status Akutansi: <strong>Verified Partner</strong></p>
+                    <div class="divider-dots" style="margin: 10px 0;"></div>
+                    <p>Terima kasih telah mempercayai layanan digital kami!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU NAVIGASI BAWAH (BOTTOM NAVIGATION BAR) -->
+        <nav class="bottom-nav border-brutal">
+            <button class="nav-item active" onclick="switchTab('beranda')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Beranda</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('riwayat')">
+                <span class="nav-icon">⏱️</span>
+                <span class="nav-label">Riwayat</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profil')">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Profil</span>
+            </button>
+        </nav>
     </div>
 
     <!-- HALAMAN 3: JENDELA MENGAMBANG SALURAN WA -->
@@ -84,13 +121,13 @@
             </div>
             <div class="divider-dots"></div>
             <div class="popup-body">
-                <div class="wa-icon-container">💬</div>
+                <div class="wa-icon-container wa-wave">💬</div>
                 <div class="wa-text">
                     <h3>Saluran WhatsApp Resmi</h3>
                     <p>Dapatkan info restock & promo menarik setiap harinya!</p>
                 </div>
             </div>
-            <a href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W" target="_blank" class="btn-join">GABUNG SALURAN SEKARANG</a>
+            <a href="https://whatsapp.com" target="_blank" class="btn-join">GABUNG SALURAN SEKARANG</a>
         </div>
     </div>
 
@@ -98,11 +135,11 @@
     <script>
         const loadingScreen = document.getElementById('loading-screen');
         const waPopup = document.getElementById('wa-popup');
+        const storeContainer = document.getElementById('store-container');
 
-        // Otomatis hilangkan loading setelah 3.5 detik
         const autoLoading = setTimeout(function() {
             clearLoading();
-        }, 3500);
+        }, 4500);
 
         function skipLoading() {
             clearTimeout(autoLoading); 
@@ -111,19 +148,56 @@
 
         function clearLoading() {
             if (loadingScreen) {
-                loadingScreen.style.display = 'none';
+                loadingScreen.style.animation = "slideOutUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards";
             }
             setTimeout(function() {
-                if (waPopup) {
-                    waPopup.style.display = 'flex';
+                if (loadingScreen) loadingScreen.style.display = 'none';
+                if (storeContainer) {
+                    storeContainer.classList.remove('hidden');
+                    storeContainer.classList.add('animate__animated', 'animate__fadeIn');
                 }
+                setTimeout(function() {
+                    if (waPopup) {
+                        waPopup.style.display = 'flex';
+                        waPopup.querySelector('.popup-card').classList.add('animate__animated', 'animate__jackInTheBox');
+                    }
+                }, 500);
             }, 800);
         }
 
         function closePopup() {
             if (waPopup) {
-                waPopup.style.display = 'none';
+                const card = waPopup.querySelector('.popup-card');
+                card.classList.remove('animate__jackInTheBox');
+                card.classList.add('animate__zoomOut');
+                setTimeout(function() {
+                    waPopup.style.display = 'none';
+                }, 400);
             }
+        }
+
+        // FUNGSI BERPINDAH HALAMAN / TAB KETIKA DI-PENCET
+        function switchTab(tabId) {
+            // Sembunyikan semua isi tab content terlebih dahulu
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+
+            // Tampilkan tab yang dipilih dengan animasi halus
+            const targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) {
+                targetTab.classList.add('active-tab');
+            }
+
+            // Ganti status aktif pada tombol navigasi bawah
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Cari tombol yang memanggil fungsi ini untuk dijadikan aktif
+            event.currentTarget.classList.add('active');
         }
     </script>
 </body>
