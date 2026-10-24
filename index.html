@@ -18,22 +18,12 @@
         }
         body {
             font-family: 'Poppins', sans-serif;
-            transition: background 0.3s ease;
-        }
-        /* Latar Belakang Kotak-Kotak Biru Telur Asin */
-        .bg-grid-telur-asin {
-            background-color: #a3e4d7;
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.08) 2px, transparent 2px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 2px, transparent 2px);
-            background-size: 25px 25px;
-        }
-        .bg-grid-abu-abu {
             background-color: #9e9e9e;
             background-image: 
                 linear-gradient(to right, rgba(0, 0, 0, 0.12) 2px, transparent 2px),
                 linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 2px, transparent 2px);
             background-size: 25px 25px;
+            padding: 30px 20px;
         }
         .border-brutal {
             border: 4px solid #000000 !important;
@@ -41,20 +31,14 @@
         .hidden {
             display: none !important;
         }
-        .page-layout {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
         
         /* Animasi */
-        .anim-fade-in { animation: fadeIn 0.6s ease forwards; }
-        .anim-bounce-up { animation: bounceUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .anim-pop-in { animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .anim-bounce-up { 
+            animation: bounceUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+        }
+        .anim-pop-in { 
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+        }
         @keyframes bounceUp {
             from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
@@ -63,90 +47,13 @@
             from { opacity: 0; transform: scale(0.7); }
             to { opacity: 1; transform: scale(1); }
         }
-        .pulse-dot { animation: dotPulse 1.5s infinite ease-in-out; }
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.5; }
-        }
+
         button:active, .btn-join:active, .product-item-link:active {
             transform: translateY(3px) translateX(2px) !important;
             box-shadow: 1px 1px 0px #000000 !important;
         }
-        
-        /* Halaman 1: Loading Screen */
-        .top-bar {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            padding: 20px 25px 0 0;
-        }
-        .btn-skip {
-            background-color: #ffffff;
-            color: #000000;
-            font-weight: bold;
-            border: 4px solid #000000;
-            padding: 8px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px #000000;
-            transition: all 0.1s ease;
-        }
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            margin-top: -40px;
-        }
-        .logo-circle-outer {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 5px solid #000000;
-            background: conic-gradient(#1abc9c, #e74c3c, #f1c40f, #1abc9c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .logo-circle-inner {
-            width: 110px;
-            height: 110px;
-            background: linear-gradient(135deg, #2980b9, #3498db);
-            border: 4px solid #000000;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 5px 0px #000000;
-        }
-        .logo-text {
-            color: #ffffff;
-            font-size: 55px;
-            font-weight: bold;
-            text-shadow: 3px 3px 0px #000000;
-        }
-        .store-name-title {
-            margin-top: 35px;
-            font-family: 'Permanent Marker', cursive;
-            font-size: 26px;
-            color: #000000;
-            letter-spacing: 1px;
-        }
-        .loading-box {
-            margin-top: 45px;
-            background-color: #000000;
-            color: #ffffff;
-            border-radius: 24px;
-            padding: 20px 35px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 15px;
-            box-shadow: 0px 8px 0px rgba(0, 0, 0, 0.2);
-            width: 320px;
-        }
 
-        /* Halaman 2: Pop-up WA Awal & Kasir */
+        /* Pop-up WA */
         .popup-overlay-active {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -214,12 +121,11 @@
             transition: all 0.1s ease;
         }
 
-        /* Halaman Utama Baru: Menu Utama List Link */
+        /* Halaman Utama Toko */
         #store-screen {
             width: 100%;
             max-width: 420px;
             margin: 0 auto;
-            padding: 30px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -243,7 +149,7 @@
         }
         .store-bio {
             font-size: 12px;
-            color: #555555;
+            color: #333333;
             font-weight: 600;
             text-align: center;
             margin-bottom: 15px;
@@ -263,7 +169,7 @@
             align-items: center;
             padding: 15px 18px;
             border-radius: 16px;
-            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.15);
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
             cursor: pointer;
             width: 100%;
             text-align: left;
@@ -280,3 +186,82 @@
             justify-content: center;
             font-size: 22px;
             margin-right: 15px;
+            flex-shrink: 0;
+            border: 2px solid #ffffff;
+        }
+        .product-text-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .prod-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.3;
+        }
+        .prod-price {
+            font-size: 11px;
+            color: #2ecc71;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+        .arrow-indicator {
+            font-size: 15px;
+            color: #ffffff;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Popup WhatsApp Komunitas -->
+    <div id="wa-popup" class="popup-overlay-active">
+        <div class="popup-card border-brutal anim-pop-in">
+            <button class="close-btn" onclick="closePopup()">×</button>
+            <div class="popup-header">
+                <span class="sub-title">JOIN OUR COMMUNITY</span>
+                <div class="status-badge">
+                    <span class="dot"></span>Online
+                </div>
+            </div>
+            <div class="divider-dots"></div>
+            <div class="popup-body">
+                <div class="wa-icon-container">💬</div>
+                <div class="wa-text">
+                    <h3>Grup WhatsApp Resmi</h3>
+                    <p>Dapatkan info restock & promo menarik setiap harinya!</p>
+                </div>
+            </div>
+            <a href="https://whatsapp.com" target="_blank" class="btn-join">GABUNG GRUP SEKARANG</a>
+        </div>
+    </div>
+
+    <!-- Konten Utama Toko -->
+    <div id="store-screen" class="anim-bounce-up">
+        <div class="store-avatar-box">DZ</div>
+        <h2 class="store-username">@danzzcenzz.store</h2>
+        <p class="store-bio">⚡ Pusat Top Up & Layanan Digital Terpercaya dengan Gaya Pop Art Brutal ⚡</p>
+        
+        <div class="list-container">
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">🚀</div>
+                <div class="product-text-details">
+                    <span class="prod-title">Suntik Followers Sosmed</span>
+                    <span class="prod-price">Mulai dari Rp 5.000</span>
+                </div>
+                <div class="arrow-indicator">➔</div>
+            </a>
+
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">🎮</div>
+                <div class="product-text-details">
+                    <span class="prod-title">Top Up Game (MLBB, FF, Pubg)</span>
+                    <span class="prod-price">Harga Bersaing & Legal</span>
+                </div>
+                <div class="arrow-indicator">➔</div>
+            </a>
+
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">🍿</div>
+                <div class="product-text-details">
