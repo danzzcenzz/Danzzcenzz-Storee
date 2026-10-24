@@ -66,7 +66,6 @@ body {
     border-radius: 14px;
     cursor: pointer;
     box-shadow: 4px 4px 0px #000000;
-    transition: all 0.2s ease;
 }
 .main-content {
     display: flex;
@@ -77,50 +76,27 @@ body {
     margin-top: -60px;
 }
 
-.logo-circle-outer {
-    width: 160px;
-    height: 160px;
+/* Loader Spinner Bulat Berputar CSS Murni */
+.spinner-loader {
+    width: 90px;
+    height: 90px;
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-top: 8px solid #000000;
     border-radius: 50%;
-    border: 5px solid #000000;
-    background: conic-gradient(#1abc9c, #e74c3c, #f1c40f, #1abc9c);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: spinCircle 3s linear infinite !important;
+    margin-bottom: 25px;
+    animation: spinNormal 1.2s linear infinite;
 }
-@keyframes spinCircle {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+@keyframes spinNormal {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.logo-circle-inner {
-    width: 110px;
-    height: 110px;
-    background: linear-gradient(135deg, #2980b9, #3498db);
-    border: 4px solid #000000;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 5px 0px #000000;
-    animation: counterSpin 3s linear infinite;
-}
-@keyframes counterSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-}
-.logo-text {
-    color: #ffffff;
-    font-size: 55px;
-    font-weight: bold;
-    text-shadow: 3px 3px 0px #000000;
-}
 .store-name-title {
-    margin-top: 25px;
-    font-size: 18px;
+    margin-top: 15px;
+    font-size: 24px;
     color: #000000;
-    font-weight: 850;
-    letter-spacing: 1px;
+    font-weight: 900;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
 }
 
@@ -151,20 +127,20 @@ body {
     max-width: 420px;
     margin: 0 auto;
     min-height: 100vh;
-    padding-bottom: 120px; /* Jarak agar konten tidak tertutup bar navigasi bawah */
+    padding-bottom: 120px;
     position: relative;
-    display: flex;
+    display: none;
     flex-direction: column;
 }
 .tab-content {
-    display: none !important; /* Sembunyikan secara default */
+    display: none;
     flex-direction: column;
     align-items: center;
     padding: 30px 20px;
     width: 100%;
 }
 .active-tab {
-    display: flex !important; /* Tampilkan jika tab aktif */
+    display: flex !important;
 }
 .tab-header-title {
     font-size: 18px;
@@ -248,7 +224,7 @@ body {
     border: 3px solid #000000;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.product-item-link:active, .btn-join:active, .btn-skip:active, .nav-item:active {
+.product-item-link:active, .btn-join-green:active, .btn-skip:active, .nav-item:active {
     transform: translateY(3px) translateX(2px);
     box-shadow: 1px 1px 0px #000000;
 }
@@ -334,7 +310,7 @@ body {
     box-shadow: 2px 2px 0px #000000;
 }
 
-/* ----- STYLE POPUP SALURAN WA ----- */
+/* ----- STYLE POPUP & ANIMASI OMBAK WA ----- */
 .popup-overlay-active {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -348,22 +324,22 @@ body {
 }
 .popup-card {
     background-color: #ffffff;
-    border-radius: 32px;
+    border-radius: 24px;
     width: 350px;
     padding: 30px 20px 25px 20px;
     position: relative;
-    box-shadow: 8px 8px 0px #000000, -4px 15px 0px #f4d03f;
+    box-shadow: 8px 8px 0px #000000;
     border: 4px solid #000000;
 }
 .close-btn {
     position: absolute;
-    top: -15px; right: -10px;
+    top: -12px; right: -12px;
     background-color: #e74c3c;
     color: #ffffff;
     border: 3px solid #000000;
-    width: 38px; height: 38px;
+    width: 34px; height: 38px;
     border-radius: 50%;
-    font-size: 22px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
@@ -372,11 +348,14 @@ body {
     box-shadow: 2px 2px 0px #000000;
 }
 .popup-header { display: flex; justify-content: space-between; align-items: center; }
-.sub-title { font-size: 11px; font-weight: 700; color: #7f8c8d; }
+.sub-title { font-size: 11px; font-weight: 800; color: #7f8c8d; letter-spacing: 0.5px; }
+
 .status-badge {
-    background-color: #e8f8f5; color: #27ae60;
-    border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 700;
+    background-color: #c8f7dc; color: #000000;
+    border: 3px solid #000000;
+    border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 800;
     display: flex; align-items: center;
+    box-shadow: 2px 2px 0px #000000;
 }
 .dot { width: 8px; height: 8px; background-color: #2ecc71; border-radius: 50%; margin-right: 6px; }
 .divider-dots {
@@ -386,4 +365,22 @@ body {
 }
 .popup-body { display: flex; align-items: center; margin-bottom: 25px; }
 
-.wa-icon-container {
+.wa-icon-svg-container {
+    background-color: #2ecc71;
+    border: 3px solid #000000;
+    border-radius: 16px; 
+    width: 70px; height: 65px;
+    display: flex; align-items: center; justify-content: center; 
+    margin-right: 15px;
+    box-shadow: 3px 3px 0px #000000;
+}
+.wa-wave {
+    animation: waveMotion 2.5s ease-in-out infinite;
+}
+@keyframes waveMotion {
+    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+    25% { transform: translateY(-4px) scale(1.04) rotate(-3deg); }
+    50% { transform: translateY(2px) scale(0.98) rotate(3deg); }
+    75% { transform: translateY(-2px) scale(1.02) rotate(-1deg); }
+}
+
