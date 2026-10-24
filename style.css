@@ -206,10 +206,11 @@ button:active, .btn-join:active, .menu-icon:active {
 
 .popup-body { display: flex; align-items: center; margin-bottom: 25px; }
 
-.wa-icon-container {
-    background-color: #25d366;
-    border-radius: 16px; width: 65px; height: 65px;
-    display: flex; align-items: center; justify-content: center; margin-right: 15px;
+.wa-icon-img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
 }
 
 .wa-text h3 { font-size: 17px; font-weight: 700; color: #000000; }
