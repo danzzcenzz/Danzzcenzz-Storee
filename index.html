@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DANZZCENZZ-STORE</title>
-    <!-- Memuat pustaka animasi eksternal untuk efek smooth -->
+    <!-- Memuat pustaka animasi eksternal agar transisinya sangat smooth -->
     <link rel="stylesheet" href="https://cloudflare.com"/>
     <!-- Menghubungkan ke file CSS terpisah -->
     <link rel="stylesheet" href="style.css">
@@ -22,14 +22,14 @@
                     <span class="logo-text">DZ</span>
                 </div>
             </div>
-            <h1 class="store-name-title fade-in-3">DANZZCENZZ GENERATED STORE</h1>
+            <h1 class="store-name-title fade-in-3">DANZZCENZZ-STORE</h1>
             <div class="loading-box-blue fade-in-4">
                 MOHON TUNGGU SEBENTAR<br>SEDANG LOADING<span class="pulse-dot">...</span>
             </div>
         </div>
     </div>
 
-    <!-- WADAH HALAMAN UTAMA TOKO (DENGAN NAVIGASI BAWAH) -->
+    <!-- WADAH UTAMA KONTEN TOKO -->
     <div id="store-container" class="hidden">
         
         <!-- ================= HALAMAN TAB 1: BERANDA ================= -->
@@ -93,7 +93,7 @@
         </div>
 
         <!-- MENU NAVIGASI BAWAH (BOTTOM NAVIGATION BAR) -->
-        <nav class="bottom-nav border-brutal">
+        <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('beranda')">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-label">Beranda</span>
@@ -137,6 +137,7 @@
         const waPopup = document.getElementById('wa-popup');
         const storeContainer = document.getElementById('store-container');
 
+        // Durasi putaran loading opening 4.5 detik
         const autoLoading = setTimeout(function() {
             clearLoading();
         }, 4500);
@@ -176,27 +177,22 @@
             }
         }
 
-        // FUNGSI BERPINDAH HALAMAN / TAB KETIKA DI-PENCET
         function switchTab(tabId) {
-            // Sembunyikan semua isi tab content terlebih dahulu
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => {
                 tab.classList.remove('active-tab');
             });
 
-            // Tampilkan tab yang dipilih dengan animasi halus
             const targetTab = document.getElementById('tab-' + tabId);
             if(targetTab) {
                 targetTab.classList.add('active-tab');
             }
 
-            // Ganti status aktif pada tombol navigasi bawah
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
                 item.classList.remove('active');
             });
 
-            // Cari tombol yang memanggil fungsi ini untuk dijadikan aktif
             event.currentTarget.classList.add('active');
         }
     </script>
