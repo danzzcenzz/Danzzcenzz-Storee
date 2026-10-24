@@ -24,25 +24,7 @@
             border: 4px solid #000000 !important;
         }
 
-        /* ----- SISTEM TRANSISI CSS MURNI (ANTI LAYAR PUTIH / BEKU) ----- */
-        #loading-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100vh;
-            background-color: #a3e4d7;
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.08) 2px, transparent 2px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 2px, transparent 2px);
-            background-size: 25px 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 9999;
-            animation: hideLoading 0.5s ease 3s forwards;
-        }
-        @keyframes hideLoading {
-            to { opacity: 0; visibility: hidden; pointer-events: none; }
-        }
-
+        /* ----- STRUKTUR HALAMAN LANGSUNG MUNCUL (ANTI BLANK KOSONG) ----- */
         #store-screen {
             width: 100%;
             max-width: 420px;
@@ -51,13 +33,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            opacity: 0;
-            animation: showStore 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.2s forwards;
-        }
-        @keyframes showStore {
-            to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Jendela Mengambang Langsung Aktif */
         .popup-overlay-active {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -68,102 +46,14 @@
             z-index: 999;
             background-color: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
-            opacity: 0;
-            visibility: hidden;
-            animation: showPopup 0.5s ease 4.5s forwards;
-        }
-        @keyframes showPopup {
-            to { opacity: 1; visibility: visible; }
         }
         
-        /* Trik Jendela Mengambang Bekerja Akurat Tanpa JS */
+        /* Trik Murni CSS untuk Menutup Jendela via Link Target */
         #wa-popup:target {
             display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
         }
 
         /* ---------------- ELEMEN & GAYA VISUAL ---------------- */
-        .top-bar {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            padding: 20px 25px 0 0;
-        }
-        .btn-skip {
-            background-color: #ffffff;
-            color: #000000;
-            font-weight: bold;
-            border: 4px solid #000000;
-            padding: 8px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px #000000;
-        }
-        .btn-skip-link {
-            text-decoration: none;
-        }
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-            margin-top: -40px;
-        }
-        .logo-circle-outer {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            border: 5px solid #000000;
-            background: conic-gradient(#1abc9c, #e74c3c, #f1c40f, #1abc9c);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .logo-circle-inner {
-            width: 110px;
-            height: 110px;
-            background: linear-gradient(135deg, #2980b9, #3498db);
-            border: 4px solid #000000;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0px 5px 0px #000000;
-        }
-        .logo-text {
-            color: #ffffff;
-            font-size: 55px;
-            font-weight: bold;
-            text-shadow: 3px 3px 0px #000000;
-        }
-        .store-name-title {
-            margin-top: 35px;
-            font-size: 26px;
-            color: #000000;
-            letter-spacing: 1px;
-            font-weight: 850;
-        }
-        .loading-box {
-            margin-top: 45px;
-            background-color: #000000;
-            color: #ffffff;
-            border-radius: 24px;
-            padding: 20px 35px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 15px;
-            box-shadow: 0px 8px 0px rgba(0, 0, 0, 0.2);
-            width: 320px;
-        }
-        .pulse-dot { animation: dotPulse 1.5s infinite ease-in-out; }
-        @keyframes dotPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.5; }
-        }
-
-        /* Komponen Jendela Mengambang (Popup) */
         .popup-card {
             background-color: #ffffff;
             border-radius: 32px;
@@ -289,3 +179,87 @@
             flex-direction: column;
             flex-grow: 1;
         }
+        .prod-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            line-height: 1.3;
+        }
+        .prod-price {
+            font-size: 11px;
+            color: #2ecc71;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+        .arrow-indicator {
+            font-size: 15px;
+            color: #ffffff;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HALAMAN TOKO UTAMA -->
+    <div id="store-screen">
+        <div class="store-avatar-box">DZ</div>
+        <h2 class="store-username">@danzzcenzz.store</h2>
+        <p class="store-bio">⚡ Pusat Top Up & Layanan Digital Terpercaya dengan Gaya Pop Art Brutal ⚡</p>
+        
+        <div class="list-container">
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">🚀</div>
+                <div class="product-text-details">
+                    <span class="prod-title">Order Video Khusus</span>
+                    <span class="prod-price">Hubungi Admin Langsung</span>
+                </div>
+                <div class="arrow-indicator">➔</div>
+            </a>
+
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">👥</div>
+                <div class="product-text-details">
+                    <span class="prod-title">Suntik Followers Sosmed</span>
+                    <span class="prod-price">Mulai dari Rp 5.000</span>
+                </div>
+                <div class="arrow-indicator">➔</div>
+            </a>
+
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">🎮</div>
+                <div class="product-text-details">
+                    <span class="prod-title">Top Up Game (MLBB, FF, Pubg)</span>
+                    <span class="prod-price">Harga Bersaing & Legal</span>
+                </div>
+                <div class="arrow-indicator">➔</div>
+            </a>
+
+            <a href="https://wa.me" target="_blank" class="product-item-link">
+                <div class="product-icon-frame">⭐️</div>
+                <div class="product-text-details">
+                    <span class="prod-title">Testimoni Pelanggan</span>
+                    <span class="prod-price">Cek Kepercayaan Toko Kami</span>
+                </div>
+                <div class="arrow-indicator">➔</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- JENDELA MENGAMBANG POPUP WHATSAPP -->
+    <div id="wa-popup" class="popup-overlay-active">
+        <div class="popup-card border-brutal">
+            <a href="#wa-popup" class="close-btn">×</a>
+            <div class="popup-header">
+                <span class="sub-title">JOIN OUR COMMUNITY</span>
+                <div class="status-badge">
+                    <span class="dot"></span>Online
+                </div>
+            </div>
+            <div class="divider-dots"></div>
+            <div class="popup-body">
+                <div class="wa-icon-container">💬</div>
+                <div class="wa-text">
+                    <h3>Saluran WhatsApp Resmi</h3>
+                    <p>Dapatkan info restock & promo menarik setiap harinya!</p>
+                </div>
+            </div>
