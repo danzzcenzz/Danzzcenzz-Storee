@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DANZZCENZZ-STORE</title>
-    <!-- Memuat pustaka animasi eksternal agar transisinya sangat smooth -->
+    <!-- Memuat pustaka animasi eksternal agar gerakan membalnya smooth -->
     <link rel="stylesheet" href="https://cloudflare.com"/>
     <!-- Menghubungkan ke file CSS terpisah -->
     <link rel="stylesheet" href="style.css">
@@ -13,15 +13,15 @@
 
     <!-- HALAMAN 1: LOADING OPENING SCREEN -->
     <div id="loading-screen">
-        <div class="top-bar fade-in-1">
+        <div class="top-bar">
             <button type="button" class="btn-skip" onclick="skipLoading()">SKIP ➔</button>
         </div>
         <div class="main-content">
-            <!-- Spinner lingkaran berputar otomatis lewat CSS murni -->
-            <div class="spinner-loader fade-in-2"></div>
+            <!-- Lingkaran Loader Spinner yang akan diputar oleh CSS -->
+            <div class="spinner-loader"></div>
             
-            <h1 class="store-name-title fade-in-3">DANZZCENZZ-STORE</h1>
-            <div class="loading-box-blue fade-in-4">
+            <h1 class="store-name-title">DANZZCENZZ-STORE</h1>
+            <div class="loading-box-blue">
                 MOHON TUNGGU SEBENTAR<br>SEDANG LOADING<span class="pulse-dot">...</span>
             </div>
         </div>
@@ -119,9 +119,9 @@
             </div>
             <div class="divider-dots"></div>
             <div class="popup-body">
-                <!-- Ikon SVG WhatsApp Hijau Asli dengan Efek Ombak -->
+                <!-- Wadah Ikon Bulat Hijau dengan Animasi Ombak CSS -->
                 <div class="wa-icon-svg-container wa-wave">
-                    <svg viewBox="0 0 24 24" width="45" height="45" fill="#FFFFFF">
+                    <svg viewBox="0 0 24 24" width="42" height="42" fill="#FFFFFF">
                         <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.73.43 3.42 1.27 4.93L2.03 21.8c-.08.28.01.58.23.77.14.12.32.18.51.18.08 0 .16-.01.24-.04l5.08-1.35c1.47.76 3.11 1.15 4.79 1.15 5.52 0 10-4.48 10-10S17.52 2 12.004 2zm4.95 14.19c-.21.29-.82.56-1.12.59-.28.03-.57.05-1.72-.34-1.42-.48-2.73-1.43-3.66-2.36-.93-.93-1.88-2.24-2.36-3.66-.39-1.15-.37-1.44-.34-1.72.03-.3.3-.91.59-1.12.19-.14.38-.2.53-.2.11 0 .21.01.3.06.18.09.43.51.52.74.09.22.14.43-.01.71-.11.2-.23.33-.36.49-.11.14-.24.29-.1.52.28.47.74.96 1.25 1.38.56.46 1.15.79 1.69 1.01.18.07.32.05.44-.06.15-.14.33-.37.5-.58.11-.14.24-.16.39-.1.15.06.94.44 1.1.52.16.08.27.12.31.2.04.09.04.7-.17 1z"/>
                     </svg>
                 </div>
@@ -131,7 +131,6 @@
                 </div>
             </div>
             <a href="https://whatsapp.com" target="_blank" class="btn-join-green">
-                <!-- Ikon WhatsApp Kecil di Tombol -->
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="#000000" style="margin-right:8px; vertical-align:middle;">
                     <path d="M12.004 2C6.48 2 2 6.48 2 12c0 1.73.43 3.42 1.27 4.93L2.03 21.8c-.08.28.01.58.23.77.14.12.32.18.51.18.08 0 .16-.01.24-.04l5.08-1.35c1.47.76 3.11 1.15 4.79 1.15 5.52 0 10-4.48 10-10S17.52 2 12.004 2zm4.95 14.19c-.21.29-.82.56-1.12.59-.28.03-.57.05-1.72-.34-1.42-.48-2.73-1.43-3.66-2.36-.93-.93-1.88-2.24-2.36-3.66-.39-1.15-.37-1.44-.34-1.72.03-.3.3-.91.59-1.12.19-.14.38-.2.53-.2.11 0 .21.01.3.06.18.09.43.51.52.74.09.22.14.43-.01.71-.11.2-.23.33-.36.49-.11.14-.24.29-.1.52.28.47.74.96 1.25 1.38.56.46 1.15.79 1.69 1.01.18.07.32.05.44-.06.15-.14.33-.37.5-.58.11-.14.24-.16.39-.1.15.06.94.44 1.1.52.16.08.27.12.31.2.04.09.04.7-.17 1z"/>
                 </svg>MASUK CHANNEL
@@ -139,17 +138,18 @@
         </div>
     </div>
 
-    <!-- LOGIKA TRANSISI JAVASCRIPT AMAN -->
+    <!-- SCRIPT LOGIKA JAVASCRIPT AMAN -->
     <script>
         const loadingScreen = document.getElementById('loading-screen');
         const waPopup = document.getElementById('wa-popup');
         const storeContainer = document.getElementById('store-container');
 
-        // Otomatis hilangkan loading setelah 4.5 detik
+        // Otomatis hilangkan loading setelah 4 detik berjalan
         const autoLoading = setTimeout(function() {
             clearLoading();
-        }, 4500);
+        }, 4000);
 
+        // Fungsi Tombol SKIP
         function skipLoading() {
             clearTimeout(autoLoading); 
             clearLoading();
@@ -157,6 +157,7 @@
 
         function clearLoading() {
             if (loadingScreen) {
+                // Memicu gerakan meluncur halus ke atas sesuai requesmu
                 loadingScreen.style.animation = "slideOutUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards";
             }
             setTimeout(function() {
@@ -190,4 +191,3 @@
             tabs.forEach(tab => {
                 tab.style.setProperty('display', 'none', 'important');
             });
-
