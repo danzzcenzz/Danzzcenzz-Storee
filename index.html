@@ -11,7 +11,9 @@
 
   <!-- OPENING -->
   <section id="opening" class="opening">
-    <button id="skipBtn" class="skip-btn" type="button">SKIP &gt;</button>
+    <button id="skipBtn" class="skip-btn" type="button">
+      SKIP &gt;
+    </button>
 
     <div class="opening-content">
       <div class="logo">D</div>
@@ -21,234 +23,132 @@
         <div class="spinner"></div>
         <p>Tunggu sebentar, sedang loading...</p>
         <div class="progress">
-          <span></span>
+          <span id="progressBar"></span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="brand">DANZZCENZZ-STORE</div>
-    <span class="badge">OFFICIAL STORE</span>
-  </header>
+  <!-- HALAMAN UTAMA -->
+  <main id="mainContent" class="hidden">
 
-  <!-- BERANDA -->
-  <main id="homePage" class="page">
+    <header class="topbar">
+      <h2>DANZZCENZZ-STORE</h2>
+      <button id="homeBtn" type="button">HOME</button>
+    </header>
+
     <section class="hero">
-      <span class="label">WELCOME TO OUR STORE</span>
-      <h2>Belanja Mudah,<br>Pesan Sekarang!</h2>
-      <p>
-        Selamat datang di DANZZCENZZ-STORE.
-        Pilih produk yang kamu inginkan dan pesan
-        dengan mudah melalui WhatsApp.
-      </p>
+      <span class="badge">WELCOME TO</span>
+      <h1>DANZZCENZZ-STORE</h1>
+      <p>Tempat order video dan layanan digital.</p>
+      <a href="#products" class="button yellow">LIHAT PRODUK ↓</a>
     </section>
 
-    <!-- POPUP CHANNEL -->
-    <section class="channel-card">
-      <div class="channel-icon">✆</div>
-      <div class="channel-content">
-        <h3>Gabung Channel WhatsApp</h3>
-        <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
+    <section class="section" id="products">
+      <h2 class="section-title">🛍️ DAFTAR PRODUK</h2>
+
+      <div class="product-grid">
+
+        <article class="product-card">
+          <div class="product-icon">🎬</div>
+          <h3>Jasa Edit Video</h3>
+          <p>Pesan jasa edit video sesuai kebutuhanmu.</p>
+          <div class="price">Harga: Hubungi Admin</div>
+          <button class="button order-btn" data-product="Jasa Edit Video">
+            ORDER SEKARANG
+          </button>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">📱</div>
+          <h3>Video Custom</h3>
+          <p>Pesan video custom sesuai permintaan.</p>
+          <div class="price">Harga: Hubungi Admin</div>
+          <button class="button order-btn" data-product="Video Custom">
+            ORDER SEKARANG
+          </button>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">✨</div>
+          <h3>Layanan Lainnya</h3>
+          <p>Tanyakan layanan lain yang tersedia.</p>
+          <div class="price">Harga: Hubungi Admin</div>
+          <button class="button order-btn" data-product="Layanan Lainnya">
+            ORDER SEKARANG
+          </button>
+        </article>
+
       </div>
+    </section>
+
+    <!-- PEMBAYARAN -->
+    <section class="payment-section">
+      <h2 class="section-title">💳 PEMBAYARAN</h2>
+      <p>Pembayaran tersedia melalui QRIS.</p>
+      <button id="showQris" class="button yellow" type="button">
+        LIHAT QRIS
+      </button>
+    </section>
+
+    <!-- CHANNEL WHATSAPP -->
+    <section class="channel-section">
+      <h2>📢 Gabung Channel WhatsApp</h2>
+      <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
       <a
-        class="btn btn-green channel-link"
+        class="button green"
         href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
         target="_blank"
-        rel="noopener noreferrer"
-      >GABUNG</a>
-    </section>
-
-    <div class="section-heading">
-      <h2>Produk &amp; Layanan</h2>
-      <span>PILIH PRODUK</span>
-    </div>
-
-    <section id="productList" class="product-grid"></section>
-
-    <section class="info-grid">
-      <div class="info-card">
-        <span>📦</span>
-        <strong>Pilihan Produk</strong>
-        <p>Pilih sesuai kebutuhan.</p>
-      </div>
-
-      <div class="info-card">
-        <span>💳</span>
-        <strong>Pembayaran</strong>
-        <p>QRIS tersedia.</p>
-      </div>
-
-      <div class="info-card">
-        <span>💬</span>
-        <strong>Admin</strong>
-        <p>Pesan melalui WhatsApp.</p>
-      </div>
+        rel="noopener"
+      >
+        ☎ GABUNG CHANNEL
+      </a>
     </section>
 
     <footer>
       <h3>DANZZCENZZ-STORE</h3>
-      <p>Terima kasih sudah mengunjungi toko kami.</p>
+      <p>Terima kasih sudah berkunjung!</p>
+      <p>© 2026 DANZZCENZZ-STORE</p>
     </footer>
+
   </main>
 
-  <!-- HALAMAN PESANAN -->
-  <main id="ordersPage" class="page" hidden>
-    <section class="hero">
-      <span class="label">ORDER CENTER</span>
-      <h2>Riwayat Pesanan</h2>
-      <p>Pesanan yang tersimpan di perangkat ini.</p>
-    </section>
-
-    <div class="section-heading">
-      <h2>Pesanan Kamu</h2>
-    </div>
-
-    <div id="orderHistory"></div>
-  </main>
-
-  <!-- HALAMAN PROFIL -->
-  <main id="profilePage" class="page" hidden>
-    <section class="hero">
-      <span class="label">PROFILE</span>
-      <h2>DANZZCENZZ-STORE</h2>
-      <p>
-        Pusat informasi toko dan bantuan pemesanan.
-        Jika membutuhkan bantuan, hubungi admin.
-      </p>
-    </section>
-
-    <div class="profile-card">
-      <h3>Informasi Toko</h3>
-      <p>Pesan produk melalui website dan lakukan pembayaran menggunakan QRIS.</p>
-
-      <a
-        class="btn btn-green"
-        href="https://wa.me/62882000379621?text=min%20mau%20order%20video%20"
-        target="_blank"
-        rel="noopener noreferrer"
-      >HUBUNGI ADMIN</a>
-
-      <a
-        class="btn btn-yellow"
-        href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
-        target="_blank"
-        rel="noopener noreferrer"
-      >GABUNG CHANNEL</a>
-    </div>
-  </main>
-
-  <!-- NAVIGASI BAWAH -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-page="homePage" type="button">
-      🏠<span>Beranda</span>
-    </button>
-    <button class="nav-btn" data-page="ordersPage" type="button">
-      🛒<span>Pesanan</span>
-    </button>
-    <button class="nav-btn" data-page="profilePage" type="button">
-      👤<span>Profil</span>
-    </button>
-  </nav>
-
-  <!-- POPUP PEMESANAN DAN QRIS -->
-  <div id="orderModal" class="modal" hidden>
-    <div class="modal-box">
-      <button class="close-btn" data-close="orderModal" type="button">×</button>
-
-      <span class="label">FORM PEMESANAN</span>
-      <h2>Pesan Produk</h2>
-      <p class="muted">Periksa produk dan isi informasi pesananmu.</p>
-
-      <div class="selected-product">
-        <span>Produk pilihan</span>
-        <strong id="selectedProduct">-</strong>
-      </div>
-
-      <div class="selected-product price-box">
-        <span>Total pembayaran</span>
-        <strong id="selectedPrice">Atur harga produk</strong>
-      </div>
-
-      <div class="field">
-        <label for="customerName">Nama pemesan</label>
-        <input id="customerName" type="text" maxlength="60" placeholder="Masukkan nama">
-      </div>
-
-      <div class="field">
-        <label for="orderNote">Catatan pesanan</label>
-        <input id="orderNote" type="text" maxlength="200" placeholder="Contoh: detail pesanan">
-      </div>
-
-      <div class="divider"></div>
-
-      <h3 class="qris-heading">Pembayaran QRIS</h3>
-      <p class="muted">Scan QRIS berikut menggunakan aplikasi pembayaran yang mendukung QRIS.</p>
+  <!-- POPUP QRIS -->
+  <section id="qrisPopup" class="popup-overlay hidden">
+    <div class="popup-card">
+      <button class="close-btn" data-close="qrisPopup" type="button">×</button>
+      <h2>PEMBAYARAN QRIS</h2>
+      <p>Scan QRIS untuk melakukan pembayaran.</p>
 
       <img
         class="qris-image"
         src="https://i.imgur.com/PrxQ7HA.jpeg"
-        alt="QRIS DANZZCENZZ-STORE"
+        alt="QRIS pembayaran"
       >
 
-      <div class="notice">
-        <strong>Perhatian!</strong><br>
-        Periksa nama penerima dan nominal sebelum membayar.
-        Pastikan pembayaran berhasil dan simpan bukti transaksi.
-      </div>
-
-      <label class="check-row">
-        <input id="paymentCheck" type="checkbox">
-        <span>Saya sudah melakukan pembayaran dan akan mengirim bukti transaksi kepada admin.</span>
-      </label>
-
-      <button id="confirmPaymentBtn" class="btn btn-yellow" type="button">
-        KONFIRMASI PEMBAYARAN
-      </button>
-
-      <button class="btn btn-black" data-close="orderModal" type="button">
-        BATAL
-      </button>
-    </div>
-  </div>
-
-  <!-- POPUP KONFIRMASI -->
-  <div id="confirmModal" class="modal" hidden>
-    <div class="modal-box confirm-box">
-      <button class="close-btn" data-close="confirmModal" type="button">×</button>
-
-      <div class="success-icon">✓</div>
-      <h2>Konfirmasi Pesanan</h2>
-
-      <p class="muted">
-        Pesanan akan dikirim ke WhatsApp admin.
-        Admin perlu memeriksa bukti pembayaran secara manual.
+      <p class="small-note">
+        Pastikan nama penerima dan nominal pembayaran sudah benar.
       </p>
 
-      <div id="confirmationSummary" class="notice"></div>
-
-      <button id="sendConfirmationBtn" class="btn btn-green" type="button">
-        KIRIM KE WHATSAPP
-      </button>
-
-      <button class="btn btn-black" data-close="confirmModal" type="button">
-        KEMBALI
+      <button id="confirmPayment" class="button green" type="button">
+        KONFIRMASI PEMBAYARAN
       </button>
     </div>
-  </div>
+  </section>
 
-  <!-- POPUP PESAN -->
-  <div id="messageModal" class="modal" hidden>
-    <div class="modal-box">
-      <button class="close-btn" data-close="messageModal" type="button">×</button>
-      <h2 id="messageTitle">Informasi</h2>
-      <p id="messageText" class="muted"></p>
-      <button class="btn btn-yellow" data-close="messageModal" type="button">
-        MENGERTI
-      </button>
+  <!-- POPUP KONFIRMASI -->
+  <section id="confirmPopup" class="popup-overlay hidden">
+    <div class="popup-card">
+      <button class="close-btn" data-close="confirmPopup" type="button">×</button>
+      <div class="popup-icon">✅</div>
+      <h2>Konfirmasi Pembayaran</h2>
+      <p>Kirim bukti pembayaran kepada admin melalui WhatsApp.</p>
+
+      <a id="sendProof" class="button green" href="#" target="_blank" rel="noopener">
+        KIRIM BUKTI PEMBAYARAN
+      </a>
     </div>
-  </div>
+  </section>
 
   <script src="script.js"></script>
 </body>
