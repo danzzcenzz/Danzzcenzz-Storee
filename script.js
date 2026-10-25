@@ -11,271 +11,387 @@ let paymentConfirmed = false;
 
 const HISTORY_KEY = 'danzzcenzz_transaction_history';
 
+/* =========================
+   RIWAYAT TRANSAKSI
+========================= */
+
 function getTransactions() {
-try {
-return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-} catch (error) {
-return [];
-}
+    try {
+        return JSON.parse(
+            localStorage.getItem(HISTORY_KEY) || '[]'
+        );
+    } catch (error) {
+        return [];
+    }
 }
 
 function escapeHTML(value) {
-return String(value).replace(/[&<>"']/g, char => ({
-'&': '&',
-'<': '<',
-'>': '>',
-'"': '"',
-"'": '''
-}[char]));
+    return String(value).replace(/[&<>"']/g, function(char) {
+        const entities = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+
+        return entities[char];
+    });
 }
 
 function formatRupiah(amount) {
-return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
+    return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
 }
 
 function renderTransactions() {
-const container = document.getElementById('transactionHistory');
-if (!container) return;
+    const container = document.getElementById('transactionHistory');
 
-const items = getTransactions();
+    if (!container) return;
 
-if (!items.length) {
-container.innerHTML = '<p>📂 Belum ada riwayat pesanan.</p>';
-return;
-}
+    const items = getTransactions();
 
-container.innerHTML = items.map(item => "<article class="transaction-item"> <strong>🛍️ ${escapeHTML(item.service || 'Pesanan')}</strong> <small>📅 ${escapeHTML(item.date || '-')}</small> <small>💵 Harga: ${formatRupiah(item.price ?? 5000)}</small> <span class="transaction-status"> ${escapeHTML(item.status || 'Menunggu verifikasi admin')} </span> </article>").join('');
+    if (!items.length) {
+        container.innerHTML =
+            '<p>📂 Belum ada riwayat pesanan.</p>';
+        return;
+    }
+
+    container.innerHTML = items.map(function(item) {
+        return `
+            <article class="transaction-item">
+                <strong>🛍️ ${escapeHTML(item.service || 'Pesanan')}</strong>
+                <small>📅 ${escapeHTML(item.date || '-')}</small>
+                <small>💵 Harga: ${formatRupiah(item.price ?? 5000)}</small>
+                <span class="transaction-status">
+                    ${escapeHTML(item.status || 'Menunggu verifikasi admin')}
+                </span>
+            </article>
+        `;
+    }).join('');
 }
 
 function saveTransaction(service, price) {
-const items = getTransactions();
+    const items = getTransactions();
 
-items.unshift({
-id: Date.now(),
-service: service,
-price: Number(price || 0),
-date: new Date().toLocaleString('id-ID', {
-dateStyle: 'medium',
-timeStyle: 'short'
-}),
-status: 'Menunggu verifikasi admin'
-});
+    items.unshift({
+        id: Date.now(),
+        service: service,
+        price: Number(price || 0),
+        date: new Date().toLocaleString('id-ID', {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        }),
+        status: 'Menunggu verifikasi admin'
+    });
 
-try {
-localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, 50)));
-renderTransactions();
-} catch (error) {
-alert('Riwayat tidak dapat disimpan. Periksa pengaturan penyimpanan browser.');
+    try {
+        localStorage.setItem(
+            HISTORY_KEY,
+            JSON.stringify(items.slice(0, 50))
+        );
+
+        renderTransactions();
+    } catch (error) {
+        alert('Riwayat tidak dapat disimpan. Periksa penyimpanan browser.');
+    }
 }
-}
+
+/* =========================
+   OPENING DAN TOMBOL SKIP
+========================= */
 
 function showInvite() {
-clearTimeout(openingTimer);
+    clearTimeout(openingTimer);
 
-if (
-!opening ||
-opening.classList.contains('leaving') ||
-opening.classList.contains('hidden')
-) {
-return;
-}
+    if (!opening || !home || !payment) return;
 
-opening.classList.add('leaving');
+    opening.classList.add('hidden');
+    opening.classList.remove('leaving');
 
-setTimeout(() => {
-opening.classList.add('hidden');
-home.classList.remove('hidden');
-payment.classList.add('hidden');
-openChannelPopup();
-window.scrollTo(0, 0);
-}, 560);
+    home.classList.remove('hidden');
+    payment.classList.add('hidden');
+
+    openChannelPopup();
+
+    window.scrollTo(0, 0);
 }
 
 function openChannelPopup() {
-if (channelWidget) channelWidget.classList.remove('hidden');
-if (channelBackdrop) channelBackdrop.classList.remove('hidden');
+    if (channelWidget) {
+        channelWidget.classList.remove('hidden');
+    }
+
+    if (channelBackdrop) {
+        channelBackdrop.classList.remove('hidden');
+    }
 }
 
 function closeChannelPopup() {
-if (channelWidget) channelWidget.classList.add('hidden');
-if (channelBackdrop) channelBackdrop.classList.add('hidden');
+    if (channelWidget) {
+        channelWidget.classList.add('hidden');
+    }
+
+    if (channelBackdrop) {
+        channelBackdrop.classList.add('hidden');
+    }
 }
 
 function showHome() {
-clearTimeout(openingTimer);
+    clearTimeout(openingTimer);
 
-opening.classList.add('hidden');
-opening.classList.remove('leaving');
-payment.classList.add('hidden');
-home.classList.remove('hidden');
+    if (opening) {
+        opening.classList.add('hidden');
+        opening.classList.remove('leaving');
+    }
 
-closeChannelPopup();
-window.scrollTo(0, 0);
+    if (payment) {
+        payment.classList.add('hidden');
+    }
+
+    if (home) {
+        home.classList.remove('hidden');
+    }
+
+    closeChannelPopup();
+
+    window.scrollTo(0, 0);
 }
+
+/* =========================
+   PEMBAYARAN
+========================= */
 
 function showPayment(service, price = 5000) {
-pendingService = service;
-pendingPrice = Number(price || 0);
-paymentConfirmed = false;
+    if (!home || !payment) return;
 
-home.classList.add('hidden');
-closeChannelPopup();
-payment.classList.remove('hidden');
+    pendingService = service;
+    pendingPrice = Number(price || 0);
+    paymentConfirmed = false;
 
-const selectedService = document.getElementById('selectedService');
-if (selectedService) {
-selectedService.textContent = 'Pesanan: ' + service;
+    home.classList.add('hidden');
+    closeChannelPopup();
+    payment.classList.remove('hidden');
+
+    const selectedService =
+        document.getElementById('selectedService');
+
+    if (selectedService) {
+        selectedService.textContent = 'Pesanan: ' + service;
+    }
+
+    const paymentPrice =
+        document.getElementById('paymentPrice');
+
+    if (paymentPrice) {
+        paymentPrice.textContent =
+            'Harga: ' + formatRupiah(pendingPrice);
+    }
+
+    const message =
+        'Halo min, saya mau order ' + service +
+        ' dengan harga ' + formatRupiah(pendingPrice) +
+        '. Saya akan mengirim bukti pembayaran QRIS. Mohon diproses ya.';
+
+    const confirmButton =
+        document.getElementById('confirmPayment');
+
+    if (confirmButton) {
+        confirmButton.href =
+            'https://wa.me/62882000379621?text=' +
+            encodeURIComponent(message);
+    }
+
+    window.scrollTo(0, 0);
 }
 
-const paymentPrice = document.getElementById('paymentPrice');
-if (paymentPrice) {
-paymentPrice.textContent = 'Harga: ' + formatRupiah(pendingPrice);
-}
+/* =========================
+   EVENT TOMBOL SKIP
+========================= */
 
-const message =
-'Halo min, saya mau order ' + service +
-' dengan harga ' + formatRupiah(pendingPrice) +
-'. Saya akan mengirim bukti pembayaran QRIS. Mohon diproses ya.';
-
-const confirmButton = document.getElementById('confirmPayment');
-if (confirmButton) {
-confirmButton.href =
-'https://wa.me/62882000379621?text=' +
-encodeURIComponent(message);
-}
-
-window.scrollTo(0, 0);
-}
-
-/* Tombol melewati opening */
 const skipBtn = document.getElementById('skipBtn');
+
 if (skipBtn) {
-skipBtn.addEventListener('click', showInvite);
+    skipBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        showInvite();
+    });
 }
 
-/* Tombol beli pada produk */
-document.querySelectorAll('.buy-button').forEach(button => {
-button.addEventListener('click', () => {
-const service = button.dataset.service || 'Produk';
-const price = Number(button.dataset.price || 10000);
-showPayment(service, price);
-});
+/* =========================
+   TOMBOL PRODUK
+========================= */
+
+document.querySelectorAll('.buy-button').forEach(function(button) {
+    button.addEventListener('click', function() {
+        const service = button.dataset.service || 'Produk';
+        const price = Number(button.dataset.price || 10000);
+
+        showPayment(service, price);
+    });
 });
 
-/* Tombol layanan lama, jika masih digunakan */
-document.querySelectorAll('.service-card').forEach(button => {
-button.addEventListener('click', () => {
-showPayment(button.dataset.service || 'Layanan', 5000);
-});
+/* =========================
+   TOMBOL LAYANAN LAMA
+========================= */
+
+document.querySelectorAll('.service-card').forEach(function(button) {
+    button.addEventListener('click', function() {
+        showPayment(
+            button.dataset.service || 'Layanan',
+            Number(button.dataset.price || 5000)
+        );
+    });
 });
 
-/* Kembali ke beranda */
+/* =========================
+   KEMBALI KE BERANDA
+========================= */
+
 const backHome = document.getElementById('backHome');
+
 if (backHome) {
-backHome.addEventListener('click', showHome);
+    backHome.addEventListener('click', function(event) {
+        event.preventDefault();
+        showHome();
+    });
 }
 
-/* Konfirmasi pembayaran dan simpan riwayat */
-const confirmPayment = document.getElementById('confirmPayment');
+/* =========================
+   KONFIRMASI PEMBAYARAN
+========================= */
+
+const confirmPayment =
+    document.getElementById('confirmPayment');
+
 if (confirmPayment) {
-confirmPayment.addEventListener('click', () => {
-if (pendingService && !paymentConfirmed) {
-saveTransaction(pendingService, pendingPrice);
-paymentConfirmed = true;
-}
-});
+    confirmPayment.addEventListener('click', function() {
+        if (pendingService && !paymentConfirmed) {
+            saveTransaction(pendingService, pendingPrice);
+            paymentConfirmed = true;
+        }
+    });
 }
 
-/* Popup Join Saluran */
-const closeChannelWidget = document.getElementById('closeChannelWidget');
+/* =========================
+   POPUP JOIN SALURAN
+========================= */
+
+const closeChannelWidget =
+    document.getElementById('closeChannelWidget');
 
 if (closeChannelWidget) {
-closeChannelWidget.addEventListener('click', closeChannelPopup);
+    closeChannelWidget.addEventListener('click', function(event) {
+        event.preventDefault();
+        closeChannelPopup();
+    });
 }
 
 if (channelBackdrop) {
-channelBackdrop.addEventListener('click', closeChannelPopup);
+    channelBackdrop.addEventListener(
+        'click',
+        closeChannelPopup
+    );
 }
 
-/* Navigasi Beranda, Riwayat, dan Profil */
-const horizontalPages = document.getElementById('horizontalPages');
-const storePages = Array.from(document.querySelectorAll('.store-page'));
+/* =========================
+   NAVIGASI HALAMAN
+========================= */
+
+const horizontalPages =
+    document.getElementById('horizontalPages');
+
+const storePages = Array.from(
+    document.querySelectorAll('.store-page')
+);
 
 const navLinks = [
-document.getElementById('homeNav'),
-document.getElementById('historyNav'),
-document.getElementById('profileNav')
+    document.getElementById('homeNav'),
+    document.getElementById('historyNav'),
+    document.getElementById('profileNav')
 ].filter(Boolean);
 
 let currentStorePage = 0;
 
 function goStorePage(index) {
-if (!horizontalPages || !storePages.length) return;
+    if (!horizontalPages || !storePages.length) return;
 
-currentStorePage = Math.max(
-0,
-Math.min(index, storePages.length - 1)
-);
+    currentStorePage = Math.max(
+        0,
+        Math.min(index, storePages.length - 1)
+    );
 
-const targetPage = storePages[currentStorePage];
+    const targetPage = storePages[currentStorePage];
 
-horizontalPages.scrollTo({
-left: targetPage.offsetLeft - horizontalPages.offsetLeft,
-behavior: 'smooth'
-});
+    horizontalPages.scrollTo({
+        left: targetPage.offsetLeft - horizontalPages.offsetLeft,
+        behavior: 'smooth'
+    });
 
-navLinks.forEach((link, i) => {
-link.classList.toggle('selected', i === currentStorePage);
-});
+    navLinks.forEach(function(link, i) {
+        link.classList.toggle(
+            'selected',
+            i === currentStorePage
+        );
+    });
 }
 
-navLinks.forEach((link, index) => {
-link.addEventListener('click', event => {
-event.preventDefault();
-goStorePage(index);
-});
+navLinks.forEach(function(link, index) {
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+        goStorePage(index);
+    });
 });
 
 if (horizontalPages) {
-let touchStartX = 0;
+    let touchStartX = 0;
 
-horizontalPages.addEventListener('touchstart', event => {
-touchStartX = event.changedTouches[0].clientX;
-}, { passive: true });
+    horizontalPages.addEventListener('touchstart', function(event) {
+        touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
 
-horizontalPages.addEventListener('touchend', event => {
-const delta = event.changedTouches[0].clientX - touchStartX;
+    horizontalPages.addEventListener('touchend', function(event) {
+        const delta =
+            event.changedTouches[0].clientX - touchStartX;
 
-if (Math.abs(delta) > 45) {
-  goStorePage(currentStorePage + (delta < 0 ? 1 : -1));
+        if (Math.abs(delta) > 45) {
+            goStorePage(
+                currentStorePage + (delta < 0 ? 1 : -1)
+            );
+        }
+    }, { passive: true });
+
+    horizontalPages.addEventListener('scroll', function() {
+        if (!horizontalPages.clientWidth) return;
+
+        const index = Math.round(
+            horizontalPages.scrollLeft /
+            horizontalPages.clientWidth
+        );
+
+        if (
+            index !== currentStorePage &&
+            index >= 0 &&
+            index < storePages.length
+        ) {
+            currentStorePage = index;
+
+            navLinks.forEach(function(link, i) {
+                link.classList.toggle(
+                    'selected',
+                    i === index
+                );
+            });
+        }
+    }, { passive: true });
 }
 
-}, { passive: true });
+/* =========================
+   MULAI WEBSITE
+========================= */
 
-horizontalPages.addEventListener('scroll', () => {
-if (!horizontalPages.clientWidth) return;
-
-const index = Math.round(
-  horizontalPages.scrollLeft / horizontalPages.clientWidth
-);
-
-if (
-  index !== currentStorePage &&
-  index >= 0 &&
-  index < storePages.length
-) {
-  currentStorePage = index;
-
-  navLinks.forEach((link, i) => {
-    link.classList.toggle('selected', i === index);
-  });
-}
-
-}, { passive: true });
-}
-
-/* Tampilkan riwayat transaksi */
 renderTransactions();
 
-/* Opening otomatis */
-openingTimer = setTimeout(showInvite, 3000);
+/* Pastikan opening bisa dilewati setelah 3 detik */
+openingTimer = setTimeout(function() {
+    showInvite();
+}, 3000);
