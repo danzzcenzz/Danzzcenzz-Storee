@@ -1,93 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DanzzCenzz Store</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Menggunakan Font Inter agar tampilan teks bersih dan modern -->
-    <link href="https://googleapis.com" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9bdcf0">
+  <title>DANZZCENZZ-STORE</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <section id="opening" class="opening salted-bg">
+    <button id="skipBtn" class="skip-btn">SKIP ⏭</button>
 
-    <!-- Container Utama Aplikasi -->
-    <div class="app-container">
-        
-        <!-- ================= HALAMAN BERANDA ================= -->
-        <section id="page-beranda" class="page-content active">
-            <div class="header-store">
-                <!-- Logo bulat sesuai permintaan -->
-                <div class="logo-container">
-                    <img src="https://i.imgur.com/ykHAwfs.png" alt="Danzz Store Logo" class="logo-img">
-                </div>
-                <h1>@danzzcenzz.store</h1>
-                <p class="tagline">⚡ Sell video terbaru viral/hot tentu harga murah meriah ⚡</p>
-            </div>
+    <div class="opening-content">
+      <div class="logo-ring">
+        <img class="brand-logo" src="https://i.imgur.com/YEiVvJp.png" alt="Logo DANZZ STORE">
+      </div>
 
-            <!-- Area Simulasi Pembelian / Produk -->
-            <div class="produk-section">
-                <div class="card-produk">
-                    <h3>Paket Video Viral Terbaru</h3>
-                    <p class="harga">Rp 15.000</p>
-                    <button class="btn-beli" onclick="bukaModalKonfirmasi('Paket Video Viral Terbaru', 'Rp 15.000')">Beli Sekarang</button>
-                </div>
-            </div>
+      <h1>DANZZCENZZ-STORE</h1>
+      <p class="tagline">SELL VIDEO DAN DLL</p>
+
+      <div class="loading-card">
+        <div class="loading-bar"><span></span></div>
+        <strong>MOHON TUNGGU SEBENTAR</strong>
+        <span>SEDANG MEMUAT...</span>
+      </div>
+    </div>
+  </section>
+
+  <main id="home" class="page salted-bg hidden">
+    <header class="store-header">
+      <img class="brand-logo small-logo" src="https://i.imgur.com/YEiVvJp.png" alt="Logo DANZZ STORE">
+      <h1>@danzzcenzz.store</h1>
+      <p>⚡ Sell video terbaru viral/hot tentu harga murah meriah ⚡</p>
+    </header>
+
+    <div class="horizontal-pages" id="horizontalPages">
+      <section class="store-page home-page" id="homePage">
+        <section class="service-list">
+          <button class="service-card" data-service="Order Video Khusus">
+            <span class="service-emoji">🚀</span>
+            <span class="service-copy">
+              <strong>Order Video Khusus</strong>
+              <small>Hubungi Admin Langsung</small>
+            </span>
+            <span class="arrow">➜</span>
+          </button>
+
+          <button class="service-card" data-service="Suntik Followers Sosmed">
+            <span class="service-emoji">👥</span>
+            <span class="service-copy">
+              <strong>Suntik Followers Sosmed</strong>
+              <small>Mulai dari Rp 5.000</small>
+            </span>
+            <span class="arrow">➜</span>
+          </button>
+
+          <button class="service-card" data-service="Top Up Game (MLBB, FF, PUBG)">
+            <span class="service-emoji">🎮</span>
+            <span class="service-copy">
+              <strong>Top Up Game (MLBB, FF, PUBG)</strong>
+              <small>Harga Bersaing & Layanan Cepat</small>
+            </span>
+            <span class="arrow">➜</span>
+          </button>
         </section>
+      </section>
 
-        <!-- ================= HALAMAN RIWAYAT ================= -->
-        <section id="page-riwayat" class="page-content">
-            <div class="box-riwayat-wrapper">
-                <div class="header-riwayat">
-                    <span class="icon-riwayat">📋</span>
-                    <h2>RIWAYAT TRANSAKSI</h2>
-                </div>
-                
-                <!-- Tempat daftar transaksi akan di-render otomatis oleh JavaScript -->
-                <div id="daftar-riwayat-konten">
-                    <p class="status-kosong">🔸 Belum ada riwayat pesanan.</p>
-                </div>
-            </div>
+      <section class="store-page history-page" id="historyPage">
+        <section class="info-panel">
+          <h2>🧾 RIWAYAT TRANSAKSI</h2>
+          <div id="historyList">
+            <p>📂 Belum ada riwayat pesanan.</p>
+          </div>
         </section>
+      </section>
 
-        <!-- ================= HALAMAN PROFIL ================= -->
-        <section id="page-profil" class="page-content">
-            <div class="profile-section">
-                <div class="profile-avatar"></div>
-                <h2>Pengguna Setia</h2>
-                <p>danzzcustomer@gmail.com</p>
-            </div>
+      <section class="store-page profile-page" id="profilePage">
+        <section class="info-panel profile-panel">
+          <h2>👤 PROFIL TOKO</h2>
+          <h3>DANZZCENZZ-STORE</h3>
+          <p>Status Akun: <strong class="verified">Verified Partner</strong></p>
+          <div class="dash"></div>
+          <p>Terima kasih telah mempercayai layanan digital kami!</p>
         </section>
-
-        <!-- ================= MODAL KONFIRMASI PEMBAYARAN ================= -->
-        <div id="modal-pembayaran" class="modal-overlay">
-            <div class="modal-box">
-                <h3>Konfirmasi Pembayaran</h3>
-                <p id="modal-detail-produk">Apakah Anda ingin mengonfirmasi pembayaran untuk produk ini?</p>
-                <div class="modal-actions">
-                    <button class="btn-batal" onclick="tutupModal()">Batal</button>
-                    <button class="btn-konfirmasi" onclick="prosesKonfirmasiPembayaran()">Konfirmasi</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= BOTTOM NAVIGATION BAR ================= -->
-        <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchPage('beranda', this)">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">Beranda</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('riwayat', this)">
-                <span class="nav-icon">⏱️</span>
-                <span class="nav-label">Riwayat</span>
-            </button>
-            <button class="nav-item" onclick="switchPage('profil', this)">
-                <span class="nav-icon">👤</span>
-                <span class="nav-label">Profil</span>
-            </button>
-        </nav>
-
+      </section>
     </div>
 
-    <script src="script.js"></script>
+    <nav class="bottom-nav">
+      <a href="#homePage" id="homeNav" class="selected">🏠 Beranda</a>
+      <a href="#historyPage" id="historyNav">⏱️ Riwayat</a>
+      <a href="#profilePage" id="profileNav">👤 Profil</a>
+    </nav>
+  </main>
+
+  <div id="channelBackdrop" class="channel-backdrop hidden"></div>
+
+  <aside id="channelWidget" class="channel-widget hidden">
+    <button id="closeChannelWidget" class="channel-close" type="button">×</button>
+
+    <div class="channel-magazine-head">
+      <span>UNDANGAN EKSKLUSIF</span>
+      <span class="channel-active">● ACTIVE</span>
+    </div>
+
+    <div class="channel-dash"></div>
+
+    <div class="channel-content">
+      <div class="channel-wa-icon">☏</div>
+
+      <div class="channel-copy">
+        <h2>Gabung Channel<br>WhatsApp</h2>
+        <p>MASUK CHANNEL UNTUK<br>INFORMASI UPDATE, DLL.</p>
+      </div>
+    </div>
+
+    <a
+      class="channel-join"
+      href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
+      target="_blank"
+      rel="noopener"
+    >
+      ☏ MASUK CHANNEL
+    </a>
+  </aside>
+
+  <main id="payment" class="page salted-bg hidden">
+    <button id="backHome" class="back-btn">← Kembali ke toko</button>
+
+    <section class="payment-card">
+      <span class="eyebrow">DANZZCENZZ-STORE • PEMBAYARAN</span>
+
+      <h1>Scan QRIS untuk Membayar</h1>
+
+      <p id="selectedService" class="selected-service">
+        Layanan pilihan Anda
+      </p>
+
+      <div id="servicePrice" class="service-price">
+        Harga: Rp 5.000
+      </div>
+
+      <img
+        class="qris-image"
+        src="https://i.imgur.com/QpNpbLx.jpeg"
+        alt="QRIS pembayaran DANZZ STORE"
+      >
+
+      <div class="alternative-payment">
+        <p>Alternatif No. Rekening / Dana / E-Wallet:</p>
+        <strong>081284867763</strong>
+      </div>
+
+      <div class="payment-warning">
+        <strong>⚠️ PENTING</strong>
+        <p>
+          Pastikan nominal dan nama merchant sudah benar sebelum membayar.
+          Simpan bukti pembayaran untuk konfirmasi.
+        </p>
+      </div>
+
+      <a
+        id="confirmPayment"
+        class="btn confirm-btn"
+        href="#"
+        target="_blank"
+        rel="noopener"
+      >
+        ✓ KONFIRMASI PEMBAYARAN VIA WHATSAPP
+      </a>
+
+      <p class="tiny-note">
+        Setelah membayar, tekan tombol konfirmasi untuk mengirim detail pesanan ke admin.
+      </p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
