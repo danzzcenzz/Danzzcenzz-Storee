@@ -129,4 +129,4 @@ horizontalPages.addEventListener('scroll', () => {
   }
 }, {passive:true});
 
-openingTimer = setTimeout(showInvite, 3000);
+openingTimer = setTimeout(showHome, 3000);
