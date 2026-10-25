@@ -29,15 +29,12 @@ html {
 }
 
 body {
-    min-height: 100vh;
-    font-family: "Segoe UI", Arial, sans-serif;
-    color: var(--black);
-    background-color: #b9c4c1;
-    background-image:
-        linear-gradient(to right, #00000012 1px, transparent 1px),
-        linear-gradient(to bottom, #00000012 1px, transparent 1px);
-    background-size: 25px 25px;
-    overflow-x: hidden;
+min-height: 100vh;
+font-family: "Segoe UI", Arial, sans-serif;
+color: var(--black);
+background: linear-gradient(135deg, #a3e4d7 0%, #d5f5ef 50%, #a3e4d7 100%);
+background-attachment: fixed;
+overflow-x: hidden;
 }
 
 button,
@@ -62,17 +59,13 @@ button {
 ========================================= */
 
 #loading-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: var(--mint);
-    background-image:
-        linear-gradient(to right, #0000000d 1px, transparent 1px),
-        linear-gradient(to bottom, #0000000d 1px, transparent 1px);
-    background-size: 25px 25px;
+position: fixed;
+inset: 0;
+z-index: 10000;
+display: flex;
+flex-direction: column;
+align-items: center;
+background: linear-gradient(135deg, #a3e4d7 0%, #d5f5ef 50%, #a3e4d7 100%);
 }
 
 #loading-screen[hidden] {
