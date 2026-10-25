@@ -113,48 +113,51 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // BERPINDAH DARI OPENING KE BERANDA
-    function showHome() {
+function showHome() {
+    clearTimeout(openingTimer);
+
+    if (opening) {
+        opening.classList.add('hidden');
+        opening.classList.remove('leaving');
+        opening.style.display = 'none';
+    }
+
+    if (payment) {
+        payment.classList.add('hidden');
+        payment.style.display = 'none';
+    }
+
+    if (home) {
+        home.classList.remove('hidden');
+        home.style.display = '';
+    }
+
+    closeChannelPopup();
+    window.scrollTo(0, 0);
+}
+
+// LANJUT KE BERANDA DENGAN POPUP CHANNEL
+function showInvite() {
+    showHome();
+    openChannelPopup();
+}
+
+// TOMBOL SKIP
+const skipBtn = document.getElementById('skipBtn');
+
+if (skipBtn) {
+    skipBtn.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
         clearTimeout(openingTimer);
-
-        if (opening) {
-            opening.classList.add('hidden');
-            opening.classList.remove('leaving');
-
-            opening.style.display = 'none';
-        }
-
-        if (payment) {
-            payment.classList.add('hidden');
-            payment.style.display = 'none';
-        }
-
-        if (home) {
-            home.classList.remove('hidden');
-            home.style.display = '';
-        }
-
-        closeChannelPopup();
-
-        window.scrollTo(0, 0);
-    }
-
-    // LANJUT KE BERANDA DENGAN POPUP CHANNEL
-    function showInvite() {
-        showHome();
-        openChannelPopup();
-    }
-
-    // TOMBOL SKIP
-    const skipBtn = document.getElementById('skipBtn');
-
-    if (skipBtn) {
-        skipBtn.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            showInvite();
-        });
-    }
+        showInvite();
+    });
+} else {
+    console.error(
+        'Tombol SKIP tidak ditemukan. Periksa id="skipBtn" di HTML.'
+    );
+}
 
     // TOMBOL TUTUP POPUP
     const closeChannelWidget = document.getElementById('closeChannelWidget');
