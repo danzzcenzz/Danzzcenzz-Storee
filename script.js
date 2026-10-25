@@ -40,9 +40,37 @@ function showPayment(service) {
   payment.classList.remove('hidden');
   document.getElementById('selectedService').textContent = 'Pesanan: ' + service;
   const message = `Halo min, saya mau order ${service}. Saya akan mengirim bukti pembayaran QRIS. Mohon diproses ya.`;
-  document.getElementById('confirmPayment').href = 'https://wa.me/62882000379621?text=' + encodeURIComponent(message);
+  const confirmLink = document.getElementById('confirmPayment');
+  confirmLink.href = 'https://wa.me/62882000379621?text=' + encodeURIComponent(message);
+  confirmLink.dataset.service = service;
   window.scrollTo(0, 0);
 }
+
+// Riwayat lokal: pesanan tercatat saat pengguna menekan tombol konfirmasi.
+const HISTORY_KEY = 'danzzcenzz_transactions_v1';
+function readTransactions() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch (_) { return []; }
+}
+function renderTransactions() {
+  const panel = document.querySelector('#historyPage .info-panel');
+  if (!panel) return;
+  const items = readTransactions();
+  panel.innerHTML = '<h2>🧾 RIWAYAT TRANSAKSI</h2>' + (items.length ? items.map(item =>
+    `<article class="transaction-item"><strong>${escapeHTML(item.service)}</strong><p>💰 ${escapeHTML(item.price)} · <span class="transaction-status">Menunggu konfirmasi</span></p><small>${escapeHTML(item.date)}</small></article>`
+  ).join('') : '<p>📂 Belum ada riwayat pesanan.</p>');
+}
+function escapeHTML(value) {
+  return String(value).replace(/[&<>\"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+}
+document.getElementById('confirmPayment').addEventListener('click', () => {
+  const link = document.getElementById('confirmPayment');
+  const service = link.dataset.service || 'Pesanan';
+  const items = readTransactions();
+  items.unshift({service, price:'Rp 5.000', date:new Date().toLocaleString('id-ID'), status:'Menunggu konfirmasi'});
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, 50))); } catch (_) {}
+  renderTransactions();
+});
+renderTransactions();
 
 document.getElementById('skipBtn').addEventListener('click', showInvite);
 document.querySelectorAll('.service-card').forEach(button => button.addEventListener('click', () => showPayment(button.dataset.service)));
@@ -74,49 +102,5 @@ horizontalPages.addEventListener('scroll', () => {
     navLinks.forEach((link, i) => link.classList.toggle('selected', i === idx));
   }
 }, {passive:true});
-
-
-// Riwayat transaksi disimpan pada browser pengguna (localStorage).
-const historyContainer = document.getElementById('transactionHistory');
-const HISTORY_KEY = 'danzzcenzz_transaction_history_v1';
-function loadTransactions() {
-  try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
-  catch (error) { return []; }
-}
-function renderTransactions() {
-  if (!historyContainer) return;
-  const transactions = loadTransactions();
-  if (!transactions.length) {
-    historyContainer.innerHTML = '<p>📂 Belum ada riwayat pesanan.</p>';
-    return;
-  }
-  historyContainer.innerHTML = transactions.map(item => `
-    <article class="transaction-item">
-      <div class="transaction-item-head"><strong>${escapeHTML(item.service)}</strong><span class="transaction-status">${escapeHTML(item.status)}</span></div>
-      <p><strong>ID:</strong> ${escapeHTML(item.id)}</p>
-      <p><strong>Tanggal:</strong> ${escapeHTML(item.date)}</p>
-      <p><strong>Pembayaran:</strong> ${escapeHTML(item.payment)}</p>
-    </article>
-  `).join('');
-}
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-}
-function recordTransaction() {
-  const service = document.getElementById('selectedService').textContent.replace(/^Pesanan:\s*/, '');
-  const transaction = {
-    id: 'DZ' + Date.now().toString().slice(-8),
-    service,
-    date: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
-    status: 'Menunggu verifikasi admin',
-    payment: 'Konfirmasi dikirim via WhatsApp'
-  };
-  const transactions = loadTransactions();
-  transactions.unshift(transaction);
-  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(transactions.slice(0, 100))); } catch (error) {}
-  renderTransactions();
-}
-renderTransactions();
-document.getElementById('confirmPayment').addEventListener('click', recordTransaction);
 
 openingTimer = setTimeout(showInvite, 3000);
