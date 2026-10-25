@@ -198,3 +198,107 @@ button{cursor:pointer}
 .channel-close{right:-17px!important;top:-19px!important;width:68px!important;height:68px!important;border:4px solid #080808!important;border-radius:50%!important;background:#ff3169!important;font-size:40px!important;line-height:1!important;box-shadow:4px 4px 0 #080808!important}
 @media(max-width:420px){.channel-widget{width:calc(100vw - 76px)!important;padding:48px 16px 24px!important;border-radius:27px!important}.channel-magazine-head{padding:0 57px 0 6px!important;font-size:10px!important;letter-spacing:.7px!important}.channel-active{padding:6px 9px!important;font-size:10px!important}.channel-dash{margin:20px 6px 25px!important}.channel-content{gap:14px!important;padding:0 6px!important}.channel-wa-icon{flex-basis:58px!important;width:58px!important;height:58px!important}.channel-copy h2{font-size:clamp(20px,5.2vw,26px)!important;margin:6px 0 12px!important}.channel-copy p{font-size:clamp(13px,3.3vw,16px)!important;line-height:1.6!important}.channel-widget>.channel-join{width:calc(100% - 12px)!important;margin:42px 6px 0!important;min-height:72px!important;font-size:clamp(15px,4vw,19px)!important;letter-spacing:1.3px!important;padding:13px 6px!important}.channel-widget>.channel-join svg{width:25px!important;height:25px!important;flex-basis:25px!important}.channel-close{right:-18px!important;top:-20px!important;width:65px!important;height:65px!important;font-size:38px!important}}
 @media(max-width:360px){.channel-widget{width:calc(100vw - 66px)!important;padding-left:12px!important;padding-right:12px!important}.channel-content{gap:10px!important}.channel-wa-icon{flex-basis:48px!important;width:48px!important;height:48px!important}.channel-wa-icon svg{width:33px!important;height:33px!important}.channel-copy h2{font-size:19px!important}.channel-copy p{font-size:12px!important}.channel-close{width:58px!important;height:58px!important;font-size:34px!important}}
+
+/* ===== KARTU PRODUK VIDEO VIRAL ===== */
+.product-grid {
+display: grid;
+grid-template-columns: repeat(2, minmax(0, 1fr));
+gap: 12px;
+width: 100%;
+padding: 12px;
+box-sizing: border-box;
+}
+
+.product-card {
+min-width: 0;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+padding: 10px;
+border-radius: 14px;
+background: linear-gradient(145deg, #111b2c, #07111f);
+border: 1px solid rgba(0, 220, 255, 0.35);
+box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+box-sizing: border-box;
+}
+
+.product-card img {
+display: block;
+width: 100%;
+aspect-ratio: 1 / 1;
+object-fit: cover;
+border-radius: 10px;
+}
+
+.product-card h3 {
+margin: 9px 0 5px;
+font-size: 14px;
+line-height: 1.4;
+font-weight: 600;
+color: #ffffff;
+overflow-wrap: anywhere;
+}
+
+.product-price {
+margin: 0 0 10px;
+font-size: 13px;
+line-height: 1.4;
+font-weight: 600;
+color: #00e5ff;
+}
+
+.buy-button {
+width: 100%;
+min-height: 36px;
+margin-top: auto;
+padding: 8px 10px;
+border: none;
+border-radius: 9px;
+background: linear-gradient(90deg, #00c8e8, #008cff);
+color: #ffffff;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+}
+
+.buy-button:active {
+transform: scale(0.97);
+}
+
+/* Area produk bisa digulir ke bawah */
+#homePage {
+box-sizing: border-box;
+min-width: 100%;
+overflow-x: hidden;
+}
+
+#homePage .product-grid {
+flex-shrink: 0;
+}
+
+/* Ukuran teks tetap sedang di HP */
+@media (max-width: 480px) {
+.product-grid {
+gap: 9px;
+padding: 10px;
+}
+
+.product-card {
+padding: 8px;
+border-radius: 12px;
+}
+
+.product-card h3 {
+font-size: 13px;
+}
+
+.product-price {
+font-size: 12px;
+}
+
+.buy-button {
+min-height: 34px;
+padding: 7px;
+font-size: 12px;
+}
+}
