@@ -11,7 +11,7 @@
   <section id="opening" class="opening salted-bg" aria-label="Opening">
     <button id="skipBtn" class="skip-btn">SKIP ⏭</button>
     <div class="opening-content">
-      <div class="logo-ring"><img class="brand-logo" src="https://i.imgur.com/DLTy3wp.png" alt="Logo DZ DANZZCENZZ STORE"></div>
+      <div class="logo-ring"><img class="brand-logo" src="https://i.imgur.com/YEiVvJp.png" alt="Logo DZ DANZZCENZZ STORE"></div>
       <h1>DANZZCENZZ-STORE</h1>
       <p class="tagline">PUSAT TOP UP & LAYANAN DIGITAL</p>
       <div class="loading-card">
@@ -22,22 +22,10 @@
     </div>
   </section>
 
-  <div id="inviteOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="inviteTitle">
-    <div class="invite-card">
-      <button id="closeInvite" class="close-btn" aria-label="Tutup">×</button>
-      <div class="invite-top"><span>UNDANGAN EKSKLUSIF</span><span class="active-pill">● ACTIVE</span></div>
-      <div class="dash"></div>
-      <div class="invite-info">
-        <div class="wa-icon" aria-label="WhatsApp"><svg viewBox="0 0 32 32" role="img" aria-hidden="true"><path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/><path d="M11.1 9.8c-.5 0-1 .2-1.3.7-.5.5-1.2 1.3-1.2 3.1s1.2 3.6 1.4 3.9c.2.3 2.4 3.8 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.4-.3-.9-.6l-2.2-1.1c-.3-.1-.6-.2-.8.2l-1 1.2c-.2.3-.4.3-.8.1a9.8 9.8 0 0 1-2.9-1.8 10.8 10.8 0 0 1-2-2.5c-.2-.4 0-.6.1-.8l.7-.8c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7l-1-2.3c-.3-.6-.6-.6-.9-.6Z" fill="white"/></svg></div>
-        <div><h2 id="inviteTitle">Gabung Channel WhatsApp</h2><p>Masuk channel untuk informasi update, promo, dan lainnya.</p></div>
-      </div>
-      <a class="btn green-btn" href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W" target="_blank" rel="noopener"><svg class="wa-btn-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M11.1 9.8c-.5 0-1 .2-1.3.7-.5.5-1.2 1.3-1.2 3.1s1.2 3.6 1.4 3.9c.2.3 2.4 3.8 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.4-.3-.9-.6l-2.2-1.1c-.3-.1-.6-.2-.8.2l-1 1.2c-.2.3-.4.3-.8.1a9.8 9.8 0 0 1-2.9-1.8 10.8 10.8 0 0 1-2-2.5c-.2-.4 0-.6.1-.8l.7-.8c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7l-1-2.3c-.3-.6-.6-.6-.9-.6Z" fill="currentColor"/></svg> MASUK CHANNEL</a>
-    </div>
-  </div>
 
   <main id="home" class="page salted-bg hidden">
     <header class="store-header">
-      <img class="brand-logo small-logo" src="https://i.imgur.com/DLTy3wp.png" alt="Logo DZ DANZZCENZZ STORE">
+      <img class="brand-logo small-logo" src="https://i.imgur.com/YEiVvJp.png" alt="Logo DZ DANZZCENZZ STORE">
       <h1>@danzzcenzz.store</h1>
       <p>⚡ Pusat Top Up & Layanan Digital Terpercaya dengan Gaya Pop Art ⚡</p>
     </header>
@@ -77,52 +65,19 @@
       <a href="#homePage" id="homeNav" class="selected">🏠 Beranda</a><a href="#historyPage" id="historyNav">⏱️ Riwayat</a><a href="#profilePage" id="profileNav">👤 Profil</a>
     </nav>
   </main>
-  <aside id="channelWidget" class="channel-widget hidden" aria-label="WhatsApp Channel">
-    <button id="closeChannelWidget" class="channel-close" type="button" aria-label="Tutup jendela">×</button>
-    <div class="channel-magazine-head"><span>UNDANGAN EKSKLUSIF</span><span class="channel-active">● ACTIVE</span></div>
+  <div id="channelBackdrop" class="channel-backdrop hidden" aria-hidden="true"></div>
+  <aside id="channelWidget" class="channel-widget hidden" aria-label="Undangan Channel WhatsApp" role="dialog" aria-modal="true">
+    <button id="closeChannelWidget" class="channel-close" type="button" aria-label="Tutup">×</button>
+    <div class="channel-magazine-head"><span>UNDANGAN EKSKLUSIF</span><span class="channel-active"><i></i> ACTIVE</span></div>
     <div class="channel-dash"></div>
-    <div id="channelSlides" class="channel-slides" aria-live="polite">
-      <article class="channel-slide active">
-        <span class="channel-big-icon">💬</span>
-        <p class="channel-kicker">WHATSAPP CHANNEL</p>
-        <h2>INFO UPDATE TOKO</h2>
-        <p>Dapatkan informasi update, promo, dan kabar terbaru DANZZCENZZ-STORE.</p>
-      </article>
-      <article class="channel-slide">
-        <span class="channel-big-icon">⚡</span>
-        <p class="channel-kicker">UPDATE CEPAT</p>
-        <h2>JANGAN KETINGGALAN</h2>
-        <p>Geser halaman ini ke kiri atau kanan seperti majalah untuk melihat informasi berikutnya.</p>
-      </article>
-      <article class="channel-slide">
-        <span class="channel-big-icon">🟢</span>
-        <p class="channel-kicker">SIAP BERGABUNG?</p>
-        <h2>MASUK CHANNEL</h2>
-        <p>Klik tombol di bawah untuk membuka Channel WhatsApp resmi toko.</p>
-        <a class="channel-join" href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W" target="_blank" rel="noopener">MASUK CHANNEL ↗</a>
-      </article>
-    </div>
-    <div class="channel-controls">
-      <button id="channelPrev" type="button" disabled>← SEBELUMNYA</button>
-      <span id="channelCount">01 / 03</span>
-      <button id="channelNext" type="button">BERIKUTNYA →</button>
-    </div>
-  </aside>
-  <button id="openChannelWidget" class="channel-launcher hidden" type="button" aria-label="Buka WhatsApp Channel"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16 2.7A13.1 13.1 0 0 0 4.8 22.6L3 29l6.6-1.7A13.1 13.1 0 1 0 16 2.7Zm0 23.8c-2 0-3.9-.5-5.6-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.4 10.4 0 1 1 16 26.5Zm5.7-7.8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.5 8.5 0 0 1-2.5-1.5 9.4 9.4 0 0 1-1.7-2.1c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.1c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4s-1.1 1.1-1.1 2.6 1.1 3 1.3 3.2a12 12 0 0 0 4.6 4c.6.3 1.1.5 1.5.6.6.2 1.2.2 1.7.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4s-.3-.2-.6-.4Z"/></svg></button>
-
-  <div id="magazineOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Info DANZZCENZZ-STORE">
-    <div class="magazine-card">
-      <button id="closeMagazine" class="close-btn" aria-label="Tutup">×</button>
-      <div class="magazine-kicker">DANZZCENZZ-STORE <span id="magazineCount">01 / 03</span></div>
-      <div class="magazine-pages" id="magazinePages">
-        <article class="magazine-page active"><span class="magazine-icon">🩵</span><p class="magazine-label">WELCOME</p><h2>SELAMAT DATANG!</h2><p>Temukan layanan digital pilihanmu dengan mudah.</p></article>
-        <article class="magazine-page"><span class="magazine-icon">⚡</span><p class="magazine-label">LAYANAN</p><h2>CEPAT & PRAKTIS</h2><p>Pilih layanan di halaman utama untuk melihat detail pesanan.</p></article>
-        <article class="magazine-page"><span class="magazine-icon">💬</span><p class="magazine-label">BUTUH BANTUAN?</p><h2>HUBUNGI ADMIN</h2><p>Gunakan tombol WhatsApp untuk melanjutkan pesanan dan konfirmasi.</p></article>
+    <div class="channel-content">
+      <div class="channel-wa-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M11.1 9.8c-.5 0-1 .2-1.3.7-.5.5-1.2 1.3-1.2 3.1s1.2 3.6 1.4 3.9c.2.3 2.4 3.8 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.4-.3-.9-.6l-2.2-1.1c-.3-.1-.6-.2-.8.2l-1 1.2c-.2.3-.4.3-.8.1a9.8 9.8 0 0 1-2.9-1.8 10.8 10.8 0 0 1-2-2.5c-.2-.4 0-.6.1-.8l.7-.8c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7l-1-2.3c-.3-.6-.6-.6-.9-.6Z" fill="currentColor"/></svg>
       </div>
-      <div class="magazine-controls"><button id="magazinePrev" type="button" disabled>← SEBELUMNYA</button><button id="magazineNext" type="button">BERIKUTNYA →</button></div>
-      <button id="magazineDone" class="magazine-done" type="button">MULAI BELANJA</button>
+      <div class="channel-copy"><h2>Gabung Channel<br>WhatsApp</h2><p>MASUK CHANNEL UNTUK<br>INFORMASI UPDATE, DLL.</p></div>
     </div>
-  </div>
+    <a class="channel-join" href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M11 10c-.7 1-.7 2.7.7 4.8s3.2 3.7 5.4 4.4c1 .3 2.4-.4 2.8-1.3l-3-1.5-1.2 1.1c-1.5-.6-2.7-1.8-3.3-3.1l1-1.2-1.4-3.1Z" fill="currentColor"/></svg> MASUK CHANNEL</a>
+  </aside>
 
   <main id="payment" class="page salted-bg hidden">
     <button id="backHome" class="back-btn">← Kembali ke toko</button>
@@ -130,7 +85,7 @@
       <span class="eyebrow">DANZZCENZZ-STORE • PEMBAYARAN</span>
       <h1>Scan QRIS untuk Membayar</h1>
       <p id="selectedService" class="selected-service">Layanan pilihan Anda</p>
-      <img class="qris-image" src="https://i.imgur.com/aTuLGpR.jpeg" alt="QRIS pembayaran DANZZCENZZ-STORE">
+      <img class="qris-image" src="https://i.imgur.com/YEiVvJp.png" alt="QRIS pembayaran DANZZCENZZ-STORE">
       <div class="payment-warning"><strong>⚠️ PENTING</strong><p>Pastikan nominal dan nama merchant sudah benar sebelum membayar. Simpan bukti pembayaran untuk konfirmasi.</p></div>
       <a id="confirmPayment" class="btn confirm-btn" href="#" target="_blank" rel="noopener">✓ KONFIRMASI PEMBAYARAN VIA WHATSAPP</a>
       <p class="tiny-note">Setelah membayar, tekan tombol konfirmasi untuk mengirim detail pesanan ke admin.</p>
