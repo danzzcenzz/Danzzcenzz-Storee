@@ -1,337 +1,314 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#a3e4d7">
-    <meta name="description" content="DANZZCENZZ-STORE - Pusat layanan digital, order video, followers, dan top up game.">
-    <title>DANZZCENZZ-STORE</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#a3e4d7">
+<meta name="description" content="DANZZCENZZ-STORE - Layanan digital dan pemesanan video.">
+<title>DANZZCENZZ-STORE</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
-<body>
-
-    <!-- OPENING LOADING -->
-    <div id="loading-screen">
-        <div class="top-bar">
-            <button type="button" class="btn-skip" id="skip-btn">
-                SKIP &gt;
-            </button>
-        </div>
-
-        <div class="main-content">
-            <div class="spinner-loader"></div>
-
-            <h1 class="store-name-title">DANZZCENZZ-STORE</h1>
-
-            <div class="loading-box">
-                <span>MOHON TUNGGU SEBENTAR</span>
-                <span>SEDANG LOADING<span class="pulse-dot">...</span></span>
-            </div>
+<body><!-- OPENING --><div id="loading-screen">
+    <div class="top-bar">
+        <button id="skip-btn" class="btn-skip">SKIP &gt;</button>
+    </div>
+    <div class="main-content">
+        <div class="spinner-loader"></div>
+        <h1 class="store-name-title">DANZZCENZZ-STORE</h1>
+        <div class="loading-box">
+            <span>MOHON TUNGGU SEBENTAR</span>
+            <span>SEDANG LOADING<span class="pulse-dot">...</span></span>
         </div>
     </div>
+</div><!-- WEBSITE --><main id="store-container" hidden><!-- BERANDA -->
+<section id="tab-beranda" class="tab-content">
+    <div class="store-avatar-box">DZ</div>
+    <h2 class="store-username">@danzzcenzz.store</h2>
+    <p class="store-bio">⚡ Pusat Top Up &amp; Layanan Digital ⚡</p>
 
-    <!-- KONTEN WEBSITE -->
-    <main id="store-container" class="hidden" hidden>
+    <div class="list-container">
 
-        <!-- BERANDA -->
-        <section id="tab-beranda" class="tab-content active-tab">
-            <div class="store-avatar-box">DZ</div>
+        <button class="product-item-link" data-order="video">
+            <span class="product-icon-frame">🚀</span>
+            <span class="product-text-details">
+                <span class="prod-title">Order Video Khusus</span>
+                <span class="prod-price">Harga sesuai pesanan</span>
+            </span>
+            <span class="arrow-indicator">➜</span>
+        </button>
 
-            <h2 class="store-username">@danzzcenzz.store</h2>
+        <a class="product-item-link"
+           href="https://wa.me/62882000379621?text=Min%20mau%20order%20followers">
+            <span class="product-icon-frame">👥</span>
+            <span class="product-text-details">
+                <span class="prod-title">Layanan Followers Sosmed</span>
+                <span class="prod-price">Mulai dari Rp5.000</span>
+            </span>
+            <span class="arrow-indicator">➜</span>
+        </a>
 
-            <p class="store-bio">
-                ⚡ Pusat Top Up &amp; Layanan Digital ⚡
+        <a class="product-item-link"
+           href="https://wa.me/62882000379621?text=Min%20mau%20order%20top%20up%20game">
+            <span class="product-icon-frame">🎮</span>
+            <span class="product-text-details">
+                <span class="prod-title">Top Up Game</span>
+                <span class="prod-price">MLBB, Free Fire, PUBG</span>
+            </span>
+            <span class="arrow-indicator">➜</span>
+        </a>
+    </div>
+
+    <a class="channel-card"
+       href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
+       target="_blank" rel="noopener noreferrer">
+        <span class="channel-icon">✆</span>
+        <span class="channel-text">
+            <strong>CHANNEL WHATSAPP</strong>
+            <span>Informasi update, promo, dan lainnya.</span>
+        </span>
+        <span class="arrow-indicator">➜</span>
+    </a>
+</section>
+
+<!-- RIWAYAT -->
+<section id="tab-riwayat" class="tab-content" hidden>
+    <div class="tab-header-title">📜 RIWAYAT TRANSAKSI</div>
+    <div class="empty-state border-brutal">
+        <span class="empty-icon">📂</span>
+        <p class="empty-text">Riwayat belum tersimpan.</p>
+    </div>
+</section>
+
+<!-- PROFIL -->
+<section id="tab-profil" class="tab-content" hidden>
+    <div class="tab-header-title">👤 PROFIL TOKO</div>
+    <div class="profile-card border-brutal">
+        <h3>DANZZCENZZ STORE</h3>
+        <p>Status toko: <strong>Online</strong></p>
+        <div class="divider-dots"></div>
+        <p>Terima kasih telah mempercayai layanan kami!</p>
+        <a class="profile-contact"
+           href="https://wa.me/62882000379621?text=Min%20mau%20tanya%20layanan">
+            HUBUNGI ADMIN
+        </a>
+    </div>
+</section>
+
+<!-- HALAMAN PEMBAYARAN -->
+<section id="tab-pembayaran" class="tab-content" hidden>
+    <div class="payment-header">
+        <span class="payment-header-icon">💳</span>
+        <h2>PEMBAYARAN</h2>
+        <p>DANZZCENZZ-STORE</p>
+    </div>
+
+    <div class="payment-card border-brutal">
+        <span class="payment-label">PESANAN KAMU</span>
+        <h3 id="payment-product">Order Video Khusus</h3>
+
+        <!-- Ubah teks harga ini jika diperlukan -->
+        <div class="price-box">
+            <span>Total pembayaran</span>
+            <strong id="payment-price">Sesuai Pesanan</strong>
+        </div>
+
+        <div class="payment-divider"></div>
+
+        <h3 class="qris-title">SCAN QRIS UNTUK MEMBAYAR</h3>
+        <p class="qris-description">
+            Buka aplikasi pembayaran yang mendukung QRIS, lalu pindai kode di bawah.
+        </p>
+
+        <div class="qris-frame">
+            <img
+                src="https://i.imgur.com/PrxQ7HA.jpeg"
+                alt="QRIS pembayaran DANZZCENZZ-STORE"
+                class="qris-image"
+                loading="lazy">
+        </div>
+
+        <div class="payment-notice">
+            <strong>⚠️ PERHATIAN</strong>
+            <p>
+                Pastikan nominal pembayaran sudah sesuai dengan instruksi admin.
+                Periksa nama penerima sebelum membayar.
             </p>
+        </div>
 
-            <div class="list-container">
+        <div class="payment-steps">
+            <h4>CARA PEMBAYARAN</h4>
+            <p>① Simpan atau screenshot QRIS jika diperlukan.</p>
+            <p>② Buka aplikasi pembayaran kamu.</p>
+            <p>③ Pindai QRIS dan periksa detail pembayaran.</p>
+            <p>④ Selesaikan pembayaran, lalu konfirmasi kepada admin.</p>
+        </div>
 
-                <!-- ORDER VIDEO -->
-                <a href="https://wa.me/62882000379621?text=min%20mau%20order%20video%20"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="product-item-link">
+        <a id="confirm-payment"
+           class="btn-confirm"
+           href="https://wa.me/62882000379621?text=Halo%20min%2C%20saya%20sudah%20bayar%20pesanan%20di%20DANZZCENZZ-STORE.%20Tolong%20cek%20pembayaran%20saya."
+           target="_blank"
+           rel="noopener noreferrer">
+            <span>✓</span>
+            SAYA SUDAH BAYAR
+            <small>CEK STATUS VIA WHATSAPP</small>
+        </a>
 
-                    <div class="product-icon-frame">🚀</div>
+        <button class="btn-back" data-tab="beranda">
+            ← KEMBALI KE BERANDA
+        </button>
 
-                    <div class="product-text-details">
-                        <span class="prod-title">Order Video Khusus</span>
-                        <span class="prod-price">Hubungi Admin Langsung</span>
-                    </div>
+        <p class="payment-footer">
+            Pembayaran akan diperiksa oleh admin. Tombol konfirmasi tidak memverifikasi pembayaran secara otomatis.
+        </p>
+    </div>
+</section>
 
-                    <span class="arrow-indicator">➜</span>
-                </a>
+<!-- NAVIGASI -->
+<nav class="bottom-nav" aria-label="Navigasi utama">
+    <button class="nav-item active" data-tab="beranda">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Beranda</span>
+    </button>
+    <button class="nav-item" data-tab="riwayat">
+        <span class="nav-icon">⏱️</span>
+        <span class="nav-label">Riwayat</span>
+    </button>
+    <button class="nav-item" data-tab="profil">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profil</span>
+    </button>
+</nav>
 
-                <!-- FOLLOWERS -->
-                <a href="https://wa.me/62882000379621?text=Min%20mau%20order%20followers"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="product-item-link">
+</main><!-- POPUP CHANNEL --><div id="wa-popup" class="popup-overlay" hidden>
+    <div class="popup-card" role="dialog" aria-modal="true">
+        <button id="close-popup" class="close-btn" aria-label="Tutup">×</button>    <div class="popup-header">
+        <span class="sub-title">UNDANGAN EKSKLUSIF</span>
+        <span class="status-badge">
+            <span class="status-dot"></span> ACTIVE
+        </span>
+    </div>
 
-                    <div class="product-icon-frame">👥</div>
+    <div class="divider-dots"></div>
 
-                    <div class="product-text-details">
-                        <span class="prod-title">Layanan Followers Sosmed</span>
-                        <span class="prod-price">Mulai dari Rp 5.000</span>
-                    </div>
-
-                    <span class="arrow-indicator">➜</span>
-                </a>
-
-                <!-- TOP UP GAME -->
-                <a href="https://wa.me/62882000379621?text=Min%20mau%20order%20top%20up%20game"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="product-item-link">
-
-                    <div class="product-icon-frame">🎮</div>
-
-                    <div class="product-text-details">
-                        <span class="prod-title">Top Up Game</span>
-                        <span class="prod-price">MLBB, Free Fire, PUBG</span>
-                    </div>
-
-                    <span class="arrow-indicator">➜</span>
-                </a>
-
-            </div>
-
-            <!-- TOMBOL CHANNEL -->
-            <a href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="channel-card">
-
-                <div class="channel-icon">✆</div>
-
-                <div class="channel-text">
-                    <strong>CHANNEL WHATSAPP</strong>
-                    <span>Informasi update, promo, dan lainnya.</span>
-                </div>
-
-                <span class="arrow-indicator">➜</span>
-            </a>
-        </section>
-
-        <!-- RIWAYAT -->
-        <section id="tab-riwayat" class="tab-content" hidden>
-            <div class="tab-header-title">📜 RIWAYAT TRANSAKSI</div>
-
-            <div class="empty-state border-brutal">
-                <span class="empty-icon">📂</span>
-                <p class="empty-text">Belum ada riwayat pesanan.</p>
-            </div>
-        </section>
-
-        <!-- PROFIL -->
-        <section id="tab-profil" class="tab-content" hidden>
-            <div class="tab-header-title">👤 PROFIL TOKO</div>
-
-            <div class="profile-card border-brutal">
-                <h3>DANZZCENZZ STORE</h3>
-                <p>Status Toko: <strong>Online</strong></p>
-
-                <div class="divider-dots"></div>
-
-                <p>Terima kasih telah mempercayai layanan kami!</p>
-
-                <a href="https://wa.me/62882000379621?text=Min%20mau%20tanya%20layanan"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="profile-contact">
-                    HUBUNGI ADMIN
-                </a>
-            </div>
-        </section>
-
-        <!-- NAVIGASI BAWAH -->
-        <nav class="bottom-nav" aria-label="Navigasi utama">
-
-            <button type="button"
-                    class="nav-item active"
-                    data-tab="beranda">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">Beranda</span>
-            </button>
-
-            <button type="button"
-                    class="nav-item"
-                    data-tab="riwayat">
-                <span class="nav-icon">⏱️</span>
-                <span class="nav-label">Riwayat</span>
-            </button>
-
-            <button type="button"
-                    class="nav-item"
-                    data-tab="profil">
-                <span class="nav-icon">👤</span>
-                <span class="nav-label">Profil</span>
-            </button>
-
-        </nav>
-    </main>
-
-    <!-- POPUP CHANNEL WHATSAPP -->
-    <div id="wa-popup" class="popup-overlay" hidden>
-        <div class="popup-card"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="popup-title">
-
-            <button type="button"
-                    class="close-btn"
-                    id="close-popup"
-                    aria-label="Tutup popup">×</button>
-
-            <div class="popup-header">
-                <span class="sub-title">UNDANGAN EKSKLUSIF</span>
-
-                <span class="status-badge">
-                    <span class="status-dot"></span>
-                    ACTIVE
-                </span>
-            </div>
-
-            <div class="divider-dots"></div>
-
-            <div class="popup-body">
-                <div class="wa-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                              d="M12 2a10 10 0 0 0-8.66 15L2 22l5.18-1.36A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.08-1.12l-.3-.18-3.08.81.82-3-.2-.31A8 8 0 1 1 12 20zm4.4-5.98c-.24-.12-1.43-.71-1.65-.79-.22-.08-.38-.12-.54.12-.16.24-.62.79-.76.95-.14.16-.28.18-.52.06-.24-.12-1.03-.38-1.96-1.2-.73-.65-1.22-1.45-1.36-1.69-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.4-.54-.41h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.24 1.02.39 1.37.5.58.18 1.1.16 1.51.1.46-.07 1.43-.58 1.63-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/>
-                    </svg>
-                </div>
-
-                <div class="wa-text">
-                    <h3 id="popup-title">Gabung Channel WhatsApp</h3>
-                    <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
-                </div>
-            </div>
-
-            <a href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
-               target="_blank"
-               rel="noopener noreferrer"
-               class="btn-join">
-                <span>➤</span>
-                MASUK CHANNEL
-            </a>
+    <div class="popup-body">
+        <div class="wa-icon">✆</div>
+        <div class="wa-text">
+            <h3>Gabung Channel WhatsApp</h3>
+            <p>MASUK CHANNEL UNTUK INFORMASI UPDATE, DLL.</p>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
-    <script>
-    (() => {
-        "use strict";
+    <a class="btn-join"
+       href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
+       target="_blank" rel="noopener noreferrer">
+        ➤ MASUK CHANNEL
+    </a>
+</div>
 
-        function initWebsite() {
-            const loadingScreen = document.getElementById("loading-screen");
-            const storeContainer = document.getElementById("store-container");
-            const skipButton = document.getElementById("skip-btn");
-            const waPopup = document.getElementById("wa-popup");
-            const closeButton = document.getElementById("close-popup");
+</div><script>
+(() => {
+    "use strict";
 
-            if (!loadingScreen || !storeContainer || !skipButton) {
-                return;
+    const $ = id => document.getElementById(id);
+
+    const loading = $("loading-screen");
+    const store = $("store-container");
+    const skip = $("skip-btn");
+    const popup = $("wa-popup");
+
+    let opened = false;
+    let popupTimer;
+
+    function openWebsite() {
+        if (opened) return;
+        opened = true;
+
+        loading.hidden = true;
+        store.hidden = false;
+        store.classList.add("store-visible");
+
+        popupTimer = setTimeout(() => {
+            if (sessionStorage.getItem("dz-popup-closed") !== "1") {
+                popup.hidden = false;
             }
+        }, 700);
+    }
 
-            let selesai = false;
-            let timerPopup;
+    skip.addEventListener("click", openWebsite);
+    setTimeout(openWebsite, 4000);
 
-            function bukaWebsite() {
-                if (selesai) return;
-                selesai = true;
+    const tabs = document.querySelectorAll(".tab-content");
+    const navButtons = document.querySelectorAll(".nav-item");
 
-                clearTimeout(timerPopup);
+    function showTab(name) {
+        tabs.forEach(tab => {
+            const active = tab.id === "tab-" + name;
+            tab.hidden = !active;
+            tab.classList.toggle("active-tab", active);
+        });
 
-                // Hilangkan opening tanpa bergantung pada animasi.
-                loadingScreen.hidden = true;
-                loadingScreen.style.display = "none";
-
-                // Tampilkan halaman utama.
-                storeContainer.hidden = false;
-                storeContainer.classList.remove("hidden");
-                storeContainer.classList.add("store-visible");
-                storeContainer.style.display = "flex";
-
-                // Popup ditampilkan setelah halaman utama terbuka.
-                timerPopup = setTimeout(() => {
-                    if (waPopup) {
-                        waPopup.hidden = false;
-                    }
-                }, 500);
+        navButtons.forEach(button => {
+            const active = button.dataset.tab === name;
+            button.classList.toggle("active", active);
+            if (active) {
+                button.setAttribute("aria-current", "page");
+            } else {
+                button.removeAttribute("aria-current");
             }
+        });
 
-            // SKIP langsung membuka website.
-            skipButton.addEventListener("click", bukaWebsite);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
-            // Opening otomatis dilewati setelah 4 detik.
-            const loadingTimer = setTimeout(bukaWebsite, 4000);
+    navButtons.forEach(button => {
+        button.addEventListener("click", () => showTab(button.dataset.tab));
+    });
 
-            // Navigasi halaman.
-            const navButtons = document.querySelectorAll(".nav-item");
-            const tabs = document.querySelectorAll(".tab-content");
+    document.querySelectorAll('[data-tab="beranda"]').forEach(button => {
+        button.addEventListener("click", () => showTab("beranda"));
+    });
 
-            function pindahTab(namaTab) {
-                tabs.forEach(tab => {
-                    const aktif = tab.id === "tab-" + namaTab;
-                    tab.hidden = !aktif;
-                    tab.classList.toggle("active-tab", aktif);
-                });
+    // ORDER VIDEO MEMBUKA HALAMAN PEMBAYARAN
+    document.querySelectorAll('[data-order="video"]').forEach(button => {
+        button.addEventListener("click", () => {
+            $("payment-product").textContent = "Order Video Khusus";
+            $("payment-price").textContent = "Sesuai Pesanan";
 
-                navButtons.forEach(button => {
-                    const aktif = button.dataset.tab === namaTab;
-                    button.classList.toggle("active", aktif);
+            const message =
+                "Halo min, saya sudah bayar pesanan video di DANZZCENZZ-STORE. Tolong cek pembayaran saya.";
+            $("confirm-payment").href =
+                "https://wa.me/62882000379621?text=" +
+                encodeURIComponent(message);
 
-                    if (aktif) {
-                        button.setAttribute("aria-current", "page");
-                    } else {
-                        button.removeAttribute("aria-current");
-                    }
-                });
-            }
+            showTab("pembayaran");
+        });
+    });
 
-            navButtons.forEach(button => {
-                button.addEventListener("click", () => {
-                    pindahTab(button.dataset.tab);
-                });
-            });
+    document.querySelectorAll(".btn-back").forEach(button => {
+        button.addEventListener("click", () => showTab(button.dataset.tab));
+    });
 
-            // Tutup popup.
-            function tutupPopup() {
-                if (waPopup) {
-                    waPopup.hidden = true;
-                }
-            }
+    function closePopup() {
+        popup.hidden = true;
+        sessionStorage.setItem("dz-popup-closed", "1");
+        clearTimeout(popupTimer);
+    }
 
-            if (closeButton) {
-                closeButton.addEventListener("click", tutupPopup);
-            }
+    $("close-popup").addEventListener("click", closePopup);
 
-            if (waPopup) {
-                waPopup.addEventListener("click", event => {
-                    if (event.target === waPopup) {
-                        tutupPopup();
-                    }
-                });
-            }
+    popup.addEventListener("click", event => {
+        if (event.target === popup) closePopup();
+    });
 
-            document.addEventListener("keydown", event => {
-                if (event.key === "Escape") {
-                    tutupPopup();
-                }
-            });
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") closePopup();
+    });
 
-            // Pastikan halaman awal benar.
-            pindahTab("beranda");
-        }
+    // QRIS gagal dimuat: beri keterangan yang jelas.
+    document.querySelector(".qris-image").addEventListener("error", event => {
+        event.target.alt = "Gambar QRIS gagal dimuat. Periksa tautan gambar.";
+    });
 
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", initWebsite);
-        } else {
-            initWebsite();
-        }
-    })();
-    </script>
-
-</body>
+    showTab("beranda");
+})();
+</script></body>
 </html>
