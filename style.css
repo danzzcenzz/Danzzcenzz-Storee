@@ -112,3 +112,18 @@ button{cursor:pointer}
 .bottom-nav a{flex:1;text-align:center;border-radius:18px;padding:10px 5px;font-size:12px;background:#fff;}
 .page{padding-bottom:125px}
 @media(max-width:420px){.bottom-nav{left:3%;right:3%;bottom:8px;border-radius:26px}.bottom-nav a{font-size:11px;padding:9px 3px}.opening.leaving{transform:translateY(-105%);}}
+
+/* Revisi 9: halaman horizontal ala majalah + tombol WhatsApp mengambang */
+#home.page{height:100svh;min-height:100svh;overflow:hidden;padding-bottom:115px;display:flex;flex-direction:column}
+#home .store-header{flex:0 0 auto;margin-bottom:12px}
+.horizontal-pages{display:flex;flex:1 1 auto;min-height:0;width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;overscroll-behavior-x:contain;touch-action:pan-x;scrollbar-width:none}
+.horizontal-pages::-webkit-scrollbar{display:none}
+.store-page{flex:0 0 100%;width:100%;min-width:100%;height:100%;overflow-y:auto;overflow-x:hidden;scroll-snap-align:start;padding:6px 4px 18px;scrollbar-width:none}
+.store-page::-webkit-scrollbar{display:none}
+.store-page .service-list{padding:0 3px}
+.store-page .info-panel{margin-top:12px}
+.bottom-nav a.selected{background:#b8e5e8;box-shadow:inset 0 0 0 2px #111}
+.floating-wa{position:fixed;right:17px;bottom:91px;width:58px;height:58px;border:3px solid #080808;border-radius:50%;background:#20d366;color:#fff;display:grid;place-items:center;z-index:8;box-shadow:4px 5px 0 #080808; text-decoration:none}
+.floating-wa svg{width:35px;height:35px}
+#payment:not(.hidden)~.floating-wa{display:none}
+@media(max-width:420px){#home.page{padding-left:12px;padding-right:12px}.store-page{padding-left:1px;padding-right:1px}.floating-wa{width:54px;height:54px;right:14px;bottom:88px}}
