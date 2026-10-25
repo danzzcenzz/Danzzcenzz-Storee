@@ -80,9 +80,17 @@ function showPayment(service) {
   home.classList.add('hidden');
   closeChannelPopup();
   payment.classList.remove('hidden');
-  pendingService = service;\n  document.getElementById('selectedService').textContent = 'Pesanan: ' + service;
+
+  pendingService = service;
+
+  document.getElementById('selectedService').textContent =
+    'Pesanan: ' + service;
+
   const message = `Halo min, saya mau order ${service}. Saya akan mengirim bukti pembayaran QRIS. Mohon diproses ya.`;
-  document.getElementById('confirmPayment').href = 'https://wa.me/62882000379621?text=' + encodeURIComponent(message);
+
+  document.getElementById('confirmPayment').href =
+    'https://wa.me/62882000379621?text=' + encodeURIComponent(message);
+
   window.scrollTo(0, 0);
 }
 
