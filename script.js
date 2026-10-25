@@ -3,102 +3,82 @@ document.addEventListener("DOMContentLoaded", function () {
   const mainContent = document.getElementById("mainContent");
   const skipBtn = document.getElementById("skipBtn");
 
-  const channelPopup = document.getElementById("channelPopup");
   const qrisPopup = document.getElementById("qrisPopup");
   const confirmPopup = document.getElementById("confirmPopup");
 
-  const orderLink =
-    "https://wa.me/62882000379621?text=min%20mau%20order%20video%20";
-
-  const channelLink =
+  const adminNumber = "62882000379621";
+  const channelURL =
     "https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W";
 
-  // OPENING: tombol Skip langsung membuka halaman utama
+  /* OPENING */
   let openingFinished = false;
+  let openingTimer;
 
   function finishOpening() {
     if (openingFinished) return;
 
     openingFinished = true;
-    mainContent.classList.remove("hidden");
-    opening.classList.add("fade-out");
+    clearTimeout(openingTimer);
 
-    window.setTimeout(function () {
-      opening.classList.add("hidden");
-    }, 450);
+    // Sembunyikan opening secara langsung.
+    opening.classList.add("hide");
+    opening.style.display = "none";
+
+    // Pastikan halaman utama terlihat.
+    mainContent.classList.remove("hidden");
+    mainContent.style.removeProperty("display");
+
+    // Bersihkan inline display jika ada aturan lama.
+    mainContent.style.opacity = "1";
+
+    window.scrollTo(0, 0);
   }
 
+  // Tombol Skip.
   skipBtn.addEventListener("click", finishOpening);
 
-  // Otomatis membuka halaman utama setelah 2 detik
-  window.setTimeout(finishOpening, 2000);
+  // Jaga-jaga jika tombol tidak tertekan.
+  openingTimer = setTimeout(finishOpening, 3000);
 
-  // Tombol Home
-  document.getElementById("homeBtn").addEventListener("click", function () {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
+  /* HOME */
+  const homeBtn = document.getElementById("homeBtn");
 
-  // Fungsi membuka dan menutup popup
+  if (homeBtn) {
+    homeBtn.addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  }
+
+  /* POPUP */
   function openPopup(popup) {
-    popup.classList.remove("hidden");
+    if (popup) popup.classList.remove("hidden");
   }
 
   function closePopup(popup) {
-    popup.classList.add("hidden");
+    if (popup) popup.classList.add("hidden");
   }
 
-  document.getElementById("showChannel").addEventListener("click", function () {
-    openPopup(channelPopup);
-  });
+  const showQris = document.getElementById("showQris");
 
-  document.getElementById("closeChannel").addEventListener("click", function () {
-    closePopup(channelPopup);
-  });
+  if (showQris) {
+    showQris.addEventListener("click", function () {
+      openPopup(qrisPopup);
+    });
+  }
 
-  document.getElementById("showQris").addEventListener("click", function () {
-    openPopup(qrisPopup);
-  });
-
-  document.getElementById("closeQris").addEventListener("click", function () {
-    closePopup(qrisPopup);
-  });
-
-  document.getElementById("closeConfirm").addEventListener("click", function () {
-    closePopup(confirmPopup);
-  });
-
-  // Order produk melalui WhatsApp
-  document.querySelectorAll(".order-btn").forEach(function (button) {
+  document.querySelectorAll("[data-close]").forEach(function (button) {
     button.addEventListener("click", function () {
-      const product = button.dataset.product || "Produk";
-      const message =
-        "Min, saya mau order " + product + ". Mohon informasi harga dan cara pembayarannya.";
-
-      window.open(
-        "https://wa.me/62882000379621?text=" + encodeURIComponent(message),
-        "_blank"
-      );
+      const popupID = button.getAttribute("data-close");
+      closePopup(document.getElementById(popupID));
     });
   });
 
-  // Konfirmasi pembayaran
-  document.getElementById("confirmPayment").addEventListener("click", function () {
-    closePopup(qrisPopup);
-    openPopup(confirmPopup);
+  [qrisPopup, confirmPopup].forEach(function (popup) {
+    if (!popup) return;
 
-    const message =
-      "Min, saya ingin konfirmasi pembayaran. Saya akan mengirimkan bukti pembayaran.";
-    document.getElementById("sendProof").href =
-      "https://wa.me/62882000379621?text=" + encodeURIComponent(message);
-  });
-
-  // Klik tombol gabung di popup
-  channelPopup.querySelector(".green").addEventListener("click", function () {
-    window.open(channelLink, "_blank");
-  });
-
-  // Menutup popup jika bagian gelap di luar kartu ditekan
-  [channelPopup, qrisPopup, confirmPopup].forEach(function (popup) {
     popup.addEventListener("click", function (event) {
       if (event.target === popup) {
         closePopup(popup);
@@ -106,12 +86,56 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Menutup popup dengan tombol Escape
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
-      closePopup(channelPopup);
       closePopup(qrisPopup);
       closePopup(confirmPopup);
     }
   });
+
+  /* ORDER PRODUK */
+  document.querySelectorAll(".order-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const product = button.dataset.product || "Produk";
+      const message =
+        "Min, saya mau order " + product +
+        ". Mohon informasi harga dan cara pembayarannya.";
+
+      const url =
+        "https://wa.me/" + adminNumber +
+        "?text=" + encodeURIComponent(message);
+
+      window.open(url, "_blank");
+    });
+  });
+
+  /* KONFIRMASI PEMBAYARAN */
+  const confirmPayment = document.getElementById("confirmPayment");
+  const sendProof = document.getElementById("sendProof");
+
+  if (confirmPayment) {
+    confirmPayment.addEventListener("click", function () {
+      closePopup(qrisPopup);
+      openPopup(confirmPopup);
+
+      const message =
+        "Min, saya ingin konfirmasi pembayaran. " +
+        "Saya akan mengirimkan bukti pembayaran.";
+
+      if (sendProof) {
+        sendProof.href =
+          "https://wa.me/" + adminNumber +
+          "?text=" + encodeURIComponent(message);
+      }
+    });
+  }
+
+  /* PASTIKAN LINK CHANNEL TETAP AKTIF */
+  document.querySelectorAll('a[href*="whatsapp.com/channel"]').forEach(
+    function (link) {
+      link.href = channelURL;
+      link.target = "_blank";
+      link.rel = "noopener";
+    }
+  );
 });
