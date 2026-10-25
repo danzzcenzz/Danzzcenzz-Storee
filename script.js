@@ -94,7 +94,7 @@ function showPayment(service) {
   window.scrollTo(0, 0);
 }
 
-document.getElementById('skipBtn').addEventListener('click', showInvite);
+document.getElementById('skipBtn').addEventListener('click', showHome);
 document.querySelectorAll('.service-card').forEach(button => button.addEventListener('click', () => showPayment(button.dataset.service)));
 document.getElementById('backHome').addEventListener('click', showHome);
 document.getElementById('confirmPayment').addEventListener('click', () => {
