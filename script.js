@@ -1,163 +1,117 @@
 document.addEventListener("DOMContentLoaded", function () {
-"use strict";
+  const opening = document.getElementById("opening");
+  const mainContent = document.getElementById("mainContent");
+  const skipBtn = document.getElementById("skipBtn");
 
-const ADMIN_NUMBER = "62882000379621";
-const CHANNEL_URL = "https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W";
+  const channelPopup = document.getElementById("channelPopup");
+  const qrisPopup = document.getElementById("qrisPopup");
+  const confirmPopup = document.getElementById("confirmPopup");
 
-const opening = document.getElementById("opening");
-const mainContent = document.getElementById("mainContent");
-const skipBtn = document.getElementById("skipBtn");
-const welcomePopup = document.getElementById("welcomePopup");
-const continueBtn = document.getElementById("continueBtn");
-const closeWelcome = document.getElementById("closeWelcome");
+  const orderLink =
+    "https://wa.me/62882000379621?text=min%20mau%20order%20video%20";
 
-const qrisPopup = document.getElementById("qrisPopup");
-const confirmPopup = document.getElementById("confirmPopup");
+  const channelLink =
+    "https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W";
 
-let openingFinished = false;
-let openingTimer;
+  // OPENING: tombol Skip langsung membuka halaman utama
+  let openingFinished = false;
 
-function showMainPage() {
-if (openingFinished) return;
-openingFinished = true;
-clearTimeout(openingTimer);
+  function finishOpening() {
+    if (openingFinished) return;
 
-if (opening) {
-  opening.classList.add("hide");
-  opening.style.display = "none";
-}
+    openingFinished = true;
+    mainContent.classList.remove("hidden");
+    opening.classList.add("fade-out");
 
-if (mainContent) {
-  mainContent.classList.remove("hidden");
-  mainContent.style.display = "block";
-}
-
-window.scrollTo(0, 0);
-
-// Tampilkan jendela mengambang setelah halaman utama siap.
-window.setTimeout(function () {
-  if (welcomePopup) {
-    welcomePopup.classList.remove("hidden");
-  }
-}, 250);
-
-}
-
-// Skip dan timer memakai fungsi yang sama.
-if (skipBtn) {
-skipBtn.addEventListener("click", showMainPage);
-}
-
-openingTimer = window.setTimeout(showMainPage, 3000);
-
-// Tutup jendela sambutan dan lanjutkan ke toko.
-function closeWelcomeWindow() {
-if (welcomePopup) welcomePopup.classList.add("hidden");
-}
-
-if (continueBtn) {
-continueBtn.addEventListener("click", closeWelcomeWindow);
-}
-
-if (closeWelcome) {
-closeWelcome.addEventListener("click", closeWelcomeWindow);
-}
-
-// Tombol HOME.
-const homeBtn = document.getElementById("homeBtn");
-
-if (homeBtn) {
-homeBtn.addEventListener("click", function () {
-window.scrollTo({ top: 0, behavior: "smooth" });
-});
-}
-
-// Membuka dan menutup popup.
-function openPopup(popup) {
-if (popup) popup.classList.remove("hidden");
-}
-
-function closePopup(popup) {
-if (popup) popup.classList.add("hidden");
-}
-
-const showQris = document.getElementById("showQris");
-
-if (showQris) {
-showQris.addEventListener("click", function () {
-openPopup(qrisPopup);
-});
-}
-
-document.querySelectorAll("[data-close]").forEach(function (button) {
-button.addEventListener("click", function () {
-const targetId = button.getAttribute("data-close");
-closePopup(document.getElementById(targetId));
-});
-});
-
-[qrisPopup, confirmPopup, welcomePopup].forEach(function (popup) {
-if (!popup) return;
-
-popup.addEventListener("click", function (event) {
-  if (event.target === popup) {
-    closePopup(popup);
-  }
-});
-
-});
-
-document.addEventListener("keydown", function (event) {
-if (event.key === "Escape") {
-closePopup(qrisPopup);
-closePopup(confirmPopup);
-closePopup(welcomePopup);
-}
-});
-
-// ORDER SEKARANG: langsung membuka chat WhatsApp admin.
-document.querySelectorAll(".order-btn").forEach(function (button) {
-button.addEventListener("click", function () {
-const product = button.getAttribute("data-product") || "Produk";
-const message =
-"Min, saya mau order " + product +
-". Mohon informasi harga dan cara pembayarannya.";
-
-  const whatsappURL =
-    "https://wa.me/" + ADMIN_NUMBER +
-    "?text=" + encodeURIComponent(message);
-
-  window.open(whatsappURL, "_blank", "noopener");
-});
-
-});
-
-// Konfirmasi pembayaran.
-const confirmPayment = document.getElementById("confirmPayment");
-const sendProof = document.getElementById("sendProof");
-
-if (confirmPayment) {
-confirmPayment.addEventListener("click", function () {
-closePopup(qrisPopup);
-
-  const message =
-    "Min, saya ingin konfirmasi pembayaran. Saya akan mengirimkan bukti pembayaran.";
-
-  if (sendProof) {
-    sendProof.href =
-      "https://wa.me/" + ADMIN_NUMBER +
-      "?text=" + encodeURIComponent(message);
+    window.setTimeout(function () {
+      opening.classList.add("hidden");
+    }, 450);
   }
 
-  openPopup(confirmPopup);
-});
+  skipBtn.addEventListener("click", finishOpening);
 
-}
+  // Otomatis membuka halaman utama setelah 2 detik
+  window.setTimeout(finishOpening, 2000);
 
-// Pastikan tautan channel mengarah ke channel yang benar.
-document.querySelectorAll('a[href*="whatsapp.com/channel"]').forEach(function (link) {
-link.href = CHANNEL_URL;
-link.target = "_blank";
-link.rel = "noopener noreferrer";
-});
+  // Tombol Home
+  document.getElementById("homeBtn").addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  // Fungsi membuka dan menutup popup
+  function openPopup(popup) {
+    popup.classList.remove("hidden");
+  }
+
+  function closePopup(popup) {
+    popup.classList.add("hidden");
+  }
+
+  document.getElementById("showChannel").addEventListener("click", function () {
+    openPopup(channelPopup);
+  });
+
+  document.getElementById("closeChannel").addEventListener("click", function () {
+    closePopup(channelPopup);
+  });
+
+  document.getElementById("showQris").addEventListener("click", function () {
+    openPopup(qrisPopup);
+  });
+
+  document.getElementById("closeQris").addEventListener("click", function () {
+    closePopup(qrisPopup);
+  });
+
+  document.getElementById("closeConfirm").addEventListener("click", function () {
+    closePopup(confirmPopup);
+  });
+
+  // Order produk melalui WhatsApp
+  document.querySelectorAll(".order-btn").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const product = button.dataset.product || "Produk";
+      const message =
+        "Min, saya mau order " + product + ". Mohon informasi harga dan cara pembayarannya.";
+
+      window.open(
+        "https://wa.me/62882000379621?text=" + encodeURIComponent(message),
+        "_blank"
+      );
+    });
+  });
+
+  // Konfirmasi pembayaran
+  document.getElementById("confirmPayment").addEventListener("click", function () {
+    closePopup(qrisPopup);
+    openPopup(confirmPopup);
+
+    const message =
+      "Min, saya ingin konfirmasi pembayaran. Saya akan mengirimkan bukti pembayaran.";
+    document.getElementById("sendProof").href =
+      "https://wa.me/62882000379621?text=" + encodeURIComponent(message);
+  });
+
+  // Klik tombol gabung di popup
+  channelPopup.querySelector(".green").addEventListener("click", function () {
+    window.open(channelLink, "_blank");
+  });
+
+  // Menutup popup jika bagian gelap di luar kartu ditekan
+  [channelPopup, qrisPopup, confirmPopup].forEach(function (popup) {
+    popup.addEventListener("click", function (event) {
+      if (event.target === popup) {
+        closePopup(popup);
+      }
+    });
+  });
+
+  // Menutup popup dengan tombol Escape
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closePopup(channelPopup);
+      closePopup(qrisPopup);
+      closePopup(confirmPopup);
+    }
+  });
 });
