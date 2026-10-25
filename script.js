@@ -6,7 +6,8 @@ let openingTimer;
 
 function showInvite() {
   clearTimeout(openingTimer);
-  opening.classList.add('hidden');
+  opening.classList.add('leaving');
+  setTimeout(() => opening.classList.add('hidden'), 520);
   home.classList.add('hidden');
   payment.classList.add('hidden');
   inviteOverlay.classList.remove('hidden');
@@ -14,6 +15,7 @@ function showInvite() {
 function showHome() {
   clearTimeout(openingTimer);
   opening.classList.add('hidden');
+  opening.classList.remove('leaving');
   inviteOverlay.classList.add('hidden');
   payment.classList.add('hidden');
   home.classList.remove('hidden');
