@@ -1,78 +1,97 @@
-const opening = document.getElementById('opening');
-const home = document.getElementById('home');
-const payment = document.getElementById('payment');
-const channelWidget = document.getElementById('channelWidget');
-const channelBackdrop = document.getElementById('channelBackdrop');
-let openingTimer;
+// Inisialisasi data riwayat dari localStorage agar data tetap tersimpan saat di-refresh
+let riwayatTransaksi = JSON.parse(localStorage.getItem('danzz_riwayat')) || [];
 
-function showInvite() {
-  clearTimeout(openingTimer);
-  if (opening.classList.contains('leaving') || opening.classList.contains('hidden')) return;
-  opening.classList.add('leaving');
-  setTimeout(() => {
-    opening.classList.add('hidden');
-    home.classList.remove('hidden');
-    payment.classList.add('hidden');
-    openChannelPopup();
-    window.scrollTo(0, 0);
-  }, 560);
-}
-function openChannelPopup() {
-  channelWidget.classList.remove('hidden');
-  channelBackdrop.classList.remove('hidden');
-}
-function closeChannelPopup() {
-  channelWidget.classList.add('hidden');
-  channelBackdrop.classList.add('hidden');
-}
-function showHome() {
-  clearTimeout(openingTimer);
-  opening.classList.add('hidden');
-  opening.classList.remove('leaving');
-  payment.classList.add('hidden');
-  home.classList.remove('hidden');
-  closeChannelPopup();
-  window.scrollTo(0, 0);
-}
-function showPayment(service) {
-  home.classList.add('hidden');
-  closeChannelPopup();
-  payment.classList.remove('hidden');
-  document.getElementById('selectedService').textContent = 'Pesanan: ' + service;
-  const message = `Halo min, saya mau order ${service}. Saya akan mengirim bukti pembayaran QRIS. Mohon diproses ya.`;
-  document.getElementById('confirmPayment').href = 'https://wa.me/62882000379621?text=' + encodeURIComponent(message);
-  window.scrollTo(0, 0);
+// Variabel sementara untuk menyimpan produk yang sedang dipilih di modal
+let produkTerpilih = null;
+
+// Fungsi untuk mengganti halaman (Tab Navigasi Bawah)
+function switchPage(pageId, element) {
+    // Sembunyikan semua halaman
+    document.querySelectorAll('.page-content').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Matikan status aktif di semua tombol navigasi
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // Tampilkan halaman terpilih & aktifkan tombolnya
+    document.getElementById(`page-${pageId}`).classList.add('active');
+    element.classList.add('active');
 }
 
-document.getElementById('skipBtn').addEventListener('click', showInvite);
-document.querySelectorAll('.service-card').forEach(button => button.addEventListener('click', () => showPayment(button.dataset.service)));
-document.getElementById('backHome').addEventListener('click', showHome);
-document.getElementById('closeChannelWidget').addEventListener('click', closeChannelPopup);
-channelBackdrop.addEventListener('click', closeChannelPopup);
+// Fungsi untuk merender/menampilkan data riwayat ke dalam HTML secara dinamis
+function renderRiwayat() {
+    const kontainerRiwayat = document.getElementById('daftar-riwayat-konten');
+    
+    if (riwayatTransaksi.length === 0) {
+        kontainerRiwayat.innerHTML = `<p class="status-kosong">🔸 Belum ada riwayat pesanan.</p>`;
+        return;
+    }
 
-// Navigasi halaman utama: Beranda, Riwayat, dan Profil.
-const horizontalPages = document.getElementById('horizontalPages');
-const storePages = Array.from(document.querySelectorAll('.store-page'));
-const navLinks = [document.getElementById('homeNav'), document.getElementById('historyNav'), document.getElementById('profileNav')];
-let currentStorePage = 0;
-function goStorePage(index) {
-  currentStorePage = Math.max(0, Math.min(index, storePages.length - 1));
-  horizontalPages.scrollTo({left: storePages[currentStorePage].offsetLeft - horizontalPages.offsetLeft, behavior:'smooth'});
-  navLinks.forEach((link, i) => link.classList.toggle('selected', i === currentStorePage));
+    // Map data array menjadi elemen kotak transaksi terstruktur
+    kontainerRiwayat.innerHTML = riwayatTransaksi.map(item => `
+        <div class="kartu-transaksi-item">
+            <div class="trx-info-kiri">
+                <span class="trx-nama-produk">${item.nama}</span>
+                <span class="trx-tanggal">${item.waktu}</span>
+            </div>
+            <div class="trx-info-kanan">
+                <span class="trx-harga">${item.harga}</span>
+                <span class="trx-status-badge">${item.status}</span>
+            </div>
+        </div>
+    `).join('');
 }
-navLinks.forEach((link, i) => link.addEventListener('click', e => { e.preventDefault(); goStorePage(i); }));
-let touchStartX = 0;
-horizontalPages.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, {passive:true});
-horizontalPages.addEventListener('touchend', e => {
-  const delta = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(delta) > 45) goStorePage(currentStorePage + (delta < 0 ? 1 : -1));
-}, {passive:true});
-horizontalPages.addEventListener('scroll', () => {
-  const idx = Math.round(horizontalPages.scrollLeft / horizontalPages.clientWidth);
-  if (idx !== currentStorePage && idx >= 0 && idx < storePages.length) {
-    currentStorePage = idx;
-    navLinks.forEach((link, i) => link.classList.toggle('selected', i === idx));
-  }
-}, {passive:true});
 
-openingTimer = setTimeout(showInvite, 3000);
+// Fungsi membuka modal pembayaran
+function bukaModalKonfirmasi(namaProduk, hargaProduk) {
+    produkTerpilih = { nama: namaProduk, harga: hargaProduk };
+    document.getElementById('modal-detail-produk').innerText = `Konfirmasi pembayaran untuk "${namaProduk}" seharga ${hargaProduk}?`;
+    document.getElementById('modal-pembayaran').classList.add('open');
+}
+
+// Fungsi menutup modal
+function tutupModal() {
+    document.getElementById('modal-pembayaran').classList.remove('open');
+    produkTerpilih = null;
+}
+
+// Fungsi UTAMA: Menambahkan riwayat otomatis setelah konfirmasi diklik
+function prosesKonfirmasiPembayaran() {
+    if (!produkTerpilih) return;
+
+    // Format opsi waktu lokal Indonesia
+    const opsiWaktu = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const waktuSekarang = new Date().toLocaleDateString('id-ID', opsiWaktu);
+
+    // Membuat objek transaksi baru
+    const transaksiBaru = {
+        nama: produkTerpilih.nama,
+        harga: produkTerpilih.harga,
+        waktu: waktuSekarang,
+        status: 'Sukses'
+    };
+
+    // Memasukkan data baru ke urutan paling atas (unshift)
+    riwayatTransaksi.unshift(transaksiBaru);
+
+    // Simpan perubahan ke memori browser
+    localStorage.setItem('danzz_riwayat', JSON.stringify(riwayatTransaksi));
+
+    // Perbarui visual daftar riwayat seketika
+    renderRiwayat();
+
+    // Tutup modal popup
+    tutupModal();
+
+    // Otomatis arahkan pengguna ke halaman Riwayat agar perubahan langsung terlihat
+    const tombolRiwayatNav = document.querySelectorAll('.nav-item')[1];
+    switchPage('riwayat', tombolRiwayatNav);
+}
+
+// Jalankan fungsi render riwayat pertama kali saat dokumen selesai dimuat
+document.addEventListener('DOMContentLoaded', () => {
+    renderRiwayat();
+});
