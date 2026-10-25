@@ -11,7 +11,7 @@
   <section id="opening" class="opening salted-bg" aria-label="Opening">
     <button id="skipBtn" class="skip-btn">SKIP ⏭</button>
     <div class="opening-content">
-      <div class="logo-ring"><div class="logo-tile">DZ</div></div>
+      <div class="logo-ring"><img class="brand-logo" src="https://i.imgur.com/DLTy3wp.png" alt="Logo DZ DANZZCENZZ STORE"></div>
       <h1>DANZZCENZZ-STORE</h1>
       <p class="tagline">PUSAT TOP UP & LAYANAN DIGITAL</p>
       <div class="loading-card">
@@ -37,7 +37,7 @@
 
   <main id="home" class="page salted-bg hidden">
     <header class="store-header">
-      <div class="logo-tile small-logo">DZ</div>
+      <img class="brand-logo small-logo" src="https://i.imgur.com/DLTy3wp.png" alt="Logo DZ DANZZCENZZ STORE">
       <h1>@danzzcenzz.store</h1>
       <p>⚡ Pusat Top Up & Layanan Digital Terpercaya dengan Gaya Pop Art ⚡</p>
     </header>
@@ -69,6 +69,20 @@
       <a href="#home">🏠 Beranda</a><a href="#history" id="historyNav">⏱️ Riwayat</a><a href="#profile" id="profileNav">👤 Profil</a>
     </nav>
   </main>
+
+  <div id="magazineOverlay" class="overlay hidden" role="dialog" aria-modal="true" aria-label="Info DANZZCENZZ-STORE">
+    <div class="magazine-card">
+      <button id="closeMagazine" class="close-btn" aria-label="Tutup">×</button>
+      <div class="magazine-kicker">DANZZCENZZ-STORE <span id="magazineCount">01 / 03</span></div>
+      <div class="magazine-pages" id="magazinePages">
+        <article class="magazine-page active"><span class="magazine-icon">🩵</span><p class="magazine-label">WELCOME</p><h2>SELAMAT DATANG!</h2><p>Temukan layanan digital pilihanmu dengan mudah.</p></article>
+        <article class="magazine-page"><span class="magazine-icon">⚡</span><p class="magazine-label">LAYANAN</p><h2>CEPAT & PRAKTIS</h2><p>Pilih layanan di halaman utama untuk melihat detail pesanan.</p></article>
+        <article class="magazine-page"><span class="magazine-icon">💬</span><p class="magazine-label">BUTUH BANTUAN?</p><h2>HUBUNGI ADMIN</h2><p>Gunakan tombol WhatsApp untuk melanjutkan pesanan dan konfirmasi.</p></article>
+      </div>
+      <div class="magazine-controls"><button id="magazinePrev" type="button" disabled>← SEBELUMNYA</button><button id="magazineNext" type="button">BERIKUTNYA →</button></div>
+      <button id="magazineDone" class="magazine-done" type="button">MULAI BELANJA</button>
+    </div>
+  </div>
 
   <main id="payment" class="page salted-bg hidden">
     <button id="backHome" class="back-btn">← Kembali ke toko</button>
