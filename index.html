@@ -1,107 +1,265 @@
-<!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#9bdcf0">
-  <title>DANZZCENZZ-STORE</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <section id="opening" class="opening salted-bg" aria-label="Opening">
-    <button id="skipBtn" class="skip-btn">SKIP ⏭</button>
-    <div class="opening-content">
-      <div class="logo-ring"><img class="brand-logo" src="https://i.imgur.com/YEiVvJp.png" alt="Logo DZ DANZZCENZZ STORE"></div>
-      <h1>DANZZCENZZ-STORE</h1>
-      <p class="tagline">SELL VIDEO DAN DLL</p>
-      <div class="loading-card">
-        <div class="loading-bar"><span></span></div>
-        <strong>MOHON TUNGGU SEBENTAR</strong>
-        <span>SEDANG MEMUAT...</span>
-      </div>
-    </div>
-  </section>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+body {
+    background-color: #cbeff7;
+    color: #1a1a1a;
+    padding-bottom: 80px; /* Jarak agar kontent tidak tertutup nav bawah */
+}
 
-  <main id="home" class="page salted-bg hidden">
-    <header class="store-header">
-      <img class="brand-logo small-logo" src="https://i.imgur.com/YEiVvJp.png" alt="Logo DZ DANZZCENZZ STORE">
-      <h1>@danzzcenzz.store</h1>
-      <p>⚡ Sell video terbaru viral/hot tentu harga murah meriah ⚡</p>
-    </header>
+/* Tab Layout */
+.tab-content {
+    display: none;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
 
-    <div class="horizontal-pages" id="horizontalPages">
-    <section class="store-page home-page" id="homePage" aria-label="Beranda">
-    <section class="service-list" aria-label="Pilihan layanan">
-      <button class="service-card" data-service="Order Video Khusus" data-description="Hubungi admin langsung">
-        <span class="service-emoji">🚀</span><span class="service-copy"><strong>Order Video Khusus</strong><small>Hubungi Admin Langsung</small></span><span class="arrow">➜</span>
-      </button>
-      <button class="service-card" data-service="Suntik Followers Sosmed" data-description="Mulai dari Rp 5.000">
-        <span class="service-emoji">👥</span><span class="service-copy"><strong>Suntik Followers Sosmed</strong><small>Mulai dari Rp 5.000</small></span><span class="arrow">➜</span>
-      </button>
-      <button class="service-card" data-service="Top Up Game (MLBB, FF, PUBG)" data-description="Harga bersaing & layanan cepat">
-        <span class="service-emoji">🎮</span><span class="service-copy"><strong>Top Up Game (MLBB, FF, PUBG)</strong><small>Harga Bersaing & Layanan Cepat</small></span><span class="arrow">➜</span>
-      </button>
-    </section>
+.tab-content.active {
+    display: block;
+}
 
-    </section>
-    <section class="store-page history-page" id="historyPage" aria-label="Riwayat">
-    <section class="info-panel">
-      <h2>🧾 RIWAYAT TRANSAKSI</h2>
-      <p>📂 Belum ada riwayat pesanan.</p>
-    </section>
-    </section>
-    <section class="store-page profile-page" id="profilePage" aria-label="Profil">
-    <section class="info-panel profile-panel">
-      <h2>👤 PROFIL TOKO</h2>
-      <h3>DANZZCENZZ-STORE</h3>
-      <p>Status Akun: <strong class="verified">Verified Partner</strong></p>
-      <div class="dash"></div>
-      <p>Terima kasih telah mempercayai layanan digital kami!</p>
-    </section>
-    </section>
-    </div>
-    <nav class="bottom-nav">
-      <a href="#homePage" id="homeNav" class="selected">🏠 Beranda</a><a href="#historyPage" id="historyNav">⏱️ Riwayat</a><a href="#profilePage" id="profileNav">👤 Profil</a>
-    </nav>
-  </main>
-  <div id="channelBackdrop" class="channel-backdrop hidden" aria-hidden="true"></div>
-  <aside id="channelWidget" class="channel-widget hidden" aria-label="Undangan Channel WhatsApp" role="dialog" aria-modal="true">
-    <button id="closeChannelWidget" class="channel-close" type="button" aria-label="Tutup">×</button>
-    <div class="channel-magazine-head"><span>UNDANGAN EKSKLUSIF</span><span class="channel-active"><i></i> ACTIVE</span></div>
-    <div class="channel-dash"></div>
-    <div class="channel-content">
-      <div class="channel-wa-icon" aria-hidden="true">
-        <svg viewBox="0 0 32 32"><path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M11.1 9.8c-.5 0-1 .2-1.3.7-.5.5-1.2 1.3-1.2 3.1s1.2 3.6 1.4 3.9c.2.3 2.4 3.8 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.4-.3-.9-.6l-2.2-1.1c-.3-.1-.6-.2-.8.2l-1 1.2c-.2.3-.4.3-.8.1a9.8 9.8 0 0 1-2.9-1.8 10.8 10.8 0 0 1-2-2.5c-.2-.4 0-.6.1-.8l.7-.8c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7l-1-2.3c-.3-.6-.6-.6-.9-.6Z" fill="currentColor"/></svg>
-      </div>
-      <div class="channel-copy"><h2>Gabung Channel<br>WhatsApp</h2><p>MASUK CHANNEL UNTUK<br>INFORMASI UPDATE, DLL.</p></div>
-    </div>
-    <a class="channel-join" href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W" target="_blank" rel="noopener"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M11 10c-.7 1-.7 2.7.7 4.8s3.2 3.7 5.4 4.4c1 .3 2.4-.4 2.8-1.3l-3-1.5-1.2 1.1c-1.5-.6-2.7-1.8-3.3-3.1l1-1.2-1.4-3.1Z" fill="currentColor"/></svg> MASUK CHANNEL</a>
-  </aside>
+/* Header */
+.header {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
 
-  <main id="payment" class="page salted-bg hidden">
-    <button id="backHome" class="back-btn">← Kembali ke toko</button>
-    <section class="payment-card">
-      <span class="eyebrow">DANZZCENZZ-STORE • PEMBAYARAN</span>
-      <h1>Scan QRIS untuk Membayar</h1>
-      <p id="selectedService" class="selected-service">Layanan pilihan Anda</p>
-      
-      <!-- Tambahan info harga di atas QRIS -->
-      <div style="font-size: 24px; font-weight: bold; color: #e43f5a; margin: 10px 0;">Harga: Rp 5.000</div>
-      
-      <img class="qris-image" src="https://i.imgur.com/QpNpbLx.jpeg" alt="QRIS pembayaran DANZZCENZZ-STORE">
-      
-      <!-- Tambahan nomor alternatif di bawah QRIS -->
-      <div style="margin-top: 15px; padding: 10px; background-color: #f8f9fa; border-radius: 6px; border: 1px dashed #ccc;">
-        <p style="margin: 0; font-size: 14px; color: #555;">Alternatif No. Rekening / Dana / E-Wallet:</p>
-        <strong style="font-size: 18px; color: #111; letter-spacing: 1px;">081284867763</strong>
-      </div>
+.logo-container {
+    width: 100px;
+    height: 100px;
+    background-color: #000;
+    margin: 0 auto 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
 
-      <div class="payment-warning"><strong>⚠️ PENTING</strong><p>Pastikan nominal dan nama merchant sudah benar sebelum membayar. Simpan bukti pembayaran untuk konfirmasi.</p></div>
-      <a id="confirmPayment" class="btn confirm-btn" href="#" target="_blank" rel="noopener">✓ KONFIRMASI PEMBAYARAN VIA WHATSAPP</a>
-      <p class="tiny-note">Setelah membayar, tekan tombol konfirmasi untuk mengirim detail pesanan ke admin.</p>
-    </section>
-  </main>
-  <script src="script.js"></script>
-</body>
-</html>
+.logo-container img {
+    width: 80px;
+    height: auto;
+}
+
+.header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #000;
+}
+
+.tagline {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Product Section */
+.product-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.product-card h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.product-card .price {
+    color: #e63946;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.btn-buy {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+}
+
+/* Tampilan Kotak Riwayat Transaksi Sesuai Gambar */
+.history-container {
+    background-color: #fff;
+    border: 3px solid #000;
+    border-radius: 0px; /* Kotak tegas sesuai mockup */
+    margin-top: 50px;
+    overflow: hidden;
+}
+
+.history-header {
+    border-bottom: 2px solid #000;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.history-header h2 {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.history-body {
+    padding: 20px;
+    min-height: 100px;
+}
+
+.empty-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000;
+}
+
+/* Item Daftar Transaksi Baru */
+.item-transaksi {
+    padding: 12px 0;
+    border-bottom: 1px dashed #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-transaksi:last-child {
+    border-bottom: none;
+}
+
+.info-produk h4 {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.info-produk span {
+    font-size: 11px;
+    color: #666;
+}
+
+.status-sukses {
+    background-color: #2ec4b6;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Profile Section */
+.profile-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+}
+
+.profile-info {
+    margin-top: 15px;
+    line-height: 2;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 450px;
+    background-color: #fff;
+    border: 3px solid #000;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+    transition: all 0.2s ease;
+}
+
+.nav-item.active {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+}
+
+/* Modal Popup */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 10px;
+}
+
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-confirm {
+    flex: 1;
+    background: #2ec4b6;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-close {
+    flex: 1;
+    background: #e63946;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
