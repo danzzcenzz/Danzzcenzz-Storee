@@ -69,6 +69,21 @@ button.logout{background:#475569}
 </section>
 
 <section class="card">
+<h2>⚙️ Pengaturan Website</h2>
+
+<form id="settingsForm">
+  <label>Nama Website</label>
+  <input id="siteName" placeholder="Nama Website" maxlength="100" required>
+
+  <label>Nomor WhatsApp Admin</label>
+  <input id="adminWhatsApp" type="tel" placeholder="Contoh: 628123456789" maxlength="20" required>
+
+  <button type="submit">💾 Simpan Pengaturan</button>
+  <p id="settingsMessage" class="small"></p>
+</form>
+</section>
+
+<section class="card">
 <h2>📦 Daftar Pesanan</h2>
 <p id="total">Total pesanan: 0</p>
 <div id="orders"><p>Memuat pesanan...</p></div>
@@ -203,6 +218,7 @@ loginForm.addEventListener("submit", async event => {
     document.getElementById("password").value = "";
 
     startOrdersListener();
+    loadWebsiteSettings();
   } catch (error) {
     showMessage("Login gagal: " + error.message);
   }
@@ -220,6 +236,7 @@ auth.onAuthStateChanged(async user => {
   loginCard.classList.add("hidden");
   adminArea.classList.remove("hidden");
   startOrdersListener();
+  loadWebsiteSettings();
 });
 
 orderForm.addEventListener("submit", async event => {
@@ -308,6 +325,57 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
   loginForm.reset();
   showMessage("Kamu sudah logout.");
 });
+
+// PENGATURAN WEBSITE
+const settingsForm = document.getElementById("settingsForm");
+const siteNameInput = document.getElementById("siteName");
+const adminWhatsAppInput = document.getElementById("adminWhatsApp");
+const settingsMessage = document.getElementById("settingsMessage");
+
+function loadWebsiteSettings() {
+  db.ref("settings").once("value")
+    .then(snapshot => {
+      const settings = snapshot.val() || {};
+
+      siteNameInput.value = settings.siteName || "DANZZCENZZ STORE";
+      adminWhatsAppInput.value = settings.adminWhatsApp || "";
+    })
+    .catch(error => {
+      settingsMessage.textContent = "Gagal memuat pengaturan: " + error.message;
+    });
+}
+
+settingsForm.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const user = auth.currentUser;
+
+  if (!user || user.uid !== ADMIN_UID) {
+    settingsMessage.textContent = "Silakan login sebagai admin.";
+    return;
+  }
+
+  const siteName = siteNameInput.value.trim();
+  const adminWhatsApp = adminWhatsAppInput.value.trim();
+
+  if (!siteName || !adminWhatsApp) {
+    settingsMessage.textContent = "Nama website dan WhatsApp wajib diisi.";
+    return;
+  }
+
+  try {
+    await db.ref("settings").update({
+      siteName,
+      adminWhatsApp,
+      updatedAt: Date.now()
+    });
+
+    settingsMessage.textContent = "Pengaturan berhasil disimpan!";
+  } catch (error) {
+    settingsMessage.textContent = "Gagal menyimpan: " + error.message;
+  }
+});
+
 </script>
 </body>
 </html>
