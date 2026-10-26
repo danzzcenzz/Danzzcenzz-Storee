@@ -1,1 +1,10 @@
-{"name":"Notifikasi Pesanan","on":{"workflow_dispatch":{}},"jobs":{"tes":{"runs-on":"ubuntu-latest","steps":[{"run":"echo Berhasil"}]}}}
+name: Notifikasi Pesanan
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tes:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Berhasil"
