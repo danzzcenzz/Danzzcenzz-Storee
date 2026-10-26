@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - DANZZCENZZ STORE</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 24px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px #00000010;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        p {
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input {
+            border: 1px solid #cbd5e1;
+        }
+
+        button {
+            border: none;
+            background: #0891b2;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 15px;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>Admin DANZZCENZZ STORE</h1>
+        <p>Halaman pengelolaan pesanan toko.</p>
+
+        <form id="loginForm">
+            <input
+                type="email"
+                id="email"
+                placeholder="Email admin"
+                autocomplete="username"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password admin"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit">Login Admin</button>
+        </form>
+
+        <p id="message" role="status"></p>
+    </main>
+</body>
+</html>
