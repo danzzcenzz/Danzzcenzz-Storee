@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - DANZZCENZZ STORE</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -12,82 +13,291 @@
         body {
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-family: Arial, sans-serif;
-            background: #f1f5f9;
+            background: #eef2f7;
             color: #111827;
         }
 
         .container {
-            max-width: 600px;
-            margin: 30px auto;
-            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
             background: white;
             border-radius: 16px;
-            box-shadow: 0 4px 20px #00000010;
+            box-shadow: 0 8px 30px #00000012;
         }
 
         h1 {
-            margin-top: 0;
+            margin: 0 0 8px;
+            text-align: center;
             font-size: 24px;
         }
 
-        p {
+        .subtitle {
+            margin-bottom: 25px;
+            text-align: center;
             color: #64748b;
-            line-height: 1.5;
+            font-size: 14px;
         }
 
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 12px;
-            border-radius: 8px;
-            font-size: 15px;
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         input {
+            width: 100%;
+            margin-top: 7px;
+            padding: 13px;
             border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #0891b2;
         }
 
         button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 13px;
             border: none;
+            border-radius: 9px;
             background: #0891b2;
             color: white;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
         }
 
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #logoutButton {
+            background: #dc2626;
+        }
+
         #message {
             margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.5;
             overflow-wrap: anywhere;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .notice {
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fff7ed;
+            color: #9a3412;
+            font-size: 13px;
+            line-height: 1.5;
         }
     </style>
 </head>
+
 <body>
+
     <main class="container">
-        <h1>Admin DANZZCENZZ STORE</h1>
-        <p>Halaman pengelolaan pesanan toko.</p>
+        <h1>DANZZCENZZ STORE</h1>
+        <p class="subtitle">Panel Login Admin</p>
 
         <form id="loginForm">
+            <label for="email">Email Admin</label>
             <input
                 type="email"
                 id="email"
-                placeholder="Email admin"
+                placeholder="Masukkan email admin"
                 autocomplete="username"
                 required
             >
 
+            <label for="password">Password Admin</label>
             <input
                 type="password"
                 id="password"
-                placeholder="Password admin"
+                placeholder="Masukkan password"
                 autocomplete="current-password"
                 required
             >
 
-            <button type="submit">Login Admin</button>
+            <button type="submit" id="loginButton">
+                Login Admin
+            </button>
         </form>
 
-        <p id="message" role="status"></p>
+        <section id="adminPanel" class="hidden">
+            <h2>Login Berhasil</h2>
+            <p id="accountInfo"></p>
+
+            <p class="notice">
+                Login berhasil. Fitur pengelolaan pesanan belum diaktifkan.
+                Database tetap terkunci sampai aturan keamanan selesai dibuat.
+            </p>
+
+            <button type="button" id="logoutButton">
+                Logout
+            </button>
+        </section>
+
+        <p id="message" role="status" aria-live="polite"></p>
     </main>
+
+    <script type="module">
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        } from
+            "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
+            authDomain: "danzzcenzz-store.firebaseapp.com",
+            databaseURL: "https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "danzzcenzz-store",
+            storageBucket: "danzzcenzz-store.firebasestorage.app",
+            messagingSenderId: "28505785159",
+            appId: "1:28505785159:web:f605c1ea4a881741a04262",
+            measurementId: "G-R0G2QBF8J8"
+        };
+
+        const ADMIN_UID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const loginForm = document.getElementById("loginForm");
+        const loginButton = document.getElementById("loginButton");
+        const logoutButton = document.getElementById("logoutButton");
+        const adminPanel = document.getElementById("adminPanel");
+        const accountInfo = document.getElementById("accountInfo");
+        const message = document.getElementById("message");
+
+        function showMessage(text, type = "") {
+            message.textContent = text;
+            message.className = type;
+        }
+
+        function showLogin() {
+            loginForm.classList.remove("hidden");
+            adminPanel.classList.add("hidden");
+        }
+
+        function showAdmin(user) {
+            loginForm.classList.add("hidden");
+            adminPanel.classList.remove("hidden");
+            accountInfo.textContent = "Akun: " + user.email;
+        }
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Memeriksa...";
+            showMessage("");
+
+            try {
+                const result = await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+                if (result.user.uid !== ADMIN_UID) {
+                    await signOut(auth);
+                    showLogin();
+                    showMessage(
+                        "Akun ini tidak memiliki akses admin.",
+                        "error"
+                    );
+                    return;
+                }
+
+                showMessage("Login admin berhasil.", "success");
+            } catch (error) {
+                console.error(error);
+
+                const messages = {
+                    "auth/invalid-credential":
+                        "Email atau password salah.",
+                    "auth/invalid-email":
+                        "Format email tidak valid.",
+                    "auth/too-many-requests":
+                        "Terlalu banyak percobaan. Coba lagi nanti.",
+                    "auth/network-request-failed":
+                        "Koneksi internet bermasalah."
+                };
+
+                showMessage(
+                    messages[error.code] ||
+                    "Login gagal. Periksa email, password, dan koneksi internet.",
+                    "error"
+                );
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Login Admin";
+            }
+        });
+
+        logoutButton.addEventListener("click", async function () {
+            try {
+                await signOut(auth);
+                showLogin();
+                showMessage("Kamu sudah logout.", "success");
+            } catch (error) {
+                showMessage("Logout gagal. Coba lagi.", "error");
+            }
+        });
+
+        onAuthStateChanged(auth, async function (user) {
+            if (!user) {
+                showLogin();
+                return;
+            }
+
+            if (user.uid !== ADMIN_UID) {
+                await signOut(auth);
+                showLogin();
+                showMessage(
+                    "Akun ini tidak memiliki akses admin.",
+                    "error"
+                );
+                return;
+            }
+
+            showAdmin(user);
+        });
+    </script>
+
 </body>
 </html>
