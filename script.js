@@ -66,17 +66,42 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function renderTransactions() {
-        const container = document.getElementById('transactionHistory');
+    const container = document.getElementById('transactionHistory');
 
-        if (!container) return;
+    if (!container) return;
 
-        const items = getTransactions();
+    const items = getTransactions();
 
-        if (!items.length) {
-            container.innerHTML =
-                '<p>📂 Belum ada riwayat pesanan.</p>';
-            return;
-        }
+    if (!items.length) {
+        container.innerHTML =
+            '<p>📂 Belum ada riwayat pesanan.</p>';
+        return;
+    }
+
+    container.innerHTML = items.map(function (item) {
+        return `
+            <article class="transaction-item">
+                <strong>
+                    🛍️ ${escapeHTML(item.service || 'Pesanan')}
+                </strong>
+
+                <small>
+                    📅 ${escapeHTML(item.date || '-')}
+                </small>
+
+                <small>
+                    💵 Harga: ${formatRupiah(item.price)}
+                </small>
+
+                <span class="transaction-status">
+                    ${escapeHTML(
+                        item.status || 'Menunggu Pembayaran'
+                    )}
+                </span>
+            </article>
+        `;
+    }).join('');
+}
 
         container.innerHTML = items.map(function (item) {
             return `
