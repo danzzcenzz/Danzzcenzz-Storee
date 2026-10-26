@@ -1,621 +1,342 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#eef2f7">
-<title>Admin DANZZCENZZ STORE</title>
+<!DOCTYPE html>  <html lang="id">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+<title>Admin DANZZCENZZ STORE</title>  <style>  
+*{box-sizing:border-box}  
+body{margin:0;padding:16px;font-family:Arial,sans-serif;background:#eef2f7;color:#111827}  
+.container{max-width:650px;margin:20px auto}  
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:16px;box-shadow:0 3px 15px #0000000b}  
+h1{font-size:23px;margin-top:0}  
+h2{font-size:18px}  
+input,select,button{width:100%;padding:12px;margin-top:10px;border-radius:8px;font-size:14px}  
+input,select{border:1px solid #cbd5e1;background:white}  
+button{border:0;background:#0891b2;color:white;font-weight:bold;cursor:pointer}  
+button.delete{background:#dc2626}  
+button.logout{background:#475569}  
+.order{border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-top:12px}  
+.order p{margin:7px 0;font-size:14px;overflow-wrap:anywhere}  
+.status{font-weight:bold;color:#0369a1}  
+.small{font-size:12px;color:#64748b;line-height:1.5}  
+.hidden{display:none!important}  
+#message{overflow-wrap:anywhere;font-size:14px}  
+</style>  </head>  <body>  
+<div class="container">  <section class="card" id="loginCard">  
+<h1>🔐 Admin DANZZCENZZ STORE</h1>  
+<p class="small">Login menggunakan akun admin Firebase.</p>  <form id="loginForm">  
+<input id="email" type="email" placeholder="Email admin" autocomplete="username" required>  
+<input id="password" type="password" placeholder="Password admin" autocomplete="current-password" required>  
+<button id="loginButton" type="submit">Login Admin</button>  
+</form>  <p id="message" role="status"></p>  
+</section>  <div id="adminArea" class="hidden">  <section class="card">  
+<h1>📋 Panel Pesanan</h1>  
+<p class="small">Pesanan akan ditampilkan dari Firebase setelah Rules dikonfigurasi.</p>  
+<button class="logout" id="logoutButton">Logout</button>  
+</section>  <section class="card">  
+<h2>➕ Tambah Pesanan Manual</h2>  <form id="orderForm">  
+<input id="customer" placeholder="Nama pelanggan" maxlength="100" required>  
+<input id="service" placeholder="Nama pesanan / layanan" maxlength="150" required>  
+<input id="price" type="number" placeholder="Harga (Rp)" min="0" required>  <select id="status">  
+<option value="Menunggu Pembayaran">Menunggu Pembayaran</option>  
+<option value="Terverifikasi">Terverifikasi</option>  
+<option value="Selesai">Selesai</option>  
+</select>  <button type="submit">Simpan Pesanan</button>
 
-<style>
-*{box-sizing:border-box}
-body{margin:0;padding:16px;font-family:Arial,sans-serif;background:#eef2f7;color:#111827}
-.container{max-width:650px;margin:20px auto}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:16px;box-shadow:0 3px 15px #0000000b}
-h1{font-size:23px;margin-top:0}
-h2{font-size:18px}
-input,select,button{width:100%;padding:12px;margin-top:10px;border-radius:8px;font-size:14px}
-input,select{border:1px solid #cbd5e1;background:white}
-button{border:0;background:#0891b2;color:white;font-weight:bold;cursor:pointer}
-button.delete{background:#dc2626}
-button.logout{background:#475569}
-.order{border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-top:12px}
-.order p{margin:7px 0;font-size:14px;overflow-wrap:anywhere}
-.status{font-weight:bold;color:#0369a1}
-.small{font-size:12px;color:#64748b;line-height:1.5}
-.hidden{display:none!important}
-#message,#settingsMessage{overflow-wrap:anywhere;font-size:14px}
-</style>
-</head>
-
-<body>
-<div class="container">
-
-<section class="card" id="loginCard">
-<h1>🔐 Admin DANZZCENZZ STORE</h1>
-<p class="small">Login menggunakan akun admin Firebase.</p>
-
-<form id="loginForm" onsubmit="return false;">
-<input id="email" type="email" placeholder="Email admin"
-autocomplete="username" required>
-<input id="password" type="password" placeholder="Password admin"
-autocomplete="current-password" required>
-<button id="loginButton" type="submit">Login Admin</button>
-</form>
-
-<p id="message" role="status"></p>
-</section>
-
-<div id="adminArea" class="hidden">
-
-<section class="card">
-<h1>📋 Panel Pesanan</h1>
-<p class="small">
-Kelola pesanan dan sembunyikan pesanan selesai dari daftar admin.
-</p>
-<button class="logout" id="logoutButton">Logout</button>
-</section>
-
-<section class="card">
-<h2>➕ Tambah Pesanan Manual</h2>
-
-<form id="orderForm">
-<input id="customer" placeholder="Nama pelanggan"
-maxlength="100" required>
-<input id="service" placeholder="Nama pesanan / layanan"
-maxlength="150" required>
-<input id="price" type="number" placeholder="Harga (Rp)"
-min="0" required>
-
-<select id="status">
-<option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
-<option value="Terverifikasi">Terverifikasi</option>
-<option value="Selesai">Selesai</option>
-</select>
-
-<button type="submit">Simpan Pesanan</button>
-</form>
-</section>
-
-<section class="card">
-<h2>⚙️ Pengaturan Website</h2>
-
-<form id="settingsForm">
-<label for="siteName">Nama Website</label>
-<input id="siteName" placeholder="Nama Website"
-maxlength="100" required>
-
-<label for="adminWhatsApp">Nomor WhatsApp Admin</label>
-<input id="adminWhatsApp" type="tel"
-placeholder="Contoh: 628123456789"
-maxlength="20" required>
+</form>  
+</section>  <section class="card">  
+<h2>⚙️ Pengaturan Website</h2>  <form id="settingsForm">  
+  <label>Nama Website</label>  
+  <input id="siteName" placeholder="Nama Website" maxlength="100" required>  <label>Nomor WhatsApp Admin</label>
+<input id="adminWhatsApp" type="tel" placeholder="Contoh: 628123456789" maxlength="20" required>
 
 <button type="submit">💾 Simpan Pengaturan</button>
-<p id="settingsMessage" class="small"></p>
-</form>
-</section>
 
-<section class="card">
-<h2>📦 Daftar Pesanan</h2>
-<p id="total">Total pesanan: 0</p>
-<p class="small">
-Pesanan selesai yang disembunyikan hanya hilang dari daftar pada
-aplikasi/perangkat ini. Data pesanan asli tetap berada di Firebase.
-</p>
-<div id="orders"><p>Memuat pesanan...</p></div>
-</section>
-
-</div>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
-  authDomain: "danzzcenzz-store.firebaseapp.com",
-  databaseURL: "https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "danzzcenzz-store",
-  storageBucket: "danzzcenzz-store.firebasestorage.app",
-  messagingSenderId: "28505785159",
-  appId: "1:28505785159:web:f605c1ea4a881741a04262",
-  measurementId: "G-R0G2QBF8J8"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.database();
-
-const ADMIN_UID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
-
-// Penyimpanan lokal khusus daftar tersembunyi admin.
-const HIDDEN_ORDERS_KEY = "danzzcenzz_admin_hidden_orders";
-
-const loginCard = document.getElementById("loginCard");
-const adminArea = document.getElementById("adminArea");
-const loginForm = document.getElementById("loginForm");
-const orderForm = document.getElementById("orderForm");
-const ordersContainer = document.getElementById("orders");
-const message = document.getElementById("message");
-
-const settingsForm = document.getElementById("settingsForm");
-const siteNameInput = document.getElementById("siteName");
-const adminWhatsAppInput = document.getElementById("adminWhatsApp");
-const settingsMessage = document.getElementById("settingsMessage");
-
-let ordersListener = null;
-let currentOrders = [];
-
-function showMessage(text) {
-  message.textContent = text;
-}
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
-
-function rupiah(value) {
-  return "Rp" + Number(value || 0).toLocaleString("id-ID");
-}
-
-// Membaca ID pesanan yang disembunyikan pada perangkat ini.
-function getHiddenOrderIds() {
-  try {
-    const saved = localStorage.getItem(HIDDEN_ORDERS_KEY);
-    const ids = saved ? JSON.parse(saved) : [];
-    return new Set(Array.isArray(ids) ? ids : []);
-  } catch (error) {
-    return new Set();
-  }
-}
-
-// Menyimpan ID pesanan tersembunyi tanpa menghapus data Firebase.
-function saveHiddenOrderIds(ids) {
-  try {
-    localStorage.setItem(
-      HIDDEN_ORDERS_KEY,
-      JSON.stringify([...ids])
-    );
-    return true;
-  } catch (error) {
-    alert(
-      "Gagal menyimpan daftar tersembunyi di perangkat ini. " +
-      "Periksa penyimpanan aplikasi."
-    );
-    return false;
-  }
-}
-
-function renderOrders(snapshot) {
-  const orders = [];
-
-  snapshot.forEach(child => {
-    orders.push({
-      id: child.key,
-      ...child.val()
-    });
-  });
-
-  currentOrders = orders;
-
-  const hiddenIds = getHiddenOrderIds();
-
-  const visibleOrders = orders.filter(order =>
-    !hiddenIds.has(order.id)
-  );
-
-  visibleOrders.sort((a, b) =>
-    Number(b.createdAt || 0) - Number(a.createdAt || 0)
-  );
-
-  document.getElementById("total").textContent =
-    "Total pesanan yang tampil: " + visibleOrders.length;
-
-  if (!visibleOrders.length) {
-    ordersContainer.innerHTML =
-      "<p>Tidak ada pesanan yang ditampilkan.</p>";
-    return;
-  }
-
-  ordersContainer.innerHTML = visibleOrders.map(order => {
-    const status = order.status || "Menunggu Pembayaran";
-    const isCompleted = status === "Selesai";
-
-    return `
-      <article class="order">
-        <p><b>Pelanggan:</b>
-          ${escapeHTML(order.customer || "Pelanggan")}
-        </p>
-
-        <p><b>Pesanan:</b>
-          ${escapeHTML(order.service || "Pesanan")}
-        </p>
-
-        <p><b>Harga:</b> ${rupiah(order.price)}</p>
-
-        <p><b>Tanggal:</b>
-          ${escapeHTML(order.date || "-")}
-        </p>
-
-        <p class="status">
-          Status: ${escapeHTML(status)}
-        </p>
-
-        <select data-status-id="${escapeHTML(order.id)}">
-          <option value="Menunggu Pembayaran"
-            ${status === "Menunggu Pembayaran" ? "selected" : ""}>
-            Menunggu Pembayaran
-          </option>
-
-          <option value="Terverifikasi"
-            ${status === "Terverifikasi" ? "selected" : ""}>
-            Terverifikasi
-          </option>
-
-          <option value="Selesai"
-            ${status === "Selesai" ? "selected" : ""}>
-            Selesai
-          </option>
-        </select>
-
-        <button data-update-id="${escapeHTML(order.id)}">
-          Ubah Status
-        </button>
-
-        ${
-          isCompleted
-            ? `<button class="delete"
-                 data-hide-id="${escapeHTML(order.id)}">
-                 🗑️ Hapus dari Daftar Admin
-               </button>`
-            : ""
-        }
-      </article>
-    `;
-  }).join("");
-}
-
-function startOrdersListener() {
-  // Hindari memasang listener berulang kali.
-  if (ordersListener) {
-    db.ref("orders").off("value", ordersListener);
-  }
-
-  ordersListener = snapshot => {
-    renderOrders(snapshot);
-  };
-
-  db.ref("orders").on(
-    "value",
-    ordersListener,
-    error => {
-      ordersContainer.textContent =
-        "Gagal membaca pesanan: " + error.message +
-        ". Periksa koneksi dan Rules Firebase.";
-    }
-  );
-}
-
-function stopOrdersListener() {
-  if (ordersListener) {
-    db.ref("orders").off("value", ordersListener);
-    ordersListener = null;
-  }
-}
-
-// LOGIN ADMIN
-loginForm.addEventListener("submit", async function(event) {
-  event.preventDefault();
-
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  const button = document.getElementById("loginButton");
-
-  button.disabled = true;
-  button.textContent = "Sedang login...";
-  showMessage("Menghubungkan ke Firebase...");
-
-  try {
-    const result = await auth.signInWithEmailAndPassword(email, password);
-
-    if (result.user.uid !== ADMIN_UID) {
-      await auth.signOut();
-      showMessage("Akun ini bukan akun admin.");
-      return;
-    }
-
-    showMessage("Login berhasil. Membuka panel admin...");
-  } catch (error) {
-    showMessage("Login gagal: " + error.message);
-  } finally {
-    button.disabled = false;
-    button.textContent = "Login Admin";
-  }
-});
-
-// STATUS LOGIN
-auth.onAuthStateChanged(async user => {
-  if (!user) {
-    stopOrdersListener();
-    loginCard.classList.remove("hidden");
-    adminArea.classList.add("hidden");
-    return;
-  }
-
-  if (user.uid !== ADMIN_UID) {
-    await auth.signOut();
-    showMessage("Akun ini bukan akun admin.");
-    return;
-  }
-
-  loginCard.classList.add("hidden");
-  adminArea.classList.remove("hidden");
-
-  startOrdersListener();
-  loadWebsiteSettings();
-});
-
-// TAMBAH PESANAN MANUAL
-orderForm.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const user = auth.currentUser;
-
-  if (!user || user.uid !== ADMIN_UID) {
-    alert("Silakan login sebagai admin.");
-    return;
-  }
-
-  const customer = document.getElementById("customer").value.trim();
-  const service = document.getElementById("service").value.trim();
-  const price = Number(document.getElementById("price").value);
-  const status = document.getElementById("status").value;
-
-  if (
-    !customer ||
-    !service ||
-    !Number.isFinite(price) ||
-    price < 0
-  ) {
-    alert("Periksa nama pelanggan, pesanan, dan harga.");
-    return;
-  }
-
-  try {
-    await db.ref("orders").push({
-      customer,
-      service,
-      price,
-      status,
-      date: new Date().toLocaleString("id-ID"),
-      createdAt: Date.now()
-    });
-
-    orderForm.reset();
-    alert("Pesanan berhasil disimpan ke Firebase.");
-  } catch (error) {
-    alert("Gagal menyimpan pesanan: " + error.message);
-  }
-});
-
-// UBAH STATUS DAN SEMBUNYIKAN PESANAN SELESAI
-ordersContainer.addEventListener("click", async event => {
-  const user = auth.currentUser;
-
-  if (!user || user.uid !== ADMIN_UID) {
-    alert("Silakan login sebagai admin.");
-    return;
-  }
-
-  const button = event.target.closest("button");
-  if (!button) return;
-
-  const updateId = button.dataset.updateId;
-  const hideId = button.dataset.hideId;
-
-  // Ubah status pesanan.
-  if (updateId) {
-    const select = ordersContainer.querySelector(
-      '[data-status-id="' + CSS.escape(updateId) + '"]'
-    );
-
-    if (!select) return;
-
-    try {
-      await db.ref("orders/" + updateId).update({
-        status: select.value
-      });
-    } catch (error) {
-      alert("Gagal mengubah status: " + error.message);
-    }
-
-    return;
-  }
-
-  // Sembunyikan pesanan selesai dari daftar admin.
-  if (hideId) {
-    const order = currentOrders.find(item => item.id === hideId);
-
-    if (!order) {
-      alert("Pesanan tidak ditemukan.");
-      return;
-    }
-
-    if (order.status !== "Selesai") {
-      alert("Hanya pesanan berstatus Selesai yang bisa disembunyikan.");
-      return;
-    }
-
-    const confirmed = confirm(
-      "Sembunyikan pesanan ini dari daftar admin?\n\n" +
-      "Data pesanan di Firebase dan riwayat pelanggan " +
-      "tidak akan dihapus."
-    );
-
-    if (!confirmed) return;
-
-    const hiddenIds = getHiddenOrderIds();
-    hiddenIds.add(hideId);
-
-    if (saveHiddenOrderIds(hiddenIds)) {
-      renderOrdersFromCurrentData();
-      alert("Pesanan disembunyikan dari daftar admin.");
-    }
-  }
-});
-
-function renderOrdersFromCurrentData() {
-  const hiddenIds = getHiddenOrderIds();
-
-  const visibleOrders = currentOrders.filter(order =>
-    !hiddenIds.has(order.id)
-  );
-
-  visibleOrders.sort((a, b) =>
-    Number(b.createdAt || 0) - Number(a.createdAt || 0)
-  );
-
-  document.getElementById("total").textContent =
-    "Total pesanan yang tampil: " + visibleOrders.length;
-
-  if (!visibleOrders.length) {
-    ordersContainer.innerHTML =
-      "<p>Tidak ada pesanan yang ditampilkan.</p>";
-    return;
-  }
-
-  ordersContainer.innerHTML = visibleOrders.map(order => {
-    const status = order.status || "Menunggu Pembayaran";
-
-    return `
-      <article class="order">
-        <p><b>Pelanggan:</b>
-          ${escapeHTML(order.customer || "Pelanggan")}
-        </p>
-
-        <p><b>Pesanan:</b>
-          ${escapeHTML(order.service || "Pesanan")}
-        </p>
-
-        <p><b>Harga:</b> ${rupiah(order.price)}</p>
-
-        <p><b>Tanggal:</b>
-          ${escapeHTML(order.date || "-")}
-        </p>
-
-        <p class="status">Status: ${escapeHTML(status)}</p>
-
-        <select data-status-id="${escapeHTML(order.id)}">
-          <option value="Menunggu Pembayaran"
-            ${status === "Menunggu Pembayaran" ? "selected" : ""}>
-            Menunggu Pembayaran
-          </option>
-          <option value="Terverifikasi"
-            ${status === "Terverifikasi" ? "selected" : ""}>
-            Terverifikasi
-          </option>
-          <option value="Selesai"
-            ${status === "Selesai" ? "selected" : ""}>
-            Selesai
-          </option>
-        </select>
-
-        <button data-update-id="${escapeHTML(order.id)}">
-          Ubah Status
-        </button>
-
-        ${
-          status === "Selesai"
-            ? `<button class="delete" data-hide-id="${escapeHTML(order.id)}">
-                 🗑️ Hapus dari Daftar Admin
-               </button>`
-            : ""
-        }
-      </article>
-    `;
-  }).join("");
-});
-
-// PENGATURAN WEBSITE
-function loadWebsiteSettings() {
-  const user = auth.currentUser;
-
-  if (!user || user.uid !== ADMIN_UID) return;
-
-  db.ref("settings").once("value")
-    .then(snapshot => {
-      const settings = snapshot.val() || {};
-
-      siteNameInput.value =
-        settings.siteName || "DANZZCENZZ STORE";
-
-      adminWhatsAppInput.value =
-        settings.adminWhatsApp || "";
-    })
-    .catch(error => {
-      settingsMessage.textContent =
-        "Gagal memuat pengaturan: " + error.message;
-    });
-}
-
-settingsForm.addEventListener("submit", async event => {
-  event.preventDefault();
-
-  const user = auth.currentUser;
-
-  if (!user || user.uid !== ADMIN_UID) {
-    settingsMessage.textContent =
-      "Silakan login sebagai admin.";
-    return;
-  }
-
-  const siteName = siteNameInput.value.trim();
-  const adminWhatsApp = adminWhatsAppInput.value.trim();
-
-  if (!siteName || !adminWhatsApp) {
-    settingsMessage.textContent =
-      "Nama website dan WhatsApp wajib diisi.";
-    return;
-  }
-
-  try {
-    await db.ref("settings").update({
-      siteName,
-      adminWhatsApp,
-      updatedAt: Date.now()
-    });
-
-    settingsMessage.textContent =
-      "Pengaturan berhasil disimpan!";
-  } catch (error) {
-    settingsMessage.textContent =
-      "Gagal menyimpan: " + error.message;
-  }
-});
-
-// LOGOUT
-document.getElementById("logoutButton")
-  .addEventListener("click", async () => {
-    stopOrdersListener();
-    await auth.signOut();
-    loginForm.reset();
-    showMessage("Kamu sudah logout.");
-  });
-
-window.addEventListener("error", function(event) {
-  document.getElementById("message").textContent =
-    "Error: " + event.message;
-});
-
-</script>
-
-</body>
-</html>
+  <p id="settingsMessage" class="small"></p>  
+</form>  
+</section>  <section class="card">  
+<h2>📦 Daftar Pesanan</h2>  
+<p id="total">Total pesanan: 0</p>  
+<div id="orders"><p>Memuat pesanan...</p></div>  
+</section>  </div>  
+</div>  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>  <script>  
+const firebaseConfig = {  
+  apiKey: "AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",  
+  authDomain: "danzzcenzz-store.firebaseapp.com",  
+  databaseURL: "https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",  
+  projectId: "danzzcenzz-store",  
+  storageBucket: "danzzcenzz-store.firebasestorage.app",  
+  messagingSenderId: "28505785159",  
+  appId: "1:28505785159:web:f605c1ea4a881741a04262",  
+  measurementId: "G-R0G2QBF8J8"  
+};  
+  
+firebase.initializeApp(firebaseConfig);  
+  
+const auth = firebase.auth();  
+const db = firebase.database();  
+  
+const ADMIN_UID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";  
+  
+const loginCard = document.getElementById("loginCard");  
+const adminArea = document.getElementById("adminArea");  
+const loginForm = document.getElementById("loginForm");  
+const orderForm = document.getElementById("orderForm");  
+const ordersContainer = document.getElementById("orders");  
+const message = document.getElementById("message");  
+  
+let ordersListener = null;  
+  
+function showMessage(text) {  
+  message.textContent = text;  
+}  
+  
+function escapeHTML(value) {  
+  return String(value ?? "").replace(/[&<>"']/g, char => ({  
+    "&":"&amp;",  
+    "<":"&lt;",  
+    ">":"&gt;",  
+    '"':"&quot;",  
+    "'":"&#39;"  
+  })[char]);  
+}  
+  
+function rupiah(value) {  
+  return "Rp" + Number(value || 0).toLocaleString("id-ID");  
+}  
+  
+function renderOrders(snapshot) {  
+  const orders = [];  
+  
+  snapshot.forEach(child => {  
+    orders.push({  
+      id: child.key,  
+      ...child.val()  
+    });  
+  });  
+  
+  orders.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));  
+  
+  document.getElementById("total").textContent =  
+    "Total pesanan: " + orders.length;  
+  
+  if (!orders.length) {  
+    ordersContainer.innerHTML = "<p>Belum ada pesanan.</p>";  
+    return;  
+  }  
+  
+  ordersContainer.innerHTML = orders.map(order => `  
+    <article class="order">  
+      <p><b>Pelanggan:</b> ${escapeHTML(order.customer || "Pelanggan")}</p>  
+      <p><b>Pesanan:</b> ${escapeHTML(order.service || "Pesanan")}</p>  
+      <p><b>Harga:</b> ${rupiah(order.price)}</p>  
+      <p><b>Tanggal:</b> ${escapeHTML(order.date || "-")}</p>  
+      <p class="status">Status: ${escapeHTML(order.status || "Menunggu Pembayaran")}</p>  
+  
+      <select data-status-id="${escapeHTML(order.id)}">  
+        <option value="Menunggu Pembayaran" ${order.status==="Menunggu Pembayaran"?"selected":""}>Menunggu Pembayaran</option>  
+        <option value="Terverifikasi" ${order.status==="Terverifikasi"?"selected":""}>Terverifikasi</option>  
+        <option value="Selesai" ${order.status==="Selesai"?"selected":""}>Selesai</option>  
+      </select>  
+  
+      <button data-update-id="${escapeHTML(order.id)}">Ubah Status</button>  
+      <button class="delete" data-delete-id="${escapeHTML(order.id)}">Hapus Pesanan</button>  
+    </article>  
+  `).join("");  
+}  
+  
+function startOrdersListener() {  
+  if (ordersListener) {  
+    db.ref("orders").off("value", ordersListener);  
+  }  
+  
+  ordersListener = snapshot => renderOrders(snapshot);  
+  
+  db.ref("orders").on("value", ordersListener, error => {  
+    ordersContainer.textContent =  
+      "Gagal membaca pesanan: " + error.message +  
+      ". Periksa konfigurasi Rules Firebase.";  
+  });  
+}  
+  
+loginForm.addEventListener("submit", async event => {  
+  event.preventDefault();  
+  
+  const email = document.getElementById("email").value.trim();  
+  const password = document.getElementById("password").value;  
+  
+  showMessage("Sedang login...");  
+  
+  try {  
+    const result = await auth.signInWithEmailAndPassword(email, password);  
+  
+    if (result.user.uid !== ADMIN_UID) {  
+      await auth.signOut();  
+      showMessage("Akun ini tidak memiliki izin admin.");  
+      return;  
+    }  
+  
+    loginCard.classList.add("hidden");  
+    adminArea.classList.remove("hidden");  
+    document.getElementById("password").value = "";  
+  
+    startOrdersListener();  
+    loadWebsiteSettings();  
+  } catch (error) {  
+    showMessage("Login gagal: " + error.message);  
+  }  
+});  
+  
+auth.onAuthStateChanged(async user => {  
+  if (!user) return;  
+  
+  if (user.uid !== ADMIN_UID) {  
+    await auth.signOut();  
+    showMessage("Akun ini bukan akun admin.");  
+    return;  
+  }  
+  
+  loginCard.classList.add("hidden");  
+  adminArea.classList.remove("hidden");  
+  startOrdersListener();  
+  loadWebsiteSettings();  
+});  
+  
+orderForm.addEventListener("submit", async event => {  
+  event.preventDefault();  
+  
+  const user = auth.currentUser;  
+  
+  if (!user || user.uid !== ADMIN_UID) {  
+    alert("Silakan login sebagai admin.");  
+    return;  
+  }  
+  
+  const customer = document.getElementById("customer").value.trim();  
+  const service = document.getElementById("service").value.trim();  
+  const price = Number(document.getElementById("price").value);  
+  const status = document.getElementById("status").value;  
+  
+  if (!customer || !service || !Number.isFinite(price) || price < 0) {  
+    alert("Periksa nama pelanggan, pesanan, dan harga.");  
+    return;  
+  }  
+  
+  try {  
+    await db.ref("orders").push({  
+      customer,  
+      service,  
+      price,  
+      status,  
+      date: new Date().toLocaleString("id-ID"),  
+      createdAt: Date.now()  
+    });  
+  
+    orderForm.reset();  
+    alert("Pesanan berhasil disimpan ke Firebase.");  
+  } catch (error) {  
+    alert("Gagal menyimpan pesanan: " + error.message);  
+  }  
+});  
+  
+ordersContainer.addEventListener("click", async event => {  
+  const user = auth.currentUser;  
+  
+  if (!user || user.uid !== ADMIN_UID) {  
+    alert("Silakan login sebagai admin.");  
+    return;  
+  }  
+  
+  const updateId = event.target.dataset.updateId;  
+  const deleteId = event.target.dataset.deleteId;  
+  
+  if (updateId) {  
+    const select = ordersContainer.querySelector(  
+      '[data-status-id="' + CSS.escape(updateId) + '"]'  
+    );  
+  
+    if (!select) return;  
+  
+    try {  
+      await db.ref("orders/" + updateId).update({  
+        status: select.value  
+      });  
+    } catch (error) {  
+      alert("Gagal mengubah status: " + error.message);  
+    }  
+  }  
+  
+  if (deleteId && confirm("Yakin ingin menghapus pesanan ini?")) {  
+    try {  
+      await db.ref("orders/" + deleteId).remove();  
+    } catch (error) {  
+      alert("Gagal menghapus pesanan: " + error.message);  
+    }  
+  }  
+});  
+  
+document.getElementById("logoutButton").addEventListener("click", async () => {  
+  if (ordersListener) {  
+    db.ref("orders").off("value", ordersListener);  
+    ordersListener = null;  
+  }  
+  
+  await auth.signOut();  
+  
+  adminArea.classList.add("hidden");  
+  loginCard.classList.remove("hidden");  
+  loginForm.reset();  
+  showMessage("Kamu sudah logout.");  
+});  
+  
+// PENGATURAN WEBSITE  
+const settingsForm = document.getElementById("settingsForm");  
+const siteNameInput = document.getElementById("siteName");  
+const adminWhatsAppInput = document.getElementById("adminWhatsApp");  
+const settingsMessage = document.getElementById("settingsMessage");  
+  
+function loadWebsiteSettings() {  
+  db.ref("settings").once("value")  
+    .then(snapshot => {  
+      const settings = snapshot.val() || {};  
+  
+      siteNameInput.value = settings.siteName || "DANZZCENZZ STORE";  
+      adminWhatsAppInput.value = settings.adminWhatsApp || "";  
+    })  
+    .catch(error => {  
+      settingsMessage.textContent = "Gagal memuat pengaturan: " + error.message;  
+    });  
+}  
+  
+settingsForm.addEventListener("submit", async event => {  
+  event.preventDefault();  
+  
+  const user = auth.currentUser;  
+  
+  if (!user || user.uid !== ADMIN_UID) {  
+    settingsMessage.textContent = "Silakan login sebagai admin.";  
+    return;  
+  }  
+  
+  const siteName = siteNameInput.value.trim();  
+  const adminWhatsApp = adminWhatsAppInput.value.trim();  
+  
+  if (!siteName || !adminWhatsApp) {  
+    settingsMessage.textContent = "Nama website dan WhatsApp wajib diisi.";  
+    return;  
+  }  
+  
+  try {  
+    await db.ref("settings").update({  
+      siteName,  
+      adminWhatsApp,  
+      updatedAt: Date.now()  
+    });  
+  
+    settingsMessage.textContent = "Pengaturan berhasil disimpan!";  
+  } catch (error) {  
+    settingsMessage.textContent = "Gagal menyimpan: " + error.message;  
+  }  
+});  
+  
+</script>  </body>  
+</html>  Kalo ini sama itu sama ga?
