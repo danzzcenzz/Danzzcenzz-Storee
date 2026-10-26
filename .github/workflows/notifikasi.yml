@@ -1,0 +1,13 @@
+name: Notifikasi Pesanan
+
+on:
+workflow_dispatch:
+repository_dispatch:
+types: [pesanan_baru]
+
+jobs:
+notifikasi:
+runs-on: ubuntu-latest
+steps:
+- name: Kirim notifikasi
+run: echo "Workflow notifikasi pesanan berhasil dijalankan"
