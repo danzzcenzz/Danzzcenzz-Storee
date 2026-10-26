@@ -1,8 +1,10 @@
 name: Notifikasi Pesanan
-on: workflow_dispatch
+
+'on':
+workflow_dispatch:
+
 jobs:
-notifikasi:
+tes:
 runs-on: ubuntu-latest
 steps:
-- name: Tes workflow
-run: echo "Notifikasi berhasil dijalankan"
+- run: echo "Berhasil"
