@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#eef2f7">
 <title>Admin DANZZCENZZ STORE</title>
 
 <style>
@@ -22,7 +23,7 @@ button.logout{background:#475569}
 .status{font-weight:bold;color:#0369a1}
 .small{font-size:12px;color:#64748b;line-height:1.5}
 .hidden{display:none!important}
-#message{overflow-wrap:anywhere;font-size:14px}
+#message,#settingsMessage{overflow-wrap:anywhere;font-size:14px}
 </style>
 </head>
 
@@ -34,8 +35,10 @@ button.logout{background:#475569}
 <p class="small">Login menggunakan akun admin Firebase.</p>
 
 <form id="loginForm">
-<input id="email" type="email" placeholder="Email admin" autocomplete="username" required>
-<input id="password" type="password" placeholder="Password admin" autocomplete="current-password" required>
+<input id="email" type="email" placeholder="Email admin"
+autocomplete="username" required>
+<input id="password" type="password" placeholder="Password admin"
+autocomplete="current-password" required>
 <button id="loginButton" type="submit">Login Admin</button>
 </form>
 
@@ -46,7 +49,9 @@ button.logout{background:#475569}
 
 <section class="card">
 <h1>📋 Panel Pesanan</h1>
-<p class="small">Pesanan akan ditampilkan dari Firebase setelah Rules dikonfigurasi.</p>
+<p class="small">
+Kelola pesanan dan sembunyikan pesanan selesai dari daftar admin.
+</p>
 <button class="logout" id="logoutButton">Logout</button>
 </section>
 
@@ -54,9 +59,12 @@ button.logout{background:#475569}
 <h2>➕ Tambah Pesanan Manual</h2>
 
 <form id="orderForm">
-<input id="customer" placeholder="Nama pelanggan" maxlength="100" required>
-<input id="service" placeholder="Nama pesanan / layanan" maxlength="150" required>
-<input id="price" type="number" placeholder="Harga (Rp)" min="0" required>
+<input id="customer" placeholder="Nama pelanggan"
+maxlength="100" required>
+<input id="service" placeholder="Nama pesanan / layanan"
+maxlength="150" required>
+<input id="price" type="number" placeholder="Harga (Rp)"
+min="0" required>
 
 <select id="status">
 <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
@@ -72,20 +80,27 @@ button.logout{background:#475569}
 <h2>⚙️ Pengaturan Website</h2>
 
 <form id="settingsForm">
-  <label>Nama Website</label>
-  <input id="siteName" placeholder="Nama Website" maxlength="100" required>
+<label for="siteName">Nama Website</label>
+<input id="siteName" placeholder="Nama Website"
+maxlength="100" required>
 
-  <label>Nomor WhatsApp Admin</label>
-  <input id="adminWhatsApp" type="tel" placeholder="Contoh: 628123456789" maxlength="20" required>
+<label for="adminWhatsApp">Nomor WhatsApp Admin</label>
+<input id="adminWhatsApp" type="tel"
+placeholder="Contoh: 628123456789"
+maxlength="20" required>
 
-  <button type="submit">💾 Simpan Pengaturan</button>
-  <p id="settingsMessage" class="small"></p>
+<button type="submit">💾 Simpan Pengaturan</button>
+<p id="settingsMessage" class="small"></p>
 </form>
 </section>
 
 <section class="card">
 <h2>📦 Daftar Pesanan</h2>
 <p id="total">Total pesanan: 0</p>
+<p class="small">
+Pesanan selesai yang disembunyikan hanya hilang dari daftar pada
+aplikasi/perangkat ini. Data pesanan asli tetap berada di Firebase.
+</p>
 <div id="orders"><p>Memuat pesanan...</p></div>
 </section>
 
@@ -115,6 +130,9 @@ const db = firebase.database();
 
 const ADMIN_UID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
 
+// Penyimpanan lokal khusus daftar tersembunyi admin.
+const HIDDEN_ORDERS_KEY = "danzzcenzz_admin_hidden_orders";
+
 const loginCard = document.getElementById("loginCard");
 const adminArea = document.getElementById("adminArea");
 const loginForm = document.getElementById("loginForm");
@@ -122,7 +140,13 @@ const orderForm = document.getElementById("orderForm");
 const ordersContainer = document.getElementById("orders");
 const message = document.getElementById("message");
 
+const settingsForm = document.getElementById("settingsForm");
+const siteNameInput = document.getElementById("siteName");
+const adminWhatsAppInput = document.getElementById("adminWhatsApp");
+const settingsMessage = document.getElementById("settingsMessage");
+
 let ordersListener = null;
+let currentOrders = [];
 
 function showMessage(text) {
   message.textContent = text;
@@ -130,16 +154,44 @@ function showMessage(text) {
 
 function escapeHTML(value) {
   return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
   })[char]);
 }
 
 function rupiah(value) {
   return "Rp" + Number(value || 0).toLocaleString("id-ID");
+}
+
+// Membaca ID pesanan yang disembunyikan pada perangkat ini.
+function getHiddenOrderIds() {
+  try {
+    const saved = localStorage.getItem(HIDDEN_ORDERS_KEY);
+    const ids = saved ? JSON.parse(saved) : [];
+    return new Set(Array.isArray(ids) ? ids : []);
+  } catch (error) {
+    return new Set();
+  }
+}
+
+// Menyimpan ID pesanan tersembunyi tanpa menghapus data Firebase.
+function saveHiddenOrderIds(ids) {
+  try {
+    localStorage.setItem(
+      HIDDEN_ORDERS_KEY,
+      JSON.stringify([...ids])
+    );
+    return true;
+  } catch (error) {
+    alert(
+      "Gagal menyimpan daftar tersembunyi di perangkat ini. " +
+      "Periksa penyimpanan aplikasi."
+    );
+    return false;
+  }
 }
 
 function renderOrders(snapshot) {
@@ -152,50 +204,114 @@ function renderOrders(snapshot) {
     });
   });
 
-  orders.sort((a, b) => Number(b.createdAt || 0) - Number(a.createdAt || 0));
+  currentOrders = orders;
+
+  const hiddenIds = getHiddenOrderIds();
+
+  const visibleOrders = orders.filter(order =>
+    !hiddenIds.has(order.id)
+  );
+
+  visibleOrders.sort((a, b) =>
+    Number(b.createdAt || 0) - Number(a.createdAt || 0)
+  );
 
   document.getElementById("total").textContent =
-    "Total pesanan: " + orders.length;
+    "Total pesanan yang tampil: " + visibleOrders.length;
 
-  if (!orders.length) {
-    ordersContainer.innerHTML = "<p>Belum ada pesanan.</p>";
+  if (!visibleOrders.length) {
+    ordersContainer.innerHTML =
+      "<p>Tidak ada pesanan yang ditampilkan.</p>";
     return;
   }
 
-  ordersContainer.innerHTML = orders.map(order => `
-    <article class="order">
-      <p><b>Pelanggan:</b> ${escapeHTML(order.customer || "Pelanggan")}</p>
-      <p><b>Pesanan:</b> ${escapeHTML(order.service || "Pesanan")}</p>
-      <p><b>Harga:</b> ${rupiah(order.price)}</p>
-      <p><b>Tanggal:</b> ${escapeHTML(order.date || "-")}</p>
-      <p class="status">Status: ${escapeHTML(order.status || "Menunggu Pembayaran")}</p>
+  ordersContainer.innerHTML = visibleOrders.map(order => {
+    const status = order.status || "Menunggu Pembayaran";
+    const isCompleted = status === "Selesai";
 
-      <select data-status-id="${escapeHTML(order.id)}">
-        <option value="Menunggu Pembayaran" ${order.status==="Menunggu Pembayaran"?"selected":""}>Menunggu Pembayaran</option>
-        <option value="Terverifikasi" ${order.status==="Terverifikasi"?"selected":""}>Terverifikasi</option>
-        <option value="Selesai" ${order.status==="Selesai"?"selected":""}>Selesai</option>
-      </select>
+    return `
+      <article class="order">
+        <p><b>Pelanggan:</b>
+          ${escapeHTML(order.customer || "Pelanggan")}
+        </p>
 
-      <button data-update-id="${escapeHTML(order.id)}">Ubah Status</button>
-      <button class="delete" data-delete-id="${escapeHTML(order.id)}">Hapus Pesanan</button>
-    </article>
-  `).join("");
+        <p><b>Pesanan:</b>
+          ${escapeHTML(order.service || "Pesanan")}
+        </p>
+
+        <p><b>Harga:</b> ${rupiah(order.price)}</p>
+
+        <p><b>Tanggal:</b>
+          ${escapeHTML(order.date || "-")}
+        </p>
+
+        <p class="status">
+          Status: ${escapeHTML(status)}
+        </p>
+
+        <select data-status-id="${escapeHTML(order.id)}">
+          <option value="Menunggu Pembayaran"
+            ${status === "Menunggu Pembayaran" ? "selected" : ""}>
+            Menunggu Pembayaran
+          </option>
+
+          <option value="Terverifikasi"
+            ${status === "Terverifikasi" ? "selected" : ""}>
+            Terverifikasi
+          </option>
+
+          <option value="Selesai"
+            ${status === "Selesai" ? "selected" : ""}>
+            Selesai
+          </option>
+        </select>
+
+        <button data-update-id="${escapeHTML(order.id)}">
+          Ubah Status
+        </button>
+
+        ${
+          isCompleted
+            ? `<button class="delete"
+                 data-hide-id="${escapeHTML(order.id)}">
+                 🗑️ Hapus dari Daftar Admin
+               </button>`
+            : ""
+        }
+      </article>
+    `;
+  }).join("");
 }
 
 function startOrdersListener() {
+  // Hindari memasang listener berulang kali.
   if (ordersListener) {
     db.ref("orders").off("value", ordersListener);
   }
 
-  ordersListener = snapshot => renderOrders(snapshot);
+  ordersListener = snapshot => {
+    renderOrders(snapshot);
+  };
 
-  db.ref("orders").on("value", ordersListener, error => {
-    ordersContainer.textContent =
-      "Gagal membaca pesanan: " + error.message +
-      ". Periksa konfigurasi Rules Firebase.";
-  });
+  db.ref("orders").on(
+    "value",
+    ordersListener,
+    error => {
+      ordersContainer.textContent =
+        "Gagal membaca pesanan: " + error.message +
+        ". Periksa koneksi dan Rules Firebase.";
+    }
+  );
 }
 
+function stopOrdersListener() {
+  if (ordersListener) {
+    db.ref("orders").off("value", ordersListener);
+    ordersListener = null;
+  }
+}
+
+// LOGIN ADMIN
 loginForm.addEventListener("submit", async event => {
   event.preventDefault();
 
@@ -205,7 +321,10 @@ loginForm.addEventListener("submit", async event => {
   showMessage("Sedang login...");
 
   try {
-    const result = await auth.signInWithEmailAndPassword(email, password);
+    const result = await auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
 
     if (result.user.uid !== ADMIN_UID) {
       await auth.signOut();
@@ -213,19 +332,21 @@ loginForm.addEventListener("submit", async event => {
       return;
     }
 
-    loginCard.classList.add("hidden");
-    adminArea.classList.remove("hidden");
     document.getElementById("password").value = "";
-
-    startOrdersListener();
-    loadWebsiteSettings();
+    showMessage("");
   } catch (error) {
     showMessage("Login gagal: " + error.message);
   }
 });
 
+// STATUS LOGIN
 auth.onAuthStateChanged(async user => {
-  if (!user) return;
+  if (!user) {
+    stopOrdersListener();
+    loginCard.classList.remove("hidden");
+    adminArea.classList.add("hidden");
+    return;
+  }
 
   if (user.uid !== ADMIN_UID) {
     await auth.signOut();
@@ -235,10 +356,12 @@ auth.onAuthStateChanged(async user => {
 
   loginCard.classList.add("hidden");
   adminArea.classList.remove("hidden");
+
   startOrdersListener();
   loadWebsiteSettings();
 });
 
+// TAMBAH PESANAN MANUAL
 orderForm.addEventListener("submit", async event => {
   event.preventDefault();
 
@@ -254,7 +377,12 @@ orderForm.addEventListener("submit", async event => {
   const price = Number(document.getElementById("price").value);
   const status = document.getElementById("status").value;
 
-  if (!customer || !service || !Number.isFinite(price) || price < 0) {
+  if (
+    !customer ||
+    !service ||
+    !Number.isFinite(price) ||
+    price < 0
+  ) {
     alert("Periksa nama pelanggan, pesanan, dan harga.");
     return;
   }
@@ -276,6 +404,7 @@ orderForm.addEventListener("submit", async event => {
   }
 });
 
+// UBAH STATUS DAN SEMBUNYIKAN PESANAN SELESAI
 ordersContainer.addEventListener("click", async event => {
   const user = auth.currentUser;
 
@@ -284,9 +413,13 @@ ordersContainer.addEventListener("click", async event => {
     return;
   }
 
-  const updateId = event.target.dataset.updateId;
-  const deleteId = event.target.dataset.deleteId;
+  const button = event.target.closest("button");
+  if (!button) return;
 
+  const updateId = button.dataset.updateId;
+  const hideId = button.dataset.hideId;
+
+  // Ubah status pesanan.
   if (updateId) {
     const select = ordersContainer.querySelector(
       '[data-status-id="' + CSS.escape(updateId) + '"]'
@@ -301,47 +434,133 @@ ordersContainer.addEventListener("click", async event => {
     } catch (error) {
       alert("Gagal mengubah status: " + error.message);
     }
+
+    return;
   }
 
-  if (deleteId && confirm("Yakin ingin menghapus pesanan ini?")) {
-    try {
-      await db.ref("orders/" + deleteId).remove();
-    } catch (error) {
-      alert("Gagal menghapus pesanan: " + error.message);
+  // Sembunyikan pesanan selesai dari daftar admin.
+  if (hideId) {
+    const order = currentOrders.find(item => item.id === hideId);
+
+    if (!order) {
+      alert("Pesanan tidak ditemukan.");
+      return;
+    }
+
+    if (order.status !== "Selesai") {
+      alert("Hanya pesanan berstatus Selesai yang bisa disembunyikan.");
+      return;
+    }
+
+    const confirmed = confirm(
+      "Sembunyikan pesanan ini dari daftar admin?\n\n" +
+      "Data pesanan di Firebase dan riwayat pelanggan " +
+      "tidak akan dihapus."
+    );
+
+    if (!confirmed) return;
+
+    const hiddenIds = getHiddenOrderIds();
+    hiddenIds.add(hideId);
+
+    if (saveHiddenOrderIds(hiddenIds)) {
+      renderOrdersFromCurrentData();
+      alert("Pesanan disembunyikan dari daftar admin.");
     }
   }
 });
 
-document.getElementById("logoutButton").addEventListener("click", async () => {
-  if (ordersListener) {
-    db.ref("orders").off("value", ordersListener);
-    ordersListener = null;
+function renderOrdersFromCurrentData() {
+  const hiddenIds = getHiddenOrderIds();
+
+  const visibleOrders = currentOrders.filter(order =>
+    !hiddenIds.has(order.id)
+  );
+
+  visibleOrders.sort((a, b) =>
+    Number(b.createdAt || 0) - Number(a.createdAt || 0)
+  );
+
+  document.getElementById("total").textContent =
+    "Total pesanan yang tampil: " + visibleOrders.length;
+
+  if (!visibleOrders.length) {
+    ordersContainer.innerHTML =
+      "<p>Tidak ada pesanan yang ditampilkan.</p>";
+    return;
   }
 
-  await auth.signOut();
+  ordersContainer.innerHTML = visibleOrders.map(order => {
+    const status = order.status || "Menunggu Pembayaran";
 
-  adminArea.classList.add("hidden");
-  loginCard.classList.remove("hidden");
-  loginForm.reset();
-  showMessage("Kamu sudah logout.");
+    return `
+      <article class="order">
+        <p><b>Pelanggan:</b>
+          ${escapeHTML(order.customer || "Pelanggan")}
+        </p>
+
+        <p><b>Pesanan:</b>
+          ${escapeHTML(order.service || "Pesanan")}
+        </p>
+
+        <p><b>Harga:</b> ${rupiah(order.price)}</p>
+
+        <p><b>Tanggal:</b>
+          ${escapeHTML(order.date || "-")}
+        </p>
+
+        <p class="status">Status: ${escapeHTML(status)}</p>
+
+        <select data-status-id="${escapeHTML(order.id)}">
+          <option value="Menunggu Pembayaran"
+            ${status === "Menunggu Pembayaran" ? "selected" : ""}>
+            Menunggu Pembayaran
+          </option>
+          <option value="Terverifikasi"
+            ${status === "Terverifikasi" ? "selected" : ""}>
+            Terverifikasi
+          </option>
+          <option value="Selesai"
+            ${status === "Selesai" ? "selected" : ""}>
+            Selesai
+          </option>
+        </select>
+
+        <button data-update-id="${escapeHTML(order.id)}">
+          Ubah Status
+        </button>
+
+        ${
+          status === "Selesai"
+            ? `<button class="delete" data-hide-id="${escapeHTML(order.id)}">
+                 🗑️ Hapus dari Daftar Admin
+               </button>`
+            : ""
+        }
+      </article>
+    `;
+  }).join("");
 });
 
 // PENGATURAN WEBSITE
-const settingsForm = document.getElementById("settingsForm");
-const siteNameInput = document.getElementById("siteName");
-const adminWhatsAppInput = document.getElementById("adminWhatsApp");
-const settingsMessage = document.getElementById("settingsMessage");
-
 function loadWebsiteSettings() {
+  const user = auth.currentUser;
+
+  if (!user || user.uid !== ADMIN_UID) return;
+
   db.ref("settings").once("value")
     .then(snapshot => {
       const settings = snapshot.val() || {};
 
-      siteNameInput.value = settings.siteName || "DANZZCENZZ STORE";
-      adminWhatsAppInput.value = settings.adminWhatsApp || "";
+      siteNameInput.value =
+        settings.siteName || "DANZZCENZZ STORE";
+
+      adminWhatsAppInput.value =
+        settings.adminWhatsApp || "";
     })
     .catch(error => {
-      settingsMessage.textContent = "Gagal memuat pengaturan: " + error.message;
+      settingsMessage.textContent =
+        "Gagal memuat pengaturan: " + error.message;
     });
 }
 
@@ -351,7 +570,8 @@ settingsForm.addEventListener("submit", async event => {
   const user = auth.currentUser;
 
   if (!user || user.uid !== ADMIN_UID) {
-    settingsMessage.textContent = "Silakan login sebagai admin.";
+    settingsMessage.textContent =
+      "Silakan login sebagai admin.";
     return;
   }
 
@@ -359,7 +579,8 @@ settingsForm.addEventListener("submit", async event => {
   const adminWhatsApp = adminWhatsAppInput.value.trim();
 
   if (!siteName || !adminWhatsApp) {
-    settingsMessage.textContent = "Nama website dan WhatsApp wajib diisi.";
+    settingsMessage.textContent =
+      "Nama website dan WhatsApp wajib diisi.";
     return;
   }
 
@@ -370,12 +591,23 @@ settingsForm.addEventListener("submit", async event => {
       updatedAt: Date.now()
     });
 
-    settingsMessage.textContent = "Pengaturan berhasil disimpan!";
+    settingsMessage.textContent =
+      "Pengaturan berhasil disimpan!";
   } catch (error) {
-    settingsMessage.textContent = "Gagal menyimpan: " + error.message;
+    settingsMessage.textContent =
+      "Gagal menyimpan: " + error.message;
   }
 });
 
+// LOGOUT
+document.getElementById("logoutButton")
+  .addEventListener("click", async () => {
+    stopOrdersListener();
+    await auth.signOut();
+    loginForm.reset();
+    showMessage("Kamu sudah logout.");
+  });
 </script>
+
 </body>
 </html>
