@@ -1,0 +1,11 @@
+name: Notifikasi DANZZCENZZ STORE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cek sistem
+        run: echo "Sistem notifikasi siap dikonfigurasi"
