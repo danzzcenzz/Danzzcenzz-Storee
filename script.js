@@ -103,30 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }).join('');
 }
 
-        container.innerHTML = items.map(function (item) {
-            return `
-                <article class="transaction-item">
-                    <strong>
-                        🛍️ ${escapeHTML(item.service || 'Pesanan')}
-                    </strong>
-
-                    <small>
-                        📅 ${escapeHTML(item.date || '-')}
-                    </small>
-
-                    <small>
-                        💵 Harga: ${formatRupiah(item.price)}
-                    </small>
-
-                    <span class="transaction-status">
-                        ${escapeHTML(
-                            item.status || 'Menunggu Pembayaran'
-                        )}
-                    </span>
-                </article>
-            `;
-        }).join('');
-    }
 
 
     function saveTransaction(order) {
