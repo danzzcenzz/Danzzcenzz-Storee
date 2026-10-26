@@ -633,12 +633,44 @@ document.addEventListener('DOMContentLoaded', function () {
     // MULAI WEBSITE
     // ========================================
 
+    // Tampilkan riwayat pembelian
+renderTransactions();
+
+// Dengarkan perubahan status pesanan dari Firebase
+db.ref('orders').on('value', function (snapshot) {
+    const firebaseOrders = snapshot.val() || {};
+    const transactions = getTransactions();
+
+    let changed = false;
+
+    transactions.forEach(function (item) {
+        if (!item.id) return;
+
+        const firebaseOrder = firebaseOrders[item.id];
+
+        if (firebaseOrder && firebaseOrder.status) {
+            if (item.status !== firebaseOrder.status) {
+                item.status = firebaseOrder.status;
+                changed = true;
+            }
+        }
+    });
+
+    if (changed) {
+        localStorage.setItem(
+            HISTORY_KEY,
+            JSON.stringify(transactions)
+        );
+    }
+
     renderTransactions();
 
-    openingTimer = setTimeout(function () {
+}, function (error) {
+    console.error('Gagal menyinkronkan status:', error);
+});
 
-        showInvite();
-
-    }, 3000);
+openingTimer = setTimeout(function () {
+    showInvite();
+}, 3000);
 
 });
