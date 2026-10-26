@@ -1,303 +1,227 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - DANZZCENZZ STORE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin DANZZCENZZ STORE</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, sans-serif;
-            background: #eef2f7;
-            color: #111827;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 400px;
-            padding: 25px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 8px 30px #00000012;
-        }
-
-        h1 {
-            margin: 0 0 8px;
-            text-align: center;
-            font-size: 24px;
-        }
-
-        .subtitle {
-            margin-bottom: 25px;
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            margin-top: 7px;
-            padding: 13px;
-            border: 1px solid #cbd5e1;
-            border-radius: 9px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #0891b2;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 13px;
-            border: none;
-            border-radius: 9px;
-            background: #0891b2;
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: wait;
-        }
-
-        #logoutButton {
-            background: #dc2626;
-        }
-
-        #message {
-            margin-top: 15px;
-            font-size: 14px;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
-
-        .success {
-            color: #15803d;
-        }
-
-        .error {
-            color: #dc2626;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .notice {
-            margin-top: 18px;
-            padding: 12px;
-            border-radius: 8px;
-            background: #fff7ed;
-            color: #9a3412;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-    </style>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:18px;font-family:Arial,sans-serif;background:#eef2f7;color:#111827}
+.container{max-width:650px;margin:20px auto}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:16px;box-shadow:0 3px 15px #0000000b}
+h1{font-size:23px;margin-top:0}
+h2{font-size:18px}
+input,select,button{width:100%;padding:12px;margin-top:10px;border-radius:8px;font-size:14px}
+input,select{border:1px solid #cbd5e1;background:white}
+button{border:0;background:#0891b2;color:white;font-weight:bold;cursor:pointer}
+button.delete{background:#dc2626}
+button.logout{background:#475569}
+.order{border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-top:12px}
+.order p{margin:7px 0;font-size:14px;overflow-wrap:anywhere}
+.status{font-weight:bold;color:#0369a1}
+.small{font-size:12px;color:#64748b;line-height:1.5}
+.hidden{display:none!important}
+</style>
 </head>
 
 <body>
+<div class="container">
 
-    <main class="container">
-        <h1>DANZZCENZZ STORE</h1>
-        <p class="subtitle">Panel Login Admin</p>
+<section class="card" id="loginCard">
+<h1>🔐 Admin DANZZCENZZ STORE</h1>
+<p class="small">Masukkan PIN admin untuk membuka pencatatan pesanan di browser ini.</p>
+<form id="loginForm">
+<input id="pin" type="password" inputmode="numeric" placeholder="Buat PIN admin baru" required>
+<button type="submit">Buka Panel Admin</button>
+</form>
+<p class="small">PIN ini hanya pengunci tampilan lokal, bukan sistem login server.</p>
+</section>
 
-        <form id="loginForm">
-            <label for="email">Email Admin</label>
-            <input
-                type="email"
-                id="email"
-                placeholder="Masukkan email admin"
-                autocomplete="username"
-                required
-            >
+<div id="adminArea" class="hidden">
+<section class="card">
+<h1>📋 Panel Pesanan</h1>
+<p class="small">Pesanan yang dicatat di sini tersimpan pada browser dan perangkat ini saja.</p>
+<button class="logout" id="logoutButton">Kunci Panel</button>
+</section>
 
-            <label for="password">Password Admin</label>
-            <input
-                type="password"
-                id="password"
-                placeholder="Masukkan password"
-                autocomplete="current-password"
-                required
-            >
+<section class="card">
+<h2>➕ Tambah Pesanan</h2>
+<form id="orderForm">
+<input id="customer" placeholder="Nama pelanggan" required maxlength="100">
+<input id="service" placeholder="Nama pesanan / layanan" required maxlength="150">
+<input id="price" type="number" placeholder="Harga (Rp)" min="0" required>
+<select id="status">
+<option value="Menunggu">Menunggu</option>
+<option value="Terverifikasi">Terverifikasi</option>
+<option value="Selesai">Selesai</option>
+</select>
+<button type="submit">Simpan Pesanan</button>
+</form>
+</section>
 
-            <button type="submit" id="loginButton">
-                Login Admin
-            </button>
-        </form>
+<section class="card">
+<h2>📦 Daftar Pesanan</h2>
+<p id="total">Total pesanan: 0</p>
+<div id="orders"></div>
+<button class="delete" id="clearButton">Hapus Semua Pesanan</button>
+</section>
+</div>
+</div>
 
-        <section id="adminPanel" class="hidden">
-            <h2>Login Berhasil</h2>
-            <p id="accountInfo"></p>
+<script>
+const STORAGE_KEY = "danzzcenzz_manual_orders_v1";
+const PIN_KEY = "danzzcenzz_admin_pin_v1";
 
-            <p class="notice">
-                Login berhasil. Fitur pengelolaan pesanan belum diaktifkan.
-                Database tetap terkunci sampai aturan keamanan selesai dibuat.
-            </p>
+const loginCard = document.getElementById("loginCard");
+const adminArea = document.getElementById("adminArea");
+const loginForm = document.getElementById("loginForm");
+const orderForm = document.getElementById("orderForm");
+const ordersContainer = document.getElementById("orders");
 
-            <button type="button" id="logoutButton">
-                Logout
-            </button>
-        </section>
+function getOrders(){
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    } catch {
+        return [];
+    }
+}
 
-        <p id="message" role="status" aria-live="polite"></p>
-    </main>
+function saveOrders(orders){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+}
 
-    <script type="module">
-        import { initializeApp } from
-            "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+function escapeHTML(value){
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#39;"
+    })[char]);
+}
 
-        import {
-            getAuth,
-            signInWithEmailAndPassword,
-            onAuthStateChanged,
-            signOut
-        } from
-            "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+function rupiah(value){
+    return "Rp" + Number(value || 0).toLocaleString("id-ID");
+}
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
-            authDomain: "danzzcenzz-store.firebaseapp.com",
-            databaseURL: "https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "danzzcenzz-store",
-            storageBucket: "danzzcenzz-store.firebasestorage.app",
-            messagingSenderId: "28505785159",
-            appId: "1:28505785159:web:f605c1ea4a881741a04262",
-            measurementId: "G-R0G2QBF8J8"
-        };
+function renderOrders(){
+    const orders = getOrders();
+    document.getElementById("total").textContent =
+        "Total pesanan: " + orders.length;
 
-        const ADMIN_UID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
+    if(!orders.length){
+        ordersContainer.innerHTML = "<p>Belum ada pesanan.</p>";
+        return;
+    }
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
+    ordersContainer.innerHTML = orders.map(order => `
+        <article class="order">
+            <p><b>Pelanggan:</b> ${escapeHTML(order.customer)}</p>
+            <p><b>Pesanan:</b> ${escapeHTML(order.service)}</p>
+            <p><b>Harga:</b> ${rupiah(order.price)}</p>
+            <p><b>Tanggal:</b> ${escapeHTML(order.date)}</p>
+            <p class="status">Status: ${escapeHTML(order.status)}</p>
 
-        const loginForm = document.getElementById("loginForm");
-        const loginButton = document.getElementById("loginButton");
-        const logoutButton = document.getElementById("logoutButton");
-        const adminPanel = document.getElementById("adminPanel");
-        const accountInfo = document.getElementById("accountInfo");
-        const message = document.getElementById("message");
+            <select data-status-id="${escapeHTML(order.id)}">
+                <option value="Menunggu" ${order.status==="Menunggu"?"selected":""}>Menunggu</option>
+                <option value="Terverifikasi" ${order.status==="Terverifikasi"?"selected":""}>Terverifikasi</option>
+                <option value="Selesai" ${order.status==="Selesai"?"selected":""}>Selesai</option>
+            </select>
 
-        function showMessage(text, type = "") {
-            message.textContent = text;
-            message.className = type;
+            <button data-update-id="${escapeHTML(order.id)}">Ubah Status</button>
+            <button class="delete" data-delete-id="${escapeHTML(order.id)}">Hapus Pesanan</button>
+        </article>
+    `).join("");
+}
+
+loginForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const enteredPin = document.getElementById("pin").value;
+    let savedPin = localStorage.getItem(PIN_KEY);
+
+    if(!savedPin){
+        if(enteredPin.length < 6){
+            alert("Buat PIN minimal 6 karakter.");
+            return;
         }
 
-        function showLogin() {
-            loginForm.classList.remove("hidden");
-            adminPanel.classList.add("hidden");
+        localStorage.setItem(PIN_KEY, enteredPin);
+        savedPin = enteredPin;
+        alert("PIN admin berhasil dibuat di browser ini.");
+    }
+
+    if(enteredPin !== savedPin){
+        alert("PIN salah.");
+        return;
+    }
+
+    loginCard.classList.add("hidden");
+    adminArea.classList.remove("hidden");
+    document.getElementById("pin").value = "";
+    renderOrders();
+});
+
+orderForm.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const orders = getOrders();
+
+    orders.unshift({
+        id: Date.now().toString() + Math.random().toString(36).slice(2,7),
+        customer: document.getElementById("customer").value.trim(),
+        service: document.getElementById("service").value.trim(),
+        price: Number(document.getElementById("price").value),
+        status: document.getElementById("status").value,
+        date: new Date().toLocaleString("id-ID")
+    });
+
+    try {
+        saveOrders(orders);
+        orderForm.reset();
+        renderOrders();
+        alert("Pesanan berhasil disimpan di browser ini.");
+    } catch {
+        alert("Pesanan gagal disimpan. Periksa penyimpanan browser.");
+    }
+});
+
+ordersContainer.addEventListener("click", event => {
+    const updateId = event.target.dataset.updateId;
+    const deleteId = event.target.dataset.deleteId;
+    let orders = getOrders();
+
+    if(updateId){
+        const select = ordersContainer.querySelector(
+            `[data-status-id="${CSS.escape(updateId)}"]`
+        );
+
+        const order = orders.find(item => item.id === updateId);
+        if(order && select){
+            order.status = select.value;
+            saveOrders(orders);
+            renderOrders();
         }
+    }
 
-        function showAdmin(user) {
-            loginForm.classList.add("hidden");
-            adminPanel.classList.remove("hidden");
-            accountInfo.textContent = "Akun: " + user.email;
-        }
+    if(deleteId && confirm("Yakin ingin menghapus pesanan ini?")){
+        orders = orders.filter(item => item.id !== deleteId);
+        saveOrders(orders);
+        renderOrders();
+    }
+});
 
-        loginForm.addEventListener("submit", async function (event) {
-            event.preventDefault();
+document.getElementById("clearButton").addEventListener("click", () => {
+    if(confirm("Yakin ingin menghapus SEMUA pesanan?")){
+        localStorage.removeItem(STORAGE_KEY);
+        renderOrders();
+    }
+});
 
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value;
-
-            loginButton.disabled = true;
-            loginButton.textContent = "Memeriksa...";
-            showMessage("");
-
-            try {
-                const result = await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-
-                if (result.user.uid !== ADMIN_UID) {
-                    await signOut(auth);
-                    showLogin();
-                    showMessage(
-                        "Akun ini tidak memiliki akses admin.",
-                        "error"
-                    );
-                    return;
-                }
-
-                showMessage("Login admin berhasil.", "success");
-            } catch (error) {
-                console.error(error);
-
-                const messages = {
-                    "auth/invalid-credential":
-                        "Email atau password salah.",
-                    "auth/invalid-email":
-                        "Format email tidak valid.",
-                    "auth/too-many-requests":
-                        "Terlalu banyak percobaan. Coba lagi nanti.",
-                    "auth/network-request-failed":
-                        "Koneksi internet bermasalah."
-                };
-
-                showMessage(
-                    messages[error.code] ||
-                    "Login gagal. Periksa email, password, dan koneksi internet.",
-                    "error"
-                );
-            } finally {
-                loginButton.disabled = false;
-                loginButton.textContent = "Login Admin";
-            }
-        });
-
-        logoutButton.addEventListener("click", async function () {
-            try {
-                await signOut(auth);
-                showLogin();
-                showMessage("Kamu sudah logout.", "success");
-            } catch (error) {
-                showMessage("Logout gagal. Coba lagi.", "error");
-            }
-        });
-
-        onAuthStateChanged(auth, async function (user) {
-            if (!user) {
-                showLogin();
-                return;
-            }
-
-            if (user.uid !== ADMIN_UID) {
-                await signOut(auth);
-                showLogin();
-                showMessage(
-                    "Akun ini tidak memiliki akses admin.",
-                    "error"
-                );
-                return;
-            }
-
-            showAdmin(user);
-        });
-    </script>
-
+document.getElementById("logoutButton").addEventListener("click", () => {
+    adminArea.classList.add("hidden");
+    loginCard.classList.remove("hidden");
+});
+</script>
 </body>
 </html>
