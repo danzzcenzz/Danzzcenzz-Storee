@@ -1,6 +1,6 @@
 name: Notifikasi Pesanan
 
-on:
+'on':
   workflow_dispatch:
 
 jobs:
