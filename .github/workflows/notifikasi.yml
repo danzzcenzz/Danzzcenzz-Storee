@@ -7,4 +7,5 @@ jobs:
 tes:
 runs-on: ubuntu-latest
 steps:
-- run: echo "Berhasil"
+- name: Tes notifikasi
+run: echo "Berhasil"
