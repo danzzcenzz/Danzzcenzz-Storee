@@ -607,6 +607,12 @@ document.getElementById("logoutButton")
     loginForm.reset();
     showMessage("Kamu sudah logout.");
   });
+
+window.addEventListener("error", function(event) {
+  document.getElementById("message").textContent =
+    "Error: " + event.message;
+});
+
 </script>
 
 </body>
