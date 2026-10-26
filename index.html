@@ -373,6 +373,13 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
+const appCheck = firebase.appCheck();
+
+appCheck.activate(
+  new firebase.appCheck.ReCaptchaEnterpriseProvider("6Ld_SQEuAAAAAEnQCWl7s4KFW47ed3DwN7JPaymt"),
+  true
+);
 </script>
 
 <script src="script.js"></script>
