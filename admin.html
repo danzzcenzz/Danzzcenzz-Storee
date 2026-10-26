@@ -312,30 +312,32 @@ function stopOrdersListener() {
 }
 
 // LOGIN ADMIN
-loginForm.addEventListener("submit", async event => {
+loginForm.addEventListener("submit", async function(event) {
   event.preventDefault();
 
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+  const button = document.getElementById("loginButton");
 
-  showMessage("Sedang login...");
+  button.disabled = true;
+  button.textContent = "Sedang login...";
+  showMessage("Menghubungkan ke Firebase...");
 
   try {
-    const result = await auth.signInWithEmailAndPassword(
-      email,
-      password
-    );
+    const result = await auth.signInWithEmailAndPassword(email, password);
 
     if (result.user.uid !== ADMIN_UID) {
       await auth.signOut();
-      showMessage("Akun ini tidak memiliki izin admin.");
+      showMessage("Akun ini bukan akun admin.");
       return;
     }
 
-    document.getElementById("password").value = "";
-    showMessage("");
+    showMessage("Login berhasil. Membuka panel admin...");
   } catch (error) {
     showMessage("Login gagal: " + error.message);
+  } finally {
+    button.disabled = false;
+    button.textContent = "Login Admin";
   }
 });
 
