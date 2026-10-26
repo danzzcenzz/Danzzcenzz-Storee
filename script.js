@@ -612,37 +612,52 @@ document.addEventListener('DOMContentLoaded', function () {
     // Tampilkan riwayat pembelian
 renderTransactions();
 
-// Dengarkan perubahan status pesanan dari Firebase
-db.ref('orders').on('value', function (snapshot) {
-    const firebaseOrders = snapshot.val() || {};
-    const transactions = getTransactions();
-
-    let changed = false;
-
-    transactions.forEach(function (item) {
-        if (!item.id) return;
-
-        const firebaseOrder = firebaseOrders[item.id];
-
-        if (firebaseOrder && firebaseOrder.status) {
-            if (item.status !== firebaseOrder.status) {
-                item.status = firebaseOrder.status;
-                changed = true;
-            }
-        }
-    });
-
-    if (changed) {
-        localStorage.setItem(
-            HISTORY_KEY,
-            JSON.stringify(transactions)
-        );
+// Sinkronkan status pesanan milik pelanggan yang login
+firebase.auth().onAuthStateChanged(function (user) {
+    if (!user) {
+        console.warn('Pelanggan belum login ke Firebase.');
+        return;
     }
 
-    renderTransactions();
+    db.ref('orders')
+        .orderByChild('customerUid')
+        .equalTo(user.uid)
+        .on('value', function (snapshot) {
+            const firebaseOrders = snapshot.val() || {};
+            const transactions = getTransactions();
 
-}, function (error) {
-    console.error('Gagal menyinkronkan status:', error);
+            let changed = false;
+
+            transactions.forEach(function (item) {
+                if (!item.id) return;
+
+                const firebaseOrder = firebaseOrders[item.id];
+
+                if (
+                    firebaseOrder &&
+                    firebaseOrder.status &&
+                    item.status !== firebaseOrder.status
+                ) {
+                    item.status = firebaseOrder.status;
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                localStorage.setItem(
+                    HISTORY_KEY,
+                    JSON.stringify(transactions)
+                );
+            }
+
+            renderTransactions();
+
+        }, function (error) {
+            console.error(
+                'Gagal menyinkronkan status pesanan:',
+                error
+            );
+        });
 });
 
 openingTimer = setTimeout(function () {
