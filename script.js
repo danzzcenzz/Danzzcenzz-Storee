@@ -14,18 +14,81 @@ document.addEventListener('DOMContentLoaded', function () {
   const paymentPrice = $('paymentPrice');
   const confirmPayment = $('confirmPayment');
   const backHome = $('backHome');
+  const historyContainer = $('transactionHistory');
 
+  const HISTORY_KEY = 'danzzcenzz_transaction_history';
   const CHANNEL_URL =
     'https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W';
 
   let database = null;
   let auth = null;
   let pendingService = null;
-  let pendingOrder = null;
   let adminWhatsApp = '62882000379621';
-  let products = [];
+  let firebaseProducts = [];
 
-  // FIX OPENING: PASTIKAN HALAMAN UTAMA BISA DIBUKA
+  // ==================================================
+  // FUNGSI DASAR
+  // ==================================================
+
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, function (char) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char];
+    });
+  }
+
+  function rupiah(value) {
+    return 'Rp' + Number(value || 0).toLocaleString('id-ID');
+  }
+
+  function getHistory() {
+    try {
+      const data = JSON.parse(
+        localStorage.getItem(HISTORY_KEY) || '[]'
+      );
+
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.error('Gagal membaca riwayat:', error);
+      return [];
+    }
+  }
+
+  function saveHistory(history) {
+    try {
+      localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(history.slice(0, 50))
+      );
+      return true;
+    } catch (error) {
+      console.error('Gagal menyimpan riwayat:', error);
+      return false;
+    }
+  }
+
+  // ==================================================
+  // HALAMAN PEMBUKA DAN BERANDA
+  // ==================================================
+
+  function closeChannel() {
+    if (channelWidget) {
+      channelWidget.classList.remove('show');
+      channelWidget.classList.add('hidden');
+      channelWidget.style.display = 'none';
+    }
+
+    if (channelBackdrop) {
+      channelBackdrop.classList.remove('show');
+      channelBackdrop.classList.add('hidden');
+      channelBackdrop.style.display = 'none';
+    }
+  }
 
   function showHome() {
     if (opening) {
@@ -48,33 +111,9 @@ document.addEventListener('DOMContentLoaded', function () {
     window.scrollTo(0, 0);
   }
 
-  function showInvite() {
-    showHome();
-
-    if (channelBackdrop) {
-      channelBackdrop.classList.add('show');
-      channelBackdrop.style.display = 'block';
-    }
-
-    if (channelWidget) {
-      channelWidget.classList.add('show');
-      channelWidget.style.display = 'block';
-    }
-  }
-
-  function closeChannel() {
-    if (channelWidget) {
-      channelWidget.classList.remove('show');
-      channelWidget.style.display = 'none';
-    }
-
-    if (channelBackdrop) {
-      channelBackdrop.classList.remove('show');
-      channelBackdrop.style.display = 'none';
-    }
-  }
-
   function showPayment() {
+    if (!pendingService) return;
+
     closeChannel();
 
     if (opening) {
@@ -95,8 +134,6 @@ document.addEventListener('DOMContentLoaded', function () {
     window.scrollTo(0, 0);
   }
 
-  // TOMBOL SKIP
-
   if (skipBtn) {
     skipBtn.addEventListener('click', function (event) {
       event.preventDefault();
@@ -104,15 +141,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // PAKSA OPENING SELESAI SETELAH 3 DETIK
-
   setTimeout(function () {
     if (opening && !opening.classList.contains('hidden')) {
       showHome();
     }
   }, 3000);
-
-  // TOMBOL POPUP CHANNEL
 
   if (closeChannelWidget) {
     closeChannelWidget.addEventListener('click', closeChannel);
@@ -132,10 +165,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // ==================================================
   // FIREBASE
+  // ==================================================
 
   try {
-    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+    if (
+      typeof firebase !== 'undefined' &&
+      firebase.apps &&
+      firebase.apps.length
+    ) {
       database = firebase.database();
       auth = firebase.auth();
 
@@ -143,11 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Firebase Auth:', error);
       });
 
-      // PENGATURAN TOKO
-
       database.ref('settings').on('value', function (snapshot) {
         const settings = snapshot.val();
-
         if (!settings) return;
 
         if (settings.siteName) {
@@ -196,41 +232,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
 
-      // PRODUK FIREBASE
-
       database.ref('products').on('value', function (snapshot) {
         const data = snapshot.val() || {};
 
-        products = Object.entries(data).map(function ([id, item]) {
-          return { id, ...item };
+        firebaseProducts = Object.entries(data).map(function (entry) {
+          return {
+            id: entry[0],
+            ...entry[1]
+          };
         });
 
-        renderProducts();
+        renderFirebaseProducts();
       });
     }
   } catch (error) {
     console.error('Firebase error:', error);
   }
 
-  // RENDER PRODUK
+  // ==================================================
+  // PRODUK FIREBASE
+  // ==================================================
 
-  function escapeHTML(value) {
-    return String(value ?? '').replace(/[&<>"']/g, function (char) {
-      return {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-      }[char];
-    });
-  }
-
-  function rupiah(value) {
-    return 'Rp' + Number(value || 0).toLocaleString('id-ID');
-  }
-
-  function renderProducts() {
+  function renderFirebaseProducts() {
     const container =
       $('productsContainer') ||
       $('productList') ||
@@ -238,9 +261,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!container) return;
 
-    container.innerHTML = products.map(function (product, index) {
+    container.innerHTML = firebaseProducts.map(function (product, index) {
       const name = product.name || product.nama || 'Produk';
-      const price = product.price ?? product.harga ?? 0;
+      const price = Number(product.price ?? product.harga ?? 0);
       const image = product.image || product.gambar || '';
 
       return `
@@ -253,10 +276,11 @@ document.addEventListener('DOMContentLoaded', function () {
               : ''
           }
           <h3>${escapeHTML(name)}</h3>
-          <p>${rupiah(price)}</p>
-          <button type="button"
-                  class="buy-product-btn"
-                  data-product-index="${index}">
+          <p class="product-price">${rupiah(price)}</p>
+          <button
+            type="button"
+            class="buy-product-btn"
+            data-product-index="${index}">
             Beli Sekarang
           </button>
         </div>
@@ -264,42 +288,107 @@ document.addEventListener('DOMContentLoaded', function () {
     }).join('');
   }
 
-  // PILIH PRODUK
+  // ==================================================
+  // PILIH PRODUK DAN BUKA PEMBAYARAN
+  // ==================================================
 
   function selectProduct(product) {
-    if (!product) return;
+    if (!product) {
+      alert('Produk tidak ditemukan.');
+      return;
+    }
 
-    pendingService = product;
+    const name =
+      product.name ||
+      product.nama ||
+      product.service ||
+      product.dataset?.service ||
+      'Produk';
+
+    const price = Number(
+      product.price ??
+      product.harga ??
+      product.dataset?.price ??
+      0
+    );
+
+    pendingService = {
+      id: product.id || '',
+      name: String(name),
+      price: price
+    };
 
     if (selectedService) {
-      selectedService.textContent =
-        product.name || product.nama || 'Produk';
+      selectedService.textContent = pendingService.name;
     }
 
     if (paymentPrice) {
-      paymentPrice.textContent = rupiah(
-        product.price ?? product.harga ?? 0
-      );
+      paymentPrice.textContent = rupiah(pendingService.price);
     }
 
     showPayment();
   }
 
+  // FIX UTAMA:
+  // Mendukung .buy-button sesuai HTML website kamu,
+  // juga tombol produk Firebase dan .buy-btn.
+
   document.addEventListener('click', function (event) {
-    const button = event.target.closest(
-      '.buy-product-btn, .buy-btn, [data-product-index]'
+    const target = event.target;
+
+    if (!(target instanceof Element)) return;
+
+    const button = target.closest(
+      '.buy-button, .buy-product-btn, .buy-btn, [data-product-index]'
     );
 
     if (!button) return;
 
-    const index = Number(button.dataset.productIndex);
+    event.preventDefault();
+    event.stopPropagation();
 
-    if (Number.isInteger(index) && products[index]) {
-      selectProduct(products[index]);
+    // Tombol produk yang berasal dari Firebase
+    if (button.hasAttribute('data-product-index')) {
+      const index = Number(button.dataset.productIndex);
+
+      if (
+        Number.isInteger(index) &&
+        firebaseProducts[index]
+      ) {
+        selectProduct(firebaseProducts[index]);
+        return;
+      }
     }
-  });
 
-  // KEMBALI KE BERANDA
+    // Tombol produk yang sudah tertulis di HTML
+    if (
+      button.classList.contains('buy-button') ||
+      button.classList.contains('buy-btn')
+    ) {
+      const serviceName =
+        button.dataset.service ||
+        button.dataset.name ||
+        button.dataset.product ||
+        button.closest('.product-card')?.querySelector('h3')?.textContent ||
+        'Produk';
+
+      const price = Number(
+        button.dataset.price ||
+        button.dataset.harga ||
+        0
+      );
+
+      selectProduct({
+        id: button.dataset.id || '',
+        name: serviceName,
+        price: price
+      });
+    }
+  }, true);
+
+  // ==================================================
+  // KEMBALI DARI PEMBAYARAN
+  // ==================================================
 
   if (backHome) {
     backHome.addEventListener('click', function (event) {
@@ -308,163 +397,336 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // KONFIRMASI PESANAN
-
-  if (confirmPayment) {
-    confirmPayment.addEventListener('click', async function (event) {
-      event.preventDefault();
-
-      if (!pendingService) {
-        alert('Silakan pilih produk terlebih dahulu.');
-        return;
-      }
-
-      const productName =
-        pendingService.name ||
-        pendingService.nama ||
-        'Produk';
-
-      const price = Number(
-        pendingService.price ?? pendingService.harga ?? 0
-      );
-
-      const order = {
-        id: 'DZ' + Date.now(),
-        productId: pendingService.id || '',
-        productName: productName,
-        price: price,
-        status: 'Menunggu pembayaran',
-        createdAt: new Date().toISOString()
-      };
-
-      pendingOrder = order;
-
-      // SIMPAN RIWAYAT LOKAL
-
-      try {
-        const history = JSON.parse(
-          localStorage.getItem('danzzcenzz_transaction_history') || '[]'
-        );
-
-        history.unshift(order);
-
-        localStorage.setItem(
-          'danzzcenzz_transaction_history',
-          JSON.stringify(history.slice(0, 50))
-        );
-      } catch (error) {
-        console.error('Riwayat:', error);
-      }
-
-      // SIMPAN KE FIREBASE
-
-      if (database && auth && auth.currentUser) {
-        try {
-          const reference = await database.ref('orders').push({
-            ...order,
-            userId: auth.currentUser.uid,
-            createdAt: firebase.database.ServerValue.TIMESTAMP
-          });
-
-          order.firebaseId = reference.key;
-        } catch (error) {
-          console.error('Simpan pesanan:', error);
-        }
-      }
-
-      // BUKA WHATSAPP ADMIN
-
-      const message = [
-        'Halo Admin DANZZCENZZ STORE.',
-        '',
-        'ID Pesanan: ' + order.id,
-        'Produk: ' + productName,
-        'Harga: ' + rupiah(price),
-        'Status: ' + order.status
-      ].join('\n');
-
-      window.open(
-        'https://wa.me/' +
-          adminWhatsApp +
-          '?text=' +
-          encodeURIComponent(message),
-        '_blank'
-      );
-    });
-  }
-
-  // NAVIGASI HALAMAN
-
-  const pageIds = {
-    homeNav: 'homePage',
-    historyNav: 'historyPage',
-    profileNav: 'profilePage'
-  };
-
-  Object.entries(pageIds).forEach(function ([navId, pageId]) {
-    const nav = $(navId);
-    const page = $(pageId);
-
-    if (!nav || !page) return;
-
-    nav.addEventListener('click', function (event) {
-      event.preventDefault();
-
-      document.querySelectorAll(
-        '#homePage, #historyPage, #profilePage'
-      ).forEach(function (element) {
-        element.classList.add('hidden');
-      });
-
-      page.classList.remove('hidden');
-
-      document.querySelectorAll(
-        '#homeNav, #historyNav, #profileNav'
-      ).forEach(function (element) {
-        element.classList.remove('active');
-      });
-
-      nav.classList.add('active');
-    });
-  });
-
-  // TAMPILKAN RIWAYAT TRANSAKSI
+  // ==================================================
+  // RIWAYAT TRANSAKSI RAPI
+  // ==================================================
 
   function renderHistory() {
-    const container = $('transactionHistory');
-
+    const container = historyContainer;
     if (!container) return;
 
-    let history = [];
-
-    try {
-      history = JSON.parse(
-        localStorage.getItem('danzzcenzz_transaction_history') || '[]'
-      );
-    } catch (error) {
-      console.error(error);
-    }
+    const history = getHistory();
 
     if (!history.length) {
-      container.innerHTML = '<p>Belum ada riwayat transaksi.</p>';
+      container.innerHTML = `
+        <div style="
+          padding:24px 12px;
+          text-align:center;
+          background:#f4fcff;
+          border:1px dashed #00bfff;
+          border-radius:14px;
+          color:#44515c;
+        ">
+          <div style="font-size:34px;margin-bottom:8px;">📦</div>
+          <strong>Belum Ada Transaksi</strong>
+          <p style="margin:7px 0 0;font-size:13px;">
+            Pesanan kamu akan muncul di sini.
+          </p>
+        </div>
+      `;
       return;
     }
 
     container.innerHTML = history.map(function (order) {
+      const name = order.productName || order.name || 'Produk';
+      const id = order.id || '-';
+      const price = Number(order.price || 0);
+      const status = order.status || 'Menunggu pembayaran';
+
+      let dateText = '-';
+
+      if (order.createdAt) {
+        const date = new Date(order.createdAt);
+
+        if (!Number.isNaN(date.getTime())) {
+          dateText = date.toLocaleString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        }
+      }
+
       return `
-        <div class="transaction-item">
-          <h3>${escapeHTML(order.productName)}</h3>
-          <p>ID: ${escapeHTML(order.id)}</p>
-          <p>${rupiah(order.price)}</p>
-          <p>${escapeHTML(order.status)}</p>
-        </div>
+        <article class="transaction-item" style="
+          margin:12px 0;
+          padding:14px;
+          border:1px solid #b5edff;
+          border-radius:14px;
+          background:#ffffff;
+          box-shadow:0 3px 12px rgba(0,150,220,.09);
+          overflow-wrap:anywhere;
+        ">
+          <div style="
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:10px;
+          ">
+            <strong style="
+              display:block;
+              flex:1;
+              min-width:0;
+              font-size:15px;
+              line-height:1.4;
+              color:#142238;
+            ">${escapeHTML(name)}</strong>
+
+            <span style="
+              flex-shrink:0;
+              font-size:14px;
+              font-weight:900;
+              color:#0077d9;
+              white-space:nowrap;
+            ">${rupiah(price)}</span>
+          </div>
+
+          <div style="
+            margin-top:10px;
+            padding-top:9px;
+            border-top:1px solid #e6f3f8;
+            color:#65717c;
+            font-size:12px;
+            line-height:1.8;
+          ">
+            <div>ID: ${escapeHTML(id)}</div>
+            <div>Tanggal: ${escapeHTML(dateText)}</div>
+          </div>
+
+          <div style="
+            display:inline-block;
+            margin-top:9px;
+            padding:5px 10px;
+            border-radius:20px;
+            background:#fff4d6;
+            color:#815700;
+            border:1px solid #f0cf79;
+            font-size:11px;
+            font-weight:900;
+          ">
+            ${escapeHTML(status)}
+          </div>
+        </article>
       `;
     }).join('');
   }
 
   renderHistory();
 
-  // PASTIKAN HALAMAN AWAL TIDAK TERKUNCI
+  // ==================================================
+  // KONFIRMASI PESANAN
+  // ==================================================
+
+  let processingOrder = false;
+
+  if (confirmPayment) {
+    confirmPayment.addEventListener('click', async function (event) {
+      event.preventDefault();
+
+      if (processingOrder) return;
+
+      if (!pendingService) {
+        alert('Silakan pilih produk terlebih dahulu.');
+        return;
+      }
+
+      processingOrder = true;
+      confirmPayment.disabled = true;
+
+      const originalText = confirmPayment.textContent;
+      confirmPayment.textContent = 'Memproses pesanan...';
+
+      try {
+        const order = {
+          id: 'DZ' + Date.now(),
+          productId: pendingService.id || '',
+          productName: pendingService.name,
+          price: pendingService.price,
+          status: 'Menunggu pembayaran',
+          createdAt: new Date().toISOString()
+        };
+
+        // Simpan riwayat lokal agar langsung muncul
+        const history = getHistory();
+        history.unshift(order);
+        saveHistory(history);
+        renderHistory();
+
+        // Simpan ke Firebase jika tersedia
+        if (database) {
+          try {
+            if (auth && !auth.currentUser) {
+              await auth.signInAnonymously();
+            }
+
+            const userId =
+              auth && auth.currentUser
+                ? auth.currentUser.uid
+                : null;
+
+            const firebaseOrder = {
+              ...order,
+              userId: userId,
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            };
+
+            const reference = await database.ref('orders').push(
+              firebaseOrder
+            );
+
+            order.firebaseId = reference.key;
+
+            const updatedHistory = getHistory();
+            const savedIndex = updatedHistory.findIndex(function (item) {
+              return item.id === order.id;
+            });
+
+            if (savedIndex !== -1) {
+              updatedHistory[savedIndex].firebaseId = reference.key;
+              saveHistory(updatedHistory);
+            }
+
+            renderHistory();
+          } catch (error) {
+            console.error('Gagal menyimpan pesanan ke Firebase:', error);
+          }
+        }
+
+        // Buka WhatsApp admin
+        const message = [
+          'Halo Admin DANZZCENZZ STORE.',
+          '',
+          'Saya ingin memesan:',
+          'ID Pesanan: ' + order.id,
+          'Produk: ' + order.productName,
+          'Harga: ' + rupiah(order.price),
+          'Status: ' + order.status,
+          '',
+          'Mohon instruksi pembayaran. Terima kasih.'
+        ].join('\n');
+
+        const whatsappURL =
+          'https://wa.me/' +
+          adminWhatsApp +
+          '?text=' +
+          encodeURIComponent(message);
+
+        const whatsappWindow = window.open(
+          whatsappURL,
+          '_blank',
+          'noopener,noreferrer'
+        );
+
+        if (!whatsappWindow) {
+          alert(
+            'Pesanan tersimpan. Jika WhatsApp tidak terbuka, ' +
+            'izinkan pop-up atau buka WhatsApp secara manual.'
+          );
+        }
+      } catch (error) {
+        console.error('Gagal memproses pesanan:', error);
+        alert('Terjadi kesalahan saat memproses pesanan.');
+      } finally {
+        processingOrder = false;
+        confirmPayment.disabled = false;
+        confirmPayment.textContent = originalText;
+      }
+    });
+  }
+
+  // ==================================================
+  // NAVIGASI BAWAH: HOME, RIWAYAT, PROFIL
+  // ==================================================
+
+  const navItems = [
+    { navId: 'homeNav', pageId: 'homePage', index: 0 },
+    { navId: 'historyNav', pageId: 'historyPage', index: 1 },
+    { navId: 'profileNav', pageId: 'profilePage', index: 2 }
+  ];
+
+  const horizontalPages =
+    document.querySelector('.horizontal-pages');
+
+  function activateNavigation(navId) {
+    navItems.forEach(function (item) {
+      const nav = $(item.navId);
+      if (!nav) return;
+
+      const active = item.navId === navId;
+
+      nav.classList.toggle('selected', active);
+      nav.classList.toggle('active', active);
+
+      if (active) {
+        nav.setAttribute('aria-current', 'page');
+      } else {
+        nav.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  navItems.forEach(function (item) {
+    const nav = $(item.navId);
+    const page = $(item.pageId);
+
+    if (!nav || !page) return;
+
+    nav.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      if (item.pageId === 'historyPage') {
+        renderHistory();
+      }
+
+      if (horizontalPages) {
+        horizontalPages.scrollTo({
+          left: item.index * horizontalPages.clientWidth,
+          behavior: 'smooth'
+        });
+      } else {
+        page.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+
+      activateNavigation(item.navId);
+    });
+  });
+
+  // Perbarui navigasi saat halaman digeser dengan jari
+  if (horizontalPages) {
+    let scrollTimer;
+
+    horizontalPages.addEventListener('scroll', function () {
+      clearTimeout(scrollTimer);
+
+      scrollTimer = setTimeout(function () {
+        const width = horizontalPages.clientWidth;
+        if (!width) return;
+
+        const index = Math.max(
+          0,
+          Math.min(
+            navItems.length - 1,
+            Math.round(horizontalPages.scrollLeft / width)
+          )
+        );
+
+        activateNavigation(navItems[index].navId);
+
+        if (index === 1) {
+          renderHistory();
+        }
+      }, 100);
+    });
+  }
+
+  // ==================================================
+  // KONDISI AWAL
+  // ==================================================
 
   if (opening) {
     opening.classList.remove('hidden', 'leaving');
@@ -472,12 +734,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (home) {
-    home.classList.add('hidden');
-    home.style.display = 'none';
+    home.classList.remove('hidden');
+    home.style.display = '';
   }
 
   if (payment) {
     payment.classList.add('hidden');
     payment.style.display = 'none';
   }
+
+  closeChannel();
+  activateNavigation('homeNav');
 });
