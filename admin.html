@@ -2,1555 +2,348 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#100d1c">
 <title>Admin DANZZCENZZ STORE</title>
-
 <style>
 *{box-sizing:border-box}
-
-:root{
-  --primary:#9b5cff;
-  --primary2:#7038e8;
-  --bg:#100d1c;
-  --card:#1b1729;
-  --card2:#231d35;
-  --border:#342b4a;
-  --text:#f7f4ff;
-  --muted:#aaa1c0;
-  --success:#34d399;
-  --danger:#fb7185;
-  --radius:20px;
-}
-
-html{
-  width:100%;
-  min-height:100%;
-  overflow-x:hidden;
-  overflow-y:auto;
-  scroll-behavior:auto;
-  -webkit-text-size-adjust:100%;
-}
-
-body{
-  margin:0;
-  padding:16px 12px calc(125px + env(safe-area-inset-bottom));
-  width:100%;
-  min-height:100vh;
-  min-height:100dvh;
-  height:auto;
-  overflow-x:hidden;
-  overflow-y:auto;
-  overscroll-behavior-y:auto;
-  -webkit-overflow-scrolling:touch;
-  touch-action:pan-y;
-  font-family:Arial,sans-serif;
-  background:
-    radial-gradient(ellipse at top left,#30204d 0,transparent 45%),
-    var(--bg);
-  color:var(--text);
-}
-
+:root{--primary:#9b5cff;--primary2:#7038e8;--bg:#100d1c;--card:#1b1729;--border:#342b4a;--text:#f7f4ff;--muted:#aaa1c0}
+html{min-height:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}
+body{margin:0;padding:16px 12px 125px;font-family:Arial,sans-serif;background:radial-gradient(ellipse at top left,#30204d,transparent 45%),var(--bg);color:var(--text)}
 button,input,select,textarea{font:inherit}
-button{cursor:pointer;touch-action:manipulation}
-button:disabled{opacity:.55;cursor:wait}
-
-.container{
-  width:100%;
-  max-width:760px;
-  margin:0 auto;
-}
-
-.card{
-  background:linear-gradient(145deg,#211b32,#191525);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:19px;
-  margin-bottom:16px;
-  box-shadow:0 12px 35px #00000020;
-}
-
-h1{font-size:22px;line-height:1.35;margin:0 0 8px}
-h2{font-size:17px;margin:0 0 12px}
-h3{font-size:15px;margin:0 0 10px}
-p{line-height:1.6}
+button{width:100%;min-height:45px;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;font-weight:bold;margin-top:10px;cursor:pointer}
+button:disabled{opacity:.5}
+button.secondary,button.logout{background:#302840;border:1px solid #493b60}
+button.delete{background:#7f263e}
+input,select,textarea{width:100%;min-height:45px;padding:12px;border:1px solid #403652;border-radius:12px;background:#120f1d;color:var(--text)}
+textarea{min-height:90px}
+label{display:block;font-size:12px;font-weight:bold;margin:15px 0 7px;color:#d9d0ec}
+.container{width:100%;max-width:760px;margin:auto}
+.card{background:linear-gradient(145deg,#211b32,#191525);border:1px solid var(--border);border-radius:20px;padding:19px;margin-bottom:16px;box-shadow:0 12px 35px #0002}
+h1{font-size:22px}h2{font-size:17px}h3{font-size:15px}
 .small{font-size:12px;color:var(--muted);line-height:1.7}
-.muted{color:var(--muted)}
 .hidden{display:none!important}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  margin-bottom:18px;
-}
-
-.brand-logo{
-  width:55px;
-  height:55px;
-  border-radius:18px;
-  background:linear-gradient(135deg,var(--primary),#5428b6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  flex-shrink:0;
-  box-shadow:0 8px 24px #9b5cff35;
-  font-size:25px;
-}
-
-.brand-logo img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.brand-name{font-size:16px;font-weight:bold}
-.brand-caption{font-size:12px;color:var(--muted);margin-top:5px}
-
-.badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:7px 11px;
-  border-radius:30px;
-  color:#c4b5fd;
-  background:#8b5cf622;
-  border:1px solid #8b5cf640;
-  font-size:11px;
-  font-weight:bold;
-}
-
-label{
-  display:block;
-  font-size:12px;
-  font-weight:bold;
-  color:#d9d0ec;
-  margin-top:15px;
-  margin-bottom:7px;
-}
-
-input,select,textarea{
-  width:100%;
-  min-height:46px;
-  padding:12px 13px;
-  border:1px solid #403652;
-  border-radius:12px;
-  background:#120f1d;
-  color:var(--text);
-  outline:none;
-  transition:border-color .2s,box-shadow .2s;
-}
-
-input:focus,select:focus,textarea:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px #9b5cff20;
-}
-
-input::placeholder,textarea::placeholder{color:#776d8c}
-textarea{min-height:95px;resize:vertical}
-input[type=color]{padding:5px;height:48px}
-input[type=file]{padding:9px}
-
-button{
-  width:100%;
-  min-height:45px;
-  padding:12px 14px;
-  border:0;
-  border-radius:12px;
-  background:linear-gradient(135deg,var(--primary),var(--primary2));
-  color:#fff;
-  font-size:13px;
-  font-weight:bold;
-  margin-top:10px;
-  box-shadow:0 5px 15px #8b5cf622;
-  transition:opacity .15s;
-}
-
-button:active{opacity:.8}
-
-button.secondary{
-  background:#302840;
-  border:1px solid #493b60;
-  box-shadow:none;
-}
-
-button.delete{
-  background:#7f263e;
-  box-shadow:none;
-}
-
-button.logout{
-  background:#302840;
-  border:1px solid #493b60;
-  box-shadow:none;
-}
-
-button.ghost{
-  background:transparent;
-  border:1px solid var(--border);
-  box-shadow:none;
-}
-
-#loginCard{
-  max-width:440px;
-  margin:8vh auto;
-  padding:25px;
-}
-
-.login-mark{
-  width:70px;
-  height:70px;
-  border-radius:23px;
-  background:linear-gradient(135deg,var(--primary),#5227a8);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:32px;
-  margin-bottom:20px;
-  box-shadow:0 12px 30px #8b5cf633;
-}
-
-.message{
-  font-size:12px;
-  line-height:1.6;
-  overflow-wrap:anywhere;
-}
-
+.badge{display:inline-block;padding:7px 11px;border-radius:30px;color:#c4b5fd;background:#8b5cf622;border:1px solid #8b5cf640;font-size:11px;font-weight:bold}
+#loginCard{max-width:440px;margin:8vh auto;padding:25px}
+.login-mark{font-size:32px;margin-bottom:18px}
+.hero{background:radial-gradient(circle at top right,#a855f733,transparent 48%),linear-gradient(135deg,#251b3b,#191525)}
+.hero-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand-logo{width:55px;height:55px;border-radius:18px;background:linear-gradient(135deg,var(--primary),#5428b6);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:25px}
+.brand-logo img{width:100%;height:100%;object-fit:cover}
+.message{font-size:12px;line-height:1.6;overflow-wrap:anywhere}
 .message:empty{display:none}
-
-.hero{
-  padding:21px;
-  background:
-    radial-gradient(circle at top right,#a855f733,transparent 48%),
-    linear-gradient(135deg,#251b3b,#191525);
-}
-
-.hero-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-}
-
-.hero h1{font-size:24px}
-.hero p{margin:8px 0 17px}
-
-/* PERBAIKAN NAVIGASI GESER */
-.slide-viewport{
-  position:relative;
-  display:block;
-  width:100%;
-  height:auto;
-  min-height:0;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scroll-snap-type:x mandatory;
-  scroll-behavior:auto;
-  scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-x:contain;
-  touch-action:pan-x pan-y;
-}
-
+.slide-viewport{width:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .slide-viewport::-webkit-scrollbar{display:none}
-
-.slide-track{
-  display:flex;
-  align-items:stretch;
-  width:100%;
-  height:auto;
-  min-height:0;
-}
-
-.admin-slide{
-  flex:0 0 100%;
-  width:100%;
-  min-width:100%;
-  height:auto;
-  min-height:0;
-  scroll-snap-align:start;
-  scroll-snap-stop:normal;
-  padding-bottom:8px;
-  align-self:stretch;
-  overflow:visible;
-}
-
-.admin-slide .card{
-  margin-bottom:0;
-  height:auto;
-  min-height:0;
-  overflow:visible;
-}
-
-.section-heading{
-  display:flex;
-  align-items:center;
-  gap:11px;
-  margin-bottom:7px;
-}
-
-.section-icon{
-  width:43px;
-  height:43px;
-  border-radius:14px;
-  background:#9b5cff20;
-  border:1px solid #9b5cff35;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:21px;
-  flex-shrink:0;
-}
-
-.product,.order{
-  background:#151120;
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:14px;
-  margin-top:12px;
-  overflow-wrap:anywhere;
-}
-
+.slide-track{display:flex;width:100%;align-items:stretch}
+.admin-slide{flex:0 0 100%;width:100%;min-width:100%;scroll-snap-align:start;padding-bottom:8px}
+.admin-slide .card{height:auto;margin-bottom:0}
+.section-heading{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+.section-icon{width:43px;height:43px;border-radius:14px;background:#9b5cff20;display:flex;align-items:center;justify-content:center;font-size:21px}
+.product,.order{background:#151120;border:1px solid var(--border);border-radius:15px;padding:14px;margin-top:12px;overflow-wrap:anywhere}
 .product-name{font-size:14px;font-weight:bold}
-
-.product img{
-  width:100%;
-  max-width:180px;
-  height:130px;
-  object-fit:contain;
-  display:block;
-  margin:12px 0;
-  border-radius:10px;
-  background:#211b30;
-}
-
-.product p,.order p{
-  margin:7px 0;
-  font-size:12px;
-  line-height:1.7;
-}
-
-.product-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:12px;
-}
-
+.product img{width:100%;max-width:180px;height:130px;object-fit:contain;display:block;margin:12px 0;border-radius:10px;background:#211b30}
+.product p,.order p{font-size:12px;line-height:1.7}
+.product-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .product-actions button{margin:0}
-
-.status-pill{
-  display:inline-block;
-  padding:5px 8px;
-  border-radius:20px;
-  background:#34d39918;
-  color:#6ee7b7;
-  font-size:10px;
-  font-weight:bold;
-}
-
-.status-pill.off{
-  background:#fb718518;
-  color:#fda4af;
-}
-
-.preview-logo{
-  width:90px;
-  height:90px;
-  object-fit:cover;
-  border-radius:20px;
-  border:1px solid var(--border);
-  background:#120f1d;
-  display:block;
-  margin-top:12px;
-}
-
-.color-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-hr{
-  border:0;
-  border-top:1px solid var(--border);
-  margin:22px 0;
-}
-
-/* NAVIGASI BAWAH */
-.bottom-nav{
-  position:fixed;
-  z-index:9999;
-  bottom:0;
-  left:0;
-  right:0;
-  display:none;
-  justify-content:center;
-  padding:10px 9px calc(10px + env(safe-area-inset-bottom));
-  background:#171322f5;
-  border-top:1px solid var(--border);
-  box-shadow:0 -8px 30px #00000030;
-  isolation:isolate;
-}
-
-.nav-track{
-  width:100%;
-  max-width:750px;
-  display:flex;
-  gap:7px;
-}
-
-.nav-button{
-  flex:1;
-  min-width:0;
-  min-height:55px;
-  margin:0;
-  padding:7px 3px;
-  background:transparent;
-  color:#9d93b3;
-  border:1px solid transparent;
-  box-shadow:none;
-  border-radius:13px;
-  font-size:11px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-}
-
-.nav-button.active{
-  color:#fff;
-  background:linear-gradient(135deg,#8b5cf6,#6d35d6);
-  box-shadow:0 5px 15px #8b5cf633;
-}
-
-/* POP-UP TETAP DI ATAS NAVIGASI */
-.toast{
-  position:fixed;
-  z-index:10000;
-  bottom:calc(95px + env(safe-area-inset-bottom));
-  left:16px;
-  right:16px;
-  max-width:450px;
-  margin:auto;
-  background:#2a223a;
-  color:#fff;
-  border:1px solid #57446f;
-  padding:14px;
-  border-radius:13px;
-  text-align:center;
-  font-size:13px;
-  box-shadow:0 10px 30px #0005;
-  overflow-wrap:anywhere;
-}
-
-.setting-note{
-  background:#9b5cff12;
-  border:1px solid #9b5cff30;
-  border-radius:12px;
-  padding:12px;
-  font-size:12px;
-  line-height:1.7;
-  color:#cfc2ed;
-  margin-top:12px;
-}
-
-.total-box{
-  background:#9b5cff15;
-  border:1px solid #9b5cff35;
-  border-radius:14px;
-  padding:15px;
-  margin:15px 0;
-}
-
-.total-box strong{
-  display:block;
-  font-size:20px;
-  margin-top:5px;
-}
-
-@media(min-width:600px){
-  body{padding:22px 16px calc(125px + env(safe-area-inset-bottom))}
-  .card{padding:23px}
-}
+.status-pill{display:inline-block;padding:5px 8px;border-radius:20px;background:#34d39918;color:#6ee7b7;font-size:10px;font-weight:bold}
+.status-pill.off{background:#fb718518;color:#fda4af}
+.color-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=color]{height:48px;padding:5px}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+.bottom-nav{position:fixed;z-index:9999;bottom:0;left:0;right:0;display:none;justify-content:center;padding:10px;background:#171322f5;border-top:1px solid var(--border)}
+.nav-track{width:100%;max-width:750px;display:flex;gap:7px}
+.nav-button{flex:1;min-width:0;min-height:55px;margin:0;padding:7px 3px;background:transparent;color:#9d93b3;border:1px solid transparent;box-shadow:none;font-size:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.nav-button.active{color:#fff;background:linear-gradient(135deg,#8b5cf6,#6d35d6)}
+.toast{position:fixed;z-index:10000;bottom:90px;left:16px;right:16px;max-width:450px;margin:auto;background:#2a223a;color:#fff;border:1px solid #57446f;padding:14px;border-radius:13px;text-align:center;font-size:13px;box-shadow:0 10px 30px #0005}
+.total-box{background:#9b5cff15;border:1px solid #9b5cff35;border-radius:14px;padding:15px;margin:15px 0}
+.total-box strong{display:block;font-size:20px;margin-top:5px}
+.setting-note{background:#9b5cff12;border:1px solid #9b5cff30;border-radius:12px;padding:12px;font-size:12px;line-height:1.7;color:#cfc2ed;margin-top:12px}
+.preview-logo{width:90px;height:90px;object-fit:cover;border-radius:20px;margin-top:12px}
+@media(min-width:600px){body{padding:22px 16px 125px}.card{padding:23px}}
 </style>
 </head>
-
 <body>
 <div class="container">
-
 <section class="card" id="loginCard">
-  <div class="login-mark">✦</div>
-  <span class="badge">ADMIN PANEL</span>
-  <h1 style="margin-top:16px">DANZZCENZZ STORE</h1>
-  <p class="small">Selamat datang kembali. Silakan masuk untuk mengelola toko.</p>
-
-  <form id="loginForm">
-    <label for="email">Email Admin</label>
-    <input id="email" type="email" autocomplete="username"
-      placeholder="Masukkan email admin" required>
-
-    <label for="password">Password Admin</label>
-    <input id="password" type="password"
-      autocomplete="current-password"
-      placeholder="Masukkan password" required>
-
-    <button id="loginButton" type="submit">Masuk ke Dashboard →</button>
-  </form>
-
-  <p id="message" class="message" role="status" aria-live="polite"></p>
+<div class="login-mark">✦</div>
+<span class="badge">ADMIN PANEL</span>
+<h1>DANZZCENZZ STORE</h1>
+<p class="small">Silakan masuk untuk mengelola toko.</p>
+<form id="loginForm">
+<label for="email">Email Admin</label>
+<input id="email" type="email" autocomplete="username" required placeholder="Masukkan email admin">
+<label for="password">Password Admin</label>
+<input id="password" type="password" autocomplete="current-password" required placeholder="Masukkan password">
+<button id="loginButton" type="submit">Masuk ke Dashboard →</button>
+</form>
+<p id="message" class="message" role="status"></p>
 </section>
 
 <div id="adminArea" class="hidden">
+<section class="card hero">
+<div class="hero-top"><div><span class="badge">✦ PANEL ADMIN</span><h1>Halo, Admin!</h1></div><div class="brand-logo" id="headerLogo">✦</div></div>
+<p class="small">Kelola toko melalui satu tempat.</p>
+<button class="logout" id="logoutButton" type="button">Keluar dari Admin</button>
+</section>
 
-  <section class="card hero">
-    <div class="hero-top">
-      <div>
-        <span class="badge">✦ PANEL ADMIN</span>
-        <h1 style="margin-top:14px">Halo, Admin!</h1>
-      </div>
-      <div class="brand-logo" id="headerLogo">✦</div>
-    </div>
-    <p class="small">Kelola toko dengan mudah melalui satu tempat.</p>
-    <button class="logout" id="logoutButton" type="button">Keluar dari Admin</button>
-  </section>
+<div class="slide-viewport" id="slideViewport">
+<div class="slide-track">
 
-  <div class="slide-viewport" id="slideViewport">
-    <div class="slide-track">
+<section class="admin-slide"><div class="card">
+<div class="section-heading"><div class="section-icon">🛍️</div><div><h2>Kelola Produk</h2><div class="small">Tambah, edit, dan hapus produk.</div></div></div>
+<form id="productForm">
+<input id="productId" type="hidden">
+<label for="productName">Nama Produk</label><input id="productName" maxlength="150" required>
+<label for="productPrice">Harga Produk (Rp)</label><input id="productPrice" type="number" min="0" step="1" required>
+<label for="productImage">URL Gambar Produk</label><input id="productImage" type="url" placeholder="https://..." required>
+<label for="productDescription">Deskripsi Produk</label><textarea id="productDescription" maxlength="1000"></textarea>
+<label for="productActive">Status Produk</label><select id="productActive"><option value="true">Ditampilkan</option><option value="false">Disembunyikan</option></select>
+<button id="saveProductButton" type="submit">＋ Simpan Produk</button>
+<button class="secondary hidden" id="cancelEditButton" type="button">Batal Edit</button>
+<p id="productMessage" class="small message"></p>
+</form>
+<hr><h2>📦 Daftar Produk</h2><div id="products" class="small">Memuat produk...</div>
+</div></section>
 
-      <section class="admin-slide">
-        <div class="card">
-          <div class="section-heading">
-            <div class="section-icon">🛍️</div>
-            <div>
-              <h2>Kelola Produk</h2>
-              <div class="small">Tambah, edit, dan hapus produk.</div>
-            </div>
-          </div>
+<section class="admin-slide"><div class="card">
+<div class="section-heading"><div class="section-icon">🎨</div><div><h2>Pengaturan Website</h2><div class="small">Atur identitas, tulisan, dan warna website.</div></div></div>
+<form id="appearanceForm">
+<label for="siteName">Nama Website / Nama Toko</label><input id="siteName" maxlength="100" required>
+<label for="siteTitle">Judul Utama Website</label><input id="siteTitle" maxlength="150">
+<label for="siteDescription">Deskripsi Website</label><textarea id="siteDescription" maxlength="1000"></textarea>
+<label for="siteTagline">Slogan / Kalimat Pembuka</label><input id="siteTagline" maxlength="250">
+<label for="productSectionTitle">Nama Bagian Produk</label><input id="productSectionTitle" maxlength="100">
+<label for="categoryTitle">Nama Kategori</label><input id="categoryTitle" maxlength="100">
+<label for="orderButtonText">Tulisan Tombol Pesan</label><input id="orderButtonText" maxlength="80">
+<label for="aboutTitle">Judul Tentang Kami</label><input id="aboutTitle" maxlength="100">
+<label for="aboutDescription">Deskripsi Tentang Kami</label><textarea id="aboutDescription" maxlength="1500"></textarea>
+<label for="footerText">Tulisan Footer</label><input id="footerText" maxlength="250">
+<label for="adminWhatsApp">Nomor WhatsApp Admin</label><input id="adminWhatsApp" type="tel" maxlength="20">
+<label for="siteLogo">URL Logo Website</label><input id="siteLogo" type="url">
+<label for="siteBanner">URL Banner Website</label><input id="siteBanner" type="url">
+<label for="appLogo">URL Logo Panel Admin</label><input id="appLogo" type="url">
+<img id="logoPreview" class="preview-logo hidden" alt="Pratinjau logo">
+<div class="color-row"><div><label for="siteColor">Warna Utama</label><input id="siteColor" type="color" value="#9b5cff"></div><div><label for="siteBackground">Warna Latar</label><input id="siteBackground" type="color" value="#eef2f7"></div></div>
+<button id="saveAppearanceButton" type="submit">💾 Simpan Pengaturan</button>
+<p id="appearanceMessage" class="small message"></p>
+</form>
+<div class="setting-note">Pengaturan disimpan ke Firebase. Website pelanggan perlu membaca pengaturan yang sama agar perubahan tampil.</div>
+</div></section>
 
-          <form id="productForm">
-            <input id="productId" type="hidden">
+<section class="admin-slide"><div class="card">
+<div class="section-heading"><div class="section-icon">📦</div><div><h2>Kelola Pesanan</h2><div class="small">Periksa dan perbarui pesanan pelanggan.</div></div></div>
+<h3>Tambah Pesanan Manual</h3>
+<form id="orderForm">
+<label for="customer">Nama Pelanggan</label><input id="customer" maxlength="100" required>
+<label for="service">Nama Pesanan / Layanan</label><input id="service" maxlength="150" required>
+<label for="price">Harga (Rp)</label><input id="price" type="number" min="0" step="1" required>
+<label for="status">Status Pesanan</label>
+<select id="status"><option>Menunggu Pembayaran</option><option>Terverifikasi</option><option>Selesai</option></select>
+<button id="saveOrderButton" type="submit">＋ Simpan Pesanan</button>
+<p id="orderMessage" class="small message"></p>
+</form>
+<hr><h2>📋 Daftar Pesanan</h2>
+<div class="total-box"><span class="small">Total nilai pesanan</span><strong id="total">Rp0</strong></div>
+<div id="orders" class="small">Memuat pesanan...</div>
+</div></section>
 
-            <label for="productName">Nama Produk</label>
-            <input id="productName" maxlength="150" placeholder="Nama produk" required>
+</div></div>
+</div></div>
 
-            <label for="productPrice">Harga Produk (Rp)</label>
-            <input id="productPrice" type="number" min="0" step="1"
-              placeholder="Contoh: 10000" required>
-
-            <label for="productImage">URL Gambar Produk</label>
-            <input id="productImage" type="url"
-              placeholder="https://..." required>
-
-            <label for="productDescription">Deskripsi Produk</label>
-            <textarea id="productDescription" maxlength="1000"
-              placeholder="Tulis deskripsi produk"></textarea>
-
-            <label for="productActive">Status Produk</label>
-            <select id="productActive">
-              <option value="true">Ditampilkan</option>
-              <option value="false">Disembunyikan</option>
-            </select>
-
-            <button id="saveProductButton" type="submit">＋ Simpan Produk</button>
-            <button class="secondary hidden" id="cancelEditButton"
-              type="button">Batal Edit</button>
-            <p id="productMessage" class="small message" role="status"></p>
-          </form>
-
-          <hr>
-          <h2>📦 Daftar Produk</h2>
-          <div id="products" class="small">Memuat produk...</div>
-        </div>
-      </section>
-
-      <section class="admin-slide">
-        <div class="card">
-          <div class="section-heading">
-            <div class="section-icon">🎨</div>
-            <div>
-              <h2>Pengaturan Website</h2>
-              <div class="small">Atur identitas, tulisan, dan warna website.</div>
-            </div>
-          </div>
-
-          <form id="appearanceForm">
-            <label for="siteName">Nama Website / Nama Toko</label>
-            <input id="siteName" maxlength="100" required placeholder="DANZZCENZZ STORE">
-
-            <label for="siteTitle">Judul Utama Website</label>
-            <input id="siteTitle" maxlength="150" placeholder="Judul yang tampil di halaman utama">
-
-            <label for="siteDescription">Deskripsi Website</label>
-            <textarea id="siteDescription" maxlength="1000" placeholder="Deskripsi utama website"></textarea>
-
-            <label for="siteTagline">Slogan / Kalimat Pembuka</label>
-            <input id="siteTagline" maxlength="250" placeholder="Slogan toko kamu">
-
-            <label for="productSectionTitle">Nama Bagian Produk</label>
-            <input id="productSectionTitle" maxlength="100" placeholder="Contoh: Produk Kami">
-
-            <label for="categoryTitle">Nama Kategori</label>
-            <input id="categoryTitle" maxlength="100" placeholder="Nama kategori produk">
-
-            <label for="orderButtonText">Tulisan Tombol Pesan</label>
-            <input id="orderButtonText" maxlength="80" placeholder="Contoh: Pesan Sekarang">
-
-            <label for="aboutTitle">Judul Bagian Tentang Kami</label>
-            <input id="aboutTitle" maxlength="100" placeholder="Tentang Kami">
-
-            <label for="aboutDescription">Deskripsi Tentang Kami</label>
-            <textarea id="aboutDescription" maxlength="1500" placeholder="Ceritakan tentang toko kamu"></textarea>
-
-            <label for="footerText">Tulisan Footer / Bagian Bawah</label>
-            <input id="footerText" maxlength="250" placeholder="Tulisan di bagian bawah website">
-
-            <label for="adminWhatsApp">Nomor WhatsApp Admin</label>
-            <input id="adminWhatsApp" type="tel" maxlength="20" placeholder="Contoh: 628123456789">
-
-            <label for="siteLogo">URL Logo Website</label>
-            <input id="siteLogo" type="url" placeholder="https://...">
-
-            <label for="siteBanner">URL Banner Website</label>
-            <input id="siteBanner" type="url" placeholder="https://...">
-
-            <label for="appLogo">URL Logo di Panel Admin</label>
-            <input id="appLogo" type="url" placeholder="https://...">
-
-            <div id="logoPreviewContainer">
-              <img id="logoPreview" class="preview-logo hidden" alt="Pratinjau logo">
-            </div>
-
-            <div class="color-row">
-              <div>
-                <label for="siteColor">Warna Utama Website</label>
-                <input id="siteColor" type="color" value="#9b5cff">
-              </div>
-              <div>
-                <label for="siteBackground">Warna Latar Website</label>
-                <input id="siteBackground" type="color" value="#eef2f7">
-              </div>
-            </div>
-
-            <button id="saveAppearanceButton" type="submit">💾 Simpan Pengaturan</button>
-            <p id="appearanceMessage" class="small message" role="status"></p>
-          </form>
-
-          <div class="setting-note">
-            <strong>Catatan:</strong> Pengaturan disimpan ke Firebase.
-            Agar judul, deskripsi, nama bagian, dan tulisan baru benar-benar
-            berubah di website pelanggan, kode website pelanggan juga harus
-            membaca pengaturan yang sama.
-          </div>
-        </div>
-      </section>
-
-      <section class="admin-slide">
-        <div class="card">
-          <div class="section-heading">
-            <div class="section-icon">📦</div>
-            <div>
-              <h2>Kelola Pesanan</h2>
-              <div class="small">Periksa dan perbarui pesanan pelanggan.</div>
-            </div>
-          </div>
-
-          <h3>Tambah Pesanan Manual</h3>
-
-          <form id="orderForm">
-            <label for="customer">Nama Pelanggan</label>
-            <input id="customer" maxlength="100" required placeholder="Nama pelanggan">
-
-            <label for="service">Nama Pesanan / Layanan</label>
-            <input id="service" maxlength="150" required placeholder="Nama produk atau layanan">
-
-            <label for="price">Harga (Rp)</label>
-            <input id="price" type="number" min="0" step="1" required placeholder="Harga pesanan">
-
-            <label for="status">Status Pesanan</label>
-            <select id="status">
-              <option>Menunggu Pembayaran</option>
-              <option>Terverifikasi</option>
-              <option>Selesai</option>
-            </select>
-
-            <button type="submit">＋ Simpan Pesanan</button>
-            <p id="orderMessage" class="small message" role="status"></p>
-          </form>
-
-          <hr>
-          <h2>📋 Daftar Pesanan</h2>
-
-          <div class="total-box">
-            <span class="small">Total nilai pesanan</span>
-            <strong id="total">Rp0</strong>
-          </div>
-
-          <div id="orders" class="small">Memuat pesanan...</div>
-        </div>
-      </section>
-
-    </div>
-  </div>
-</div>
-</div>
-
-<nav class="bottom-nav" id="bottomNav">
-  <div class="nav-track">
-    <button type="button" class="nav-button active" data-go="0">🛍️<span>Produk</span></button>
-    <button type="button" class="nav-button" data-go="1">🎨<span>Pengaturan</span></button>
-    <button type="button" class="nav-button" data-go="2">📦<span>Pesanan</span></button>
-  </div>
-</nav>
-
+<nav class="bottom-nav" id="bottomNav"><div class="nav-track">
+<button type="button" class="nav-button active" data-go="0">🛍️<span>Produk</span></button>
+<button type="button" class="nav-button" data-go="1">🎨<span>Pengaturan</span></button>
+<button type="button" class="nav-button" data-go="2">📦<span>Pesanan</span></button>
+</div></nav>
 <div id="toast" class="toast hidden" role="status"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
 <script>
 "use strict";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
-  authDomain:"danzzcenzz-store.firebaseapp.com",
-  databaseURL:"https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:"danzzcenzz-store",
-  storageBucket:"danzzcenzz-store.firebasestorage.app",
-  messagingSenderId:"28505785159",
-  appId:"1:28505785159:web:f605c1ea4a881741a04262",
-  measurementId:"G-R0G2QBF8J8"
+const firebaseConfig={
+apiKey:"AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
+authDomain:"danzzcenzz-store.firebaseapp.com",
+databaseURL:"https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",
+projectId:"danzzcenzz-store",
+storageBucket:"danzzcenzz-store.firebasestorage.app",
+messagingSenderId:"28505785159",
+appId:"1:28505785159:web:f605c1ea4a881741a04262",
+measurementId:"G-R0G2QBF8J8"
 };
-
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
-
-const auth=firebase.auth();
-const db=firebase.database();
+const auth=firebase.auth(),db=firebase.database();
 const ADMIN_UID="2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
 const $=id=>document.getElementById(id);
+let productsListener=null,ordersListener=null,settingsListener=null,toastTimer=null,editingProductId=null,loginInProgress=false;
+const settingFields=["siteName","siteTitle","siteDescription","siteTagline","productSectionTitle","categoryTitle","orderButtonText","aboutTitle","aboutDescription","footerText","adminWhatsApp","siteLogo","siteBanner","appLogo","siteColor","siteBackground"];
+const statusValues=["Menunggu Pembayaran","Terverifikasi","Selesai"];
 
-let productsListener=null;
-let ordersListener=null;
-let settingsListener=null;
-let toastTimer=null;
-let editingProductId=null;
-let importingLegacy=false;
-let settingsFormBound=false;
-let orderFormBound=false;
-let authCheckStarted=false;
-let loginInProgress=false;
+function toast(message){$("toast").textContent=message;$("toast").classList.remove("hidden");clearTimeout(toastTimer);toastTimer=setTimeout(()=>$("toast").classList.add("hidden"),3000)}
+function isAdmin(){return !!auth.currentUser&&auth.currentUser.uid===ADMIN_UID}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function rupiah(v){return "Rp"+Number(v||0).toLocaleString("id-ID")}
+function msg(id,text,error=false){$(id).textContent=text;$(id).style.color=error?"#fb7185":"#34d399"}
+function showLogin(){ $("loginCard").classList.remove("hidden");$("adminArea").classList.add("hidden");$("bottomNav").style.display="none"}
+function showAdmin(){ $("loginCard").classList.add("hidden");$("adminArea").classList.remove("hidden");$("bottomNav").style.display="flex"}
 
-/* NOTIFIKASI PESAN */
-function toast(message){
-  const box=$("toast");
-  box.textContent=message;
-  box.classList.remove("hidden");
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>box.classList.add("hidden"),3000);
-}
-
-function isAdmin(){
-  return !!auth.currentUser&&auth.currentUser.uid===ADMIN_UID;
-}
-
-function esc(value){
-  return String(value??"").replace(/[&<>"']/g,char=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[char]));
-}
-
-function rupiah(value){
-  return "Rp"+Number(value||0).toLocaleString("id-ID");
-}
-
-function showLoginMessage(message,isError=true){
-  $("message").textContent=message;
-  $("message").style.color=isError?"#fb7185":"#34d399";
-}
-
-function showAdminMessage(id,message,isError=false){
-  $(id).textContent=message;
-  $(id).style.color=isError?"#fb7185":"#34d399";
-}
-
-function showLoginScreen(){
-  $("loginCard").classList.remove("hidden");
-  $("adminArea").classList.add("hidden");
-  $("bottomNav").style.display="none";
-}
-
-function showAdminScreen(){
-  $("loginCard").classList.add("hidden");
-  $("adminArea").classList.remove("hidden");
-  $("bottomNav").style.display="flex";
-}
-
-/* NAVIGASI GESER */
-const viewport=$("slideViewport");
-const slides=Array.from(document.querySelectorAll(".admin-slide"));
-const navButtons=Array.from(document.querySelectorAll(".nav-button"));
-
+const viewport=$("slideViewport"),slides=[...document.querySelectorAll(".admin-slide")],navButtons=[...document.querySelectorAll(".nav-button")];
 let currentPage=0;
-let navigationTimer=null;
-
-function updateNavigation(index){
-  currentPage=Math.max(0,Math.min(index,slides.length-1));
-  navButtons.forEach((button,i)=>{
-    button.classList.toggle("active",i===currentPage);
-  });
-}
-
-function goToPage(index){
-  index=Math.max(0,Math.min(index,slides.length-1));
-  updateNavigation(index);
-
-  const target=slides[index];
-  if(!target)return;
-
-  viewport.scrollTo({
-    left:target.offsetLeft-slides[0].offsetLeft,
-    behavior:"auto"
-  });
-}
-
-navButtons.forEach(button=>{
-  button.addEventListener("click",()=>{
-    goToPage(Number(button.dataset.go));
-  });
-});
-
-viewport.addEventListener("scroll",()=>{
-  if(!viewport.clientWidth)return;
-
-  clearTimeout(navigationTimer);
-  navigationTimer=setTimeout(()=>{
-    const index=Math.max(0,Math.min(
-      slides.length-1,
-      Math.round(viewport.scrollLeft/viewport.clientWidth)
-    ));
-    updateNavigation(index);
-  },60);
-},{passive:true});
-
-/* MENJAGA SCROLL HALAMAN */
-let restoreScrollTimer=null;
-
-function savePagePosition(){
-  return {
-    x:window.scrollX||window.pageXOffset||0,
-    y:window.scrollY||window.pageYOffset||0
-  };
-}
-
-function restorePagePosition(position){
-  if(!position)return;
-
-  clearTimeout(restoreScrollTimer);
-
-  requestAnimationFrame(()=>{
-    window.scrollTo(position.x,position.y);
-
-    restoreScrollTimer=setTimeout(()=>{
-      window.scrollTo(position.x,position.y);
-    },80);
-  });
-}
-
-/* LOGIN */
-function friendlyAuthError(error){
-  const errors={
-    "auth/invalid-email":"Format email tidak valid.",
-    "auth/user-disabled":"Akun ini telah dinonaktifkan.",
-    "auth/user-not-found":"Email admin tidak ditemukan.",
-    "auth/wrong-password":"Password salah.",
-    "auth/invalid-credential":"Email atau password salah.",
-    "auth/invalid-login-credentials":"Email atau password salah.",
-    "auth/too-many-requests":"Terlalu banyak percobaan. Coba lagi nanti.",
-    "auth/network-request-failed":"Koneksi internet bermasalah.",
-    "auth/operation-not-allowed":"Login Email/Password belum diaktifkan di Firebase.",
-    "auth/unauthorized-domain":"Domain website belum diizinkan di Firebase Authentication.",
-    "auth/internal-error":"Firebase mengalami kesalahan internal."
-  };
-
-  return errors[error.code]||
-    "Login gagal ("+(error.code||"error")+"): "+
-    (error.message||"Kesalahan tidak diketahui.");
-}
-
-$("loginForm").addEventListener("submit",async event=>{
-  event.preventDefault();
-  if(loginInProgress)return;
-
-  const email=$("email").value.trim();
-  const password=$("password").value;
-  const button=$("loginButton");
-
-  if(!email||!password){
-    showLoginMessage("Masukkan email dan password admin.");
-    return;
-  }
-
-  loginInProgress=true;
-  button.disabled=true;
-  button.textContent="Sedang masuk...";
-  showLoginMessage("Menghubungkan ke Firebase...",false);
-
-  let timeoutId;
-
-  try{
-    const loginPromise=auth.signInWithEmailAndPassword(email,password);
-    const timeoutPromise=new Promise((_,reject)=>{
-      timeoutId=setTimeout(()=>reject(
-        new Error("Waktu login habis. Periksa koneksi internet.")
-      ),20000);
-    });
-
-    const result=await Promise.race([loginPromise,timeoutPromise]);
-    clearTimeout(timeoutId);
-
-    if(!result.user||result.user.uid!==ADMIN_UID){
-      await auth.signOut();
-      showLoginMessage("Akun ini tidak memiliki izin admin.");
-      return;
-    }
-
-    $("password").value="";
-    showLoginMessage("Login berhasil.",false);
-
-  }catch(error){
-    clearTimeout(timeoutId);
-    console.error("Login gagal:",error);
-    showLoginScreen();
-    showLoginMessage(friendlyAuthError(error));
-
-  }finally{
-    loginInProgress=false;
-    button.disabled=false;
-    button.textContent="Masuk ke Dashboard →";
-  }
-});
-
-/* STATUS LOGIN */
-auth.onAuthStateChanged(async user=>{
-  authCheckStarted=true;
-
-  if(!user){
-    showLoginScreen();
-    stopListeners();
-    if(!loginInProgress)$("message").textContent="";
-    return;
-  }
-
-  if(user.uid!==ADMIN_UID){
-    showLoginScreen();
-    showLoginMessage("Akun ini bukan akun admin.");
-
-    try{await auth.signOut();}
-    catch(error){console.error(error);}
-    return;
-  }
-
-  showAdminScreen();
-  startProductsListener();
-  startOrdersListener();
-  startSettingsListener();
-  bindAppearanceForm();
-  bindOrderForm();
-
-  requestAnimationFrame(()=>goToPage(0));
-
-},error=>{
-  console.error("Pemeriksaan login gagal:",error);
-  showLoginScreen();
-  showLoginMessage("Gagal memeriksa login: "+error.message);
-});
-
-setTimeout(()=>{
-  if(!authCheckStarted){
-    showLoginScreen();
-    showLoginMessage("Firebase belum merespons. Periksa koneksi internet.");
-  }
-},12000);
+function goToPage(i){currentPage=Math.max(0,Math.min(i,slides.length-1));navButtons.forEach((b,n)=>b.classList.toggle("active",n===currentPage));viewport.scrollTo({left:currentPage*viewport.clientWidth,behavior:"auto"})}
+navButtons.forEach(b=>b.addEventListener("click",()=>goToPage(Number(b.dataset.go))));
+viewport.addEventListener("scroll",()=>{if(viewport.clientWidth){const i=Math.round(viewport.scrollLeft/viewport.clientWidth);navButtons.forEach((b,n)=>b.classList.toggle("active",n===i))}},{passive:true});
+window.addEventListener("resize",()=>goToPage(currentPage));
 
 function stopListeners(){
-  if(productsListener){
-    db.ref("products").off("value",productsListener);
-    productsListener=null;
-  }
-
-  if(ordersListener){
-    db.ref("orders").off("value",ordersListener);
-    ordersListener=null;
-  }
-
-  if(settingsListener){
-    db.ref("settings").off("value",settingsListener);
-    settingsListener=null;
-  }
+if(productsListener){db.ref("products").off("value",productsListener);productsListener=null}
+if(ordersListener){db.ref("orders").off("value",ordersListener);ordersListener=null}
+if(settingsListener){db.ref("settings").off("value",settingsListener);settingsListener=null}
 }
 
-$("logoutButton").addEventListener("click",async()=>{
-  stopListeners();
-
-  try{
-    await auth.signOut();
-    $("loginForm").reset();
-    showLoginMessage("Kamu sudah logout.",false);
-  }catch(error){
-    toast("Gagal logout: "+error.message);
-  }
+function authError(e){
+const errors={"auth/invalid-email":"Format email tidak valid.","auth/user-not-found":"Email admin tidak ditemukan.","auth/wrong-password":"Password salah.","auth/invalid-credential":"Email atau password salah.","auth/too-many-requests":"Terlalu banyak percobaan. Coba lagi nanti.","auth/network-request-failed":"Koneksi internet bermasalah.","auth/operation-not-allowed":"Aktifkan login Email/Password di Firebase Authentication.","auth/unauthorized-domain":"Domain website belum diizinkan di Firebase Authentication."};
+return errors[e.code]||"Login gagal: "+(e.message||e.code||"Kesalahan");
+}
+$("loginForm").addEventListener("submit",async e=>{
+e.preventDefault();if(loginInProgress)return;
+loginInProgress=true;$("loginButton").disabled=true;$("loginButton").textContent="Sedang masuk...";
+msg("message","Menghubungkan ke Firebase...");
+try{
+const result=await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);
+if(result.user.uid!==ADMIN_UID){await auth.signOut();msg("message","Akun ini bukan akun admin.",true)}
+else{$("password").value="";msg("message","Login berhasil")}
+}catch(err){msg("message",authError(err),true)}
+finally{loginInProgress=false;$("loginButton").disabled=false;$("loginButton").textContent="Masuk ke Dashboard →"}
 });
+auth.onAuthStateChanged(async user=>{
+if(!user){showLogin();stopListeners();return}
+if(user.uid!==ADMIN_UID){showLogin();msg("message","Akun ini bukan akun admin.",true);await auth.signOut();return}
+showAdmin();startProducts();startOrders();startSettings();goToPage(0);
+});
+$("logoutButton").addEventListener("click",async()=>{stopListeners();await auth.signOut()});
 
-/* PRODUK CONTOH LAMA */
-const legacyProducts=[
-  {
-    name:"Video viral adik Kaka di mobil",
-    price:10000,
-    image:"https://i.imgur.com/0KuKRAt.jpeg",
-    description:"Video viral adik Kaka di mobil"
-  },
-  {
-    name:"Video Viral Ade kaka di mobil",
-    price:10000,
-    image:"https://i.imgur.com/0KuKRAt.jpeg",
-    description:"Video viral Ade kaka di mobil"
-  },
-  {
-    name:"Video Viral 3",
-    price:10000,
-    image:"https://i.imgur.com/5glTUQl.jpeg",
-    description:"Produk video viral"
-  },
-  {
-    name:"SEGERA!",
-    price:10000,
-    image:"https://i.imgur.com/5glTUQl.jpeg",
-    description:"Produk segera tersedia"
-  },
-  ...Array.from({length:6},(_,i)=>({
-    name:"Video Viral "+(i+5),
-    price:10000,
-    image:"https://i.imgur.com/5glTUQl.jpeg",
-    description:"Produk video viral"
-  }))
-];
-
-async function importLegacy(snapshot){
-  if(importingLegacy||!isAdmin())return;
-
-  const existing=new Set();
-
-  snapshot.forEach(child=>{
-    const product=child.val()||{};
-    if(product.name)existing.add(String(product.name).trim().toLowerCase());
-  });
-
-  const missing=legacyProducts.filter(product=>
-    !existing.has(product.name.toLowerCase())
-  );
-
-  if(!missing.length)return;
-
-  importingLegacy=true;
-
-  try{
-    for(const product of missing){
-      await db.ref("products").push({
-        ...product,
-        active:true,
-        createdAt:Date.now(),
-        updatedAt:Date.now()
-      });
-    }
-  }catch(error){
-    showAdminMessage("productMessage","Produk contoh gagal disalin: "+error.message,true);
-  }finally{
-    importingLegacy=false;
-  }
+/* PRODUK */
+function startProducts(){
+if(productsListener)db.ref("products").off("value",productsListener);
+productsListener=s=>renderProducts(s);
+db.ref("products").on("value",productsListener,e=>msg("productMessage","Gagal membaca produk: "+e.message,true));
 }
-
-function startProductsListener(){
-  if(productsListener)db.ref("products").off("value",productsListener);
-
-  productsListener=snapshot=>{
-    renderProducts(snapshot);
-    importLegacy(snapshot);
-  };
-
-  db.ref("products").on("value",productsListener,error=>{
-    $("products").textContent="Gagal membaca produk: "+error.message;
-  });
-}
-
 function renderProducts(snapshot){
-  const products=[];
-
-  snapshot.forEach(child=>{
-    products.push({id:child.key,...(child.val()||{})});
-  });
-
-  if(!products.length){
-    $("products").innerHTML="<p>Belum ada produk.</p>";
-    return;
-  }
-
-  $("products").innerHTML=products.map(product=>`
-    <article class="product">
-      <div class="product-name">${esc(product.name||"Produk tanpa nama")}</div>
-      <p>Harga: <strong>${rupiah(product.price)}</strong></p>
-      <p>Status:
-        <span class="status-pill ${product.active===false?"off":""}">
-          ${product.active===false?"Disembunyikan":"Ditampilkan"}
-        </span>
-      </p>
-      ${product.image?`
-        <img src="${esc(product.image)}" alt="Gambar produk"
-          loading="lazy" onerror="this.style.display='none'">
-      `:""}
-      <p>${esc(product.description||"")}</p>
-      <div class="product-actions">
-        <button type="button" data-edit-product="${esc(product.id)}">✏️ Edit</button>
-        <button type="button" class="delete" data-delete-product="${esc(product.id)}">Hapus</button>
-      </div>
-    </article>
-  `).join("");
+const items=[];snapshot.forEach(c=>items.push({id:c.key,...(c.val()||{})}));
+if(!items.length){$("products").textContent="Belum ada produk.";return}
+$("products").innerHTML=items.map(p=>`<article class="product">
+<div class="product-name">${esc(p.name||"Produk tanpa nama")}</div>
+<p>Harga: <b>${rupiah(p.price)}</b></p>
+<p>Status: <span class="status-pill ${p.active===false?"off":""}">${p.active===false?"Disembunyikan":"Ditampilkan"}</span></p>
+${p.image?`<img src="${esc(p.image)}" alt="Gambar produk" onerror="this.style.display='none'">`:""}
+<p>${esc(p.description||"")}</p>
+<div class="product-actions"><button type="button" data-edit="${esc(p.id)}">✏️ Edit</button><button type="button" class="delete" data-delete="${esc(p.id)}">Hapus</button></div>
+</article>`).join("");
 }
-
-function resetProduct(){
-  editingProductId=null;
-  $("productId").value="";
-  $("productForm").reset();
-  $("productActive").value="true";
-  $("saveProductButton").textContent="＋ Simpan Produk";
-  $("cancelEditButton").classList.add("hidden");
+function resetProduct(){editingProductId=null;$("productForm").reset();$("productActive").value="true";$("saveProductButton").textContent="＋ Simpan Produk";$("cancelEditButton").classList.add("hidden")}
+$("productForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return msg("productMessage","Login admin diperlukan.",true);
+const name=$("productName").value.trim(),price=Number($("productPrice").value),image=$("productImage").value.trim();
+if(!name||!image||!Number.isFinite(price)||price<0)return msg("productMessage","Periksa nama, harga, dan URL gambar.",true);
+const data={name,price,image,description:$("productDescription").value.trim(),active:$("productActive").value==="true",updatedAt:Date.now()};
+$("saveProductButton").disabled=true;
+try{if(editingProductId)await db.ref("products/"+editingProductId).update(data);else await db.ref("products").push({...data,createdAt:Date.now()});resetProduct();msg("productMessage","Produk berhasil disimpan.");toast("Produk berhasil disimpan")}
+catch(err){msg("productMessage","Gagal menyimpan: "+err.message,true)}
+finally{$("saveProductButton").disabled=false}
+});
+$("products").addEventListener("click",async e=>{
+const b=e.target.closest("button");if(!b||!isAdmin())return;
+if(b.dataset.edit){
+try{const s=await db.ref("products/"+b.dataset.edit).once("value"),p=s.val();if(!p)return;
+editingProductId=b.dataset.edit;$("productName").value=p.name||"";$("productPrice").value=p.price??0;$("productImage").value=p.image||"";$("productDescription").value=p.description||"";$("productActive").value=p.active===false?"false":"true";$("saveProductButton").textContent="Simpan Perubahan Produk";$("cancelEditButton").classList.remove("hidden");$("productForm").scrollIntoView({behavior:"smooth"});
+}catch(err){msg("productMessage","Gagal membuka produk: "+err.message,true)}
 }
-
-$("productForm").addEventListener("submit",async event=>{
-  event.preventDefault();
-
-  if(!isAdmin()){
-    showAdminMessage("productMessage","Silakan login sebagai admin.",true);
-    return;
-  }
-
-  const name=$("productName").value.trim();
-  const price=Number($("productPrice").value);
-  const image=$("productImage").value.trim();
-  const description=$("productDescription").value.trim();
-  const active=$("productActive").value==="true";
-
-  if(!name||!image||!Number.isFinite(price)||price<0){
-    showAdminMessage("productMessage","Periksa nama, harga, dan URL gambar.",true);
-    return;
-  }
-
-  const data={name,price,image,description,active,updatedAt:Date.now()};
-  $("saveProductButton").disabled=true;
-
-  try{
-    if(editingProductId){
-      await db.ref("products/"+editingProductId).update(data);
-    }else{
-      await db.ref("products").push({...data,createdAt:Date.now()});
-    }
-
-    showAdminMessage("productMessage","Produk berhasil disimpan.");
-    resetProduct();
-    toast("Produk berhasil disimpan.");
-
-  }catch(error){
-    showAdminMessage("productMessage","Gagal menyimpan: "+error.message,true);
-  }finally{
-    $("saveProductButton").disabled=false;
-  }
+if(b.dataset.delete&&confirm("Yakin ingin menghapus produk ini?")){try{await db.ref("products/"+b.dataset.delete).remove();toast("Produk dihapus")}catch(err){msg("productMessage","Gagal menghapus: "+err.message,true)}}
 });
-
-$("products").addEventListener("click",async event=>{
-  if(!isAdmin())return;
-
-  const button=event.target.closest("button");
-  if(!button)return;
-
-  const editId=button.dataset.editProduct;
-  const deleteId=button.dataset.deleteProduct;
-
-  if(editId){
-    try{
-      const snapshot=await db.ref("products/"+editId).once("value");
-      const product=snapshot.val();
-      if(!product)return;
-
-      editingProductId=editId;
-      $("productId").value=editId;
-      $("productName").value=product.name||"";
-      $("productPrice").value=product.price??0;
-      $("productImage").value=product.image||"";
-      $("productDescription").value=product.description||"";
-      $("productActive").value=product.active===false?"false":"true";
-
-      $("saveProductButton").textContent="Simpan Perubahan Produk";
-      $("cancelEditButton").classList.remove("hidden");
-      showAdminMessage("productMessage","Sedang mengedit produk.");
-
-      $("productForm").scrollIntoView({behavior:"smooth",block:"start"});
-
-    }catch(error){
-      showAdminMessage("productMessage","Gagal membuka produk: "+error.message,true);
-    }
-  }
-
-  if(deleteId&&confirm("Yakin ingin menghapus produk ini?")){
-    try{
-      await db.ref("products/"+deleteId).remove();
-      if(editingProductId===deleteId)resetProduct();
-      toast("Produk dihapus.");
-    }catch(error){
-      showAdminMessage("productMessage","Gagal menghapus: "+error.message,true);
-    }
-  }
-});
-
-$("cancelEditButton").addEventListener("click",()=>{
-  resetProduct();
-  showAdminMessage("productMessage","Edit dibatalkan.");
-});
+$("cancelEditButton").addEventListener("click",resetProduct);
 
 /* PENGATURAN WEBSITE */
-const settingFields=[
-  "siteName","siteTitle","siteDescription","siteTagline",
-  "productSectionTitle","categoryTitle","orderButtonText",
-  "aboutTitle","aboutDescription","footerText","adminWhatsApp",
-  "siteLogo","siteBanner","appLogo","siteColor","siteBackground"
-];
-
-function updateLogoPreview(url){
-  const preview=$("logoPreview");
-  const headerLogo=$("headerLogo");
-
-  if(url){
-    preview.src=url;
-    preview.classList.remove("hidden");
-    preview.onerror=()=>preview.classList.add("hidden");
-
-    headerLogo.innerHTML="";
-    const image=document.createElement("img");
-    image.src=url;
-    image.alt="Logo toko";
-    image.onerror=()=>{headerLogo.textContent="✦";};
-    headerLogo.appendChild(image);
-
-  }else{
-    preview.removeAttribute("src");
-    preview.classList.add("hidden");
-    headerLogo.textContent="✦";
-  }
+function updateLogo(url){
+const preview=$("logoPreview"),header=$("headerLogo");
+if(url){preview.src=url;preview.classList.remove("hidden");preview.onerror=()=>preview.classList.add("hidden");header.innerHTML="";const img=document.createElement("img");img.src=url;img.alt="Logo";img.onerror=()=>header.textContent="✦";header.appendChild(img)}
+else{preview.classList.add("hidden");preview.removeAttribute("src");header.textContent="✦"}
 }
-
-$("appLogo").addEventListener("input",()=>{
-  updateLogoPreview($("appLogo").value.trim());
+$("appLogo").addEventListener("input",()=>updateLogo($("appLogo").value.trim()));
+function startSettings(){
+if(settingsListener)db.ref("settings").off("value",settingsListener);
+settingsListener=s=>{
+const d=s.val()||{};
+settingFields.forEach(id=>{if(d[id]!==undefined)$(id).value=d[id];else if(id==="siteColor")$(id).value="#9b5cff";else if(id==="siteBackground")$(id).value="#eef2f7";else $(id).value=""});
+updateLogo(d.appLogo||"");
+};
+db.ref("settings").on("value",settingsListener,e=>msg("appearanceMessage","Gagal membaca pengaturan: "+e.message,true));
+}
+$("appearanceForm").addEventListener("submit",async e=>{
+e.preventDefault();if(!isAdmin())return msg("appearanceMessage","Login admin diperlukan.",true);
+const b=$("saveAppearanceButton");b.disabled=true;
+try{const d={};settingFields.forEach(id=>d[id]=$(id).value.trim());await db.ref("settings").update(d);msg("appearanceMessage","Pengaturan berhasil disimpan.");toast("Pengaturan disimpan")}
+catch(err){msg("appearanceMessage","Gagal menyimpan: "+err.message,true)}
+finally{b.disabled=false}
 });
 
-function startSettingsListener(){
-  if(settingsListener)db.ref("settings").off("value",settingsListener);
-
-  settingsListener=snapshot=>{
-    const settings=snapshot.val()||{};
-
-    settingFields.forEach(id=>{
-      const element=$(id);
-      if(!element)return;
-
-      const fallback={
-        siteColor:"#9b5cff",
-        siteBackground:"#eef2f7"
-      };
-
-      element.value=settings[id]??fallback[id]??"";
-    });
-
-    updateLogoPreview(settings.appLogo||"");
-  };
-
-  db.ref("settings").on("value",settingsListener,error=>{
-    showAdminMessage("appearanceMessage","Gagal membaca pengaturan: "+error.message,true);
-  });
+/* PESANAN */
+function startOrders(){
+if(ordersListener)db.ref("orders").off("value",ordersListener);
+ordersListener=s=>{
+const list=$("orders");list.innerHTML="";let total=0;
+if(!s.exists()){list.textContent="Belum ada pesanan."; $("total").textContent="Rp0";return}
+s.forEach(c=>{
+const o=c.val()||{},id=c.key,price=Number(o.price||o.harga||0);total+=price;
+const item=document.createElement("article");item.className="order";
+const title=document.createElement("b");title.textContent=o.service||o.product||o.namaProduk||"Pesanan";item.appendChild(title);
+const detail=document.createElement("p");detail.textContent="Pelanggan: "+(o.customer||o.customerName||o.nama||"-")+" | Harga: "+rupiah(price)+" | Status: "+(o.status||"Menunggu Pembayaran");item.appendChild(detail);
+const select=document.createElement("select");
+statusValues.forEach(st=>{const opt=document.createElement("option");opt.value=st;opt.textContent=st;opt.selected=(o.status||"Menunggu Pembayaran")===st;select.appendChild(opt)});
+select.addEventListener("change",async()=>{if(!isAdmin())return;select.disabled=true;try{await db.ref("orders/"+id).update({status:select.value});toast("Status pesanan diperbarui")}catch(err){toast("Gagal mengubah status: "+err.message)}finally{select.disabled=false}});
+item.appendChild(select);
+const remove=document.createElement("button");remove.type="button";remove.className="delete";remove.textContent="Hapus Pesanan";
+remove.addEventListener("click",async()=>{if(!isAdmin()||!confirm("Yakin ingin menghapus pesanan ini?"))return;remove.disabled=true;try{await db.ref("orders/"+id).remove();toast("Pesanan dihapus")}catch(err){toast("Gagal menghapus: "+err.message);remove.disabled=false}});
+item.appendChild(remove);list.appendChild(item);
+});
+$("total").textContent=rupiah(total);
+};
+db.ref("orders").on("value",ordersListener,e=>{$("orders").textContent="Gagal membaca pesanan: "+e.message});
 }
 
-function bindAppearanceForm(){
-  if(settingsFormBound)return;
-  settingsFormBound=true;
-
-  $("appearanceForm").addEventListener("submit",async event=>{
-    event.preventDefault();
-
-    if(!isAdmin()){
-      showAdminMessage("appearanceMessage","Silakan login sebagai admin.",true);
-      return;
-    }
-
-    const button=$("saveAppearanceButton");
-    button.disabled=true;
-    button.textContent="Menyimpan...";
-
-    try{
-      const data={};
-      settingFields.forEach(id=>{
-        data[id]=$(id).value.trim();
-      });
-
-      await db.ref("settings").update(data);
-
-      showAdminMessage("appearanceMessage","Pengaturan berhasil disimpan.");
-      toast("Pengaturan website disimpan.");
-
-    }catch(error){
-      showAdminMessage("appearanceMessage","Gagal menyimpan: "+error.message,true);
-    }finally{
-      button.disabled=false;
-      button.textContent="💾 Simpan Pengaturan";
-    }
-  });
-}
-
-/* PESANAN — PERBAIKAN SCROLL */
-function startOrdersListener(){
-  if(ordersListener)db.ref("orders").off("value",ordersListener);
-
-  let savedPagePosition=null;
-  let savedSlidePosition=null;
-  let pendingRestore=false;
-
-  ordersListener=snapshot=>{
-    /*
-      Jangan mengubah posisi halaman ketika Firebase mengirim
-      pembaruan setelah status pesanan berubah.
-    */
-    const pagePosition=savedPagePosition||savePagePosition();
-    const slidePosition=savedSlidePosition!==null
-      ?savedSlidePosition
-      :viewport.scrollLeft;
-
-    const list=$("orders");
-    const fragment=document.createDocumentFragment();
-    let total=0;
-
-    if(!snapshot.exists()){
-      const empty=document.createElement("p");
-      empty.textContent="Belum ada pesanan.";
-      fragment.appendChild(empty);
-    }else{
-      snapshot.forEach(child=>{
-        const order=child.val()||{};
-        const id=child.key;
-        const price=Number(order.price||order.harga||0);
-        total+=price;
-
-        const item=document.createElement("article");
-        item.className="order";
-
-        const title=document.createElement("b");
-        title.textContent=order.service||order.product||
-          order.namaProduk||"Pesanan";
-        item.appendChild(title);
-
-        const details=document.createElement("p");
-        details.textContent=
-          "Pelanggan: "+(order.customer||order.customerName||order.nama||"-")+
-          " | Harga: "+rupiah(price)+
-          " | Status: "+(order.status||"Menunggu Pembayaran");
-        item.appendChild(details);
-
-        const select=document.createElement("select");
-
-        [
-          "Menunggu Pembayaran",
-          "Terverifikasi",
-          "Diproses",
-          "Selesai",
-          "Dibatalkan"
-        ].forEach(status=>{
-          const option=document.createElement("option");
-          option.value=status;
-          option.textContent=status;
-
-          if((order.status||"Menunggu Pembayaran")===status){
-            option.selected=true;
-          }
-
-          select.appendChild(option);
-        });
-
-        select.addEventListener("change",async()=>{
-          if(!isAdmin())return;
-
-          const newStatus=select.value;
-
-          savedPagePosition=savePagePosition();
-          savedSlidePosition=viewport.scrollLeft;
-          pendingRestore=true;
-          select.disabled=true;
-
-          try{
-            await db.ref("orders/"+id).update({status:newStatus});
-            toast("Status pesanan diperbarui.");
-          }catch(error){
-            toast("Gagal mengubah status: "+error.message);
-          }finally{
-            select.disabled=false;
-
-            /*
-              Posisi dikembalikan setelah perubahan selesai,
-              termasuk jika daftar pesanan dirender ulang.
-            */
-            requestAnimationFrame(()=>{
-              if(pendingRestore){
-                viewport.scrollLeft=savedSlidePosition||0;
-                restorePagePosition(savedPagePosition);
-
-                setTimeout(()=>{
-                  if(savedPagePosition){
-                    window.scrollTo(
-                      savedPagePosition.x,
-                      savedPagePosition.y
-                    );
-                  }
-
-                  savedPagePosition=null;
-                  savedSlidePosition=null;
-                  pendingRestore=false;
-                },150);
-              }
-            });
-          }
-        });
-
-        item.appendChild(select);
-
-        const remove=document.createElement("button");
-        remove.type="button";
-        remove.className="delete";
-        remove.textContent="Hapus Pesanan";
-
-        remove.addEventListener("click",async()=>{
-          if(!confirm("Yakin ingin menghapus pesanan ini?"))return;
-          if(!isAdmin())return;
-
-          savedPagePosition=savePagePosition();
-          savedSlidePosition=viewport.scrollLeft;
-          pendingRestore=true;
-          remove.disabled=true;
-
-          try{
-            await db.ref("orders/"+id).remove();
-            toast("Pesanan dihapus.");
-          }catch(error){
-            remove.disabled=false;
-            toast("Gagal menghapus: "+error.message);
-          }finally{
-            requestAnimationFrame(()=>{
-              if(pendingRestore){
-                viewport.scrollLeft=savedSlidePosition||0;
-                restorePagePosition(savedPagePosition);
-
-                setTimeout(()=>{
-                  if(savedPagePosition){
-                    window.scrollTo(
-                      savedPagePosition.x,
-                      savedPagePosition.y
-                    );
-                  }
-
-                  savedPagePosition=null;
-                  savedSlidePosition=null;
-                  pendingRestore=false;
-                },150);
-              }
-            });
-          }
-        });
-
-        item.appendChild(remove);
-        fragment.appendChild(item);
-      });
-    }
-
-    list.replaceChildren(fragment);
-    $("total").textContent=rupiah(total);
-
-    /*
-      Jangan memaksa scroll ke atas atau ke bawah saat Firebase
-      hanya memperbarui data pesanan.
-    */
-    if(pendingRestore){
-      requestAnimationFrame(()=>{
-        viewport.scrollLeft=savedSlidePosition||0;
-        restorePagePosition(savedPagePosition);
-      });
-    }
-  };
-
-  db.ref("orders").on("value",ordersListener,error=>{
-    $("orders").textContent="Gagal membaca pesanan: "+error.message;
-  });
-}
-
-/* TAMBAH PESANAN MANUAL */
-function bindOrderForm(){
-  if(orderFormBound)return;
-  orderFormBound=true;
-
-  $("orderForm").addEventListener("submit",async event=>{
-    event.preventDefault();
-
-    if(!isAdmin())return;
-
-    const customer=$("customer").value.trim();
-    const service=$("service").value.trim();
-    const price=Number($("price").value);
-    const status=$("status").value;
-
-    if(!customer||!service||!Number.isFinite(price)||price<0){
-      showAdminMessage("orderMessage","Periksa data pesanan.",true);
-      return;
-    }
-
-    try{
-      await db.ref("orders").push({
-        customer,
-        service,
-        price,
-        status,
-        createdAt:Date.now()
-      });
-
-      $("orderForm").reset();
-      showAdminMessage("orderMessage","Pesanan berhasil ditambahkan.");
-      toast("Pesanan berhasil ditambahkan.");
-
-    }catch(error){
-      showAdminMessage("orderMessage","Gagal menambahkan pesanan: "+error.message,true);
-    }
-  });
-}
-
-/* MENANGANI KESALAHAN */
-window.addEventListener("error",event=>{
-  console.error("Kesalahan JavaScript:",event.error||event.message);
+/* TAMBAH PESANAN MANUAL — SUDAH DISESUAIKAN DENGAN RULES */
+$("orderForm").addEventListener("submit",async e=>{
+e.preventDefault();
+if(!isAdmin())return msg("orderMessage","Silakan login menggunakan akun admin.",true);
+const customer=$("customer").value.trim();
+const service=$("service").value.trim();
+const price=Number($("price").value);
+const status=$("status").value;
+if(!customer||!service||!Number.isFinite(price)||price<0)return msg("orderMessage","Periksa nama pelanggan, layanan, dan harga.",true);
+if(!statusValues.includes(status))return msg("orderMessage","Status pesanan tidak valid.",true);
+const button=$("saveOrderButton");button.disabled=true;button.textContent="Menyimpan...";
+try{
+const now=Date.now();
+await db.ref("orders").push({
+customer:customer,
+customerUid:auth.currentUser.uid,
+service:service,
+price:price,
+status:status,
+date:new Date(now).toLocaleString("id-ID"),
+createdAt:now
+});
+$("orderForm").reset();
+msg("orderMessage","Pesanan berhasil ditambahkan.");
+toast("Pesanan berhasil ditambahkan.");
+}catch(err){
+console.error("Gagal menambahkan pesanan:",err);
+msg("orderMessage","Gagal menambahkan pesanan: "+err.message,true);
+}finally{button.disabled=false;button.textContent="＋ Simpan Pesanan"}
 });
 
-window.addEventListener("unhandledrejection",event=>{
-  console.error("Proses gagal:",event.reason);
-});
-
-/* MENYESUAIKAN NAVIGASI KETIKA LAYAR BERUBAH */
-window.addEventListener("resize",()=>{
-  requestAnimationFrame(()=>{
-    goToPage(currentPage);
-  });
-});
+window.addEventListener("error",e=>console.error("JavaScript:",e.error||e.message));
+window.addEventListener("unhandledrejection",e=>console.error("Proses gagal:",e.reason));
 </script>
 </body>
 </html>
