@@ -1,26 +1,218 @@
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  const $ = (selector) => document.querySelector(selector);
-  const $$ = (selector) => document.querySelectorAll(selector);
+  const $ = id => document.getElementById(id);
 
-  const opening = $('#opening');
-  const home = $('#home');
-  const payment = $('#payment');
+  const opening = $('opening');
+  const skipBtn = $('skipBtn');
+  const home = $('home');
+  const payment = $('payment');
+  const channelWidget = $('channelWidget');
+  const channelBackdrop = $('channelBackdrop');
+  const closeChannelWidget = $('closeChannelWidget');
+  const selectedService = $('selectedService');
+  const paymentPrice = $('paymentPrice');
+  const confirmPayment = $('confirmPayment');
+  const backHome = $('backHome');
 
-  let openingTimer = null;
-  let currentProduct = null;
-  let currentOrder = null;
-  let database = null;
-  let auth = null;
-  let settings = {};
-  let products = [];
-
-  const DEFAULT_WHATSAPP = '62882000379621';
   const CHANNEL_URL =
     'https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W';
 
-  let adminWhatsApp = DEFAULT_WHATSAPP;
+  let database = null;
+  let auth = null;
+  let pendingService = null;
+  let pendingOrder = null;
+  let adminWhatsApp = '62882000379621';
+  let products = [];
+
+  // FIX OPENING: PASTIKAN HALAMAN UTAMA BISA DIBUKA
+
+  function showHome() {
+    if (opening) {
+      opening.classList.add('hidden');
+      opening.classList.remove('leaving');
+      opening.style.display = 'none';
+    }
+
+    if (payment) {
+      payment.classList.add('hidden');
+      payment.style.display = 'none';
+    }
+
+    if (home) {
+      home.classList.remove('hidden');
+      home.style.display = '';
+    }
+
+    closeChannel();
+    window.scrollTo(0, 0);
+  }
+
+  function showInvite() {
+    showHome();
+
+    if (channelBackdrop) {
+      channelBackdrop.classList.add('show');
+      channelBackdrop.style.display = 'block';
+    }
+
+    if (channelWidget) {
+      channelWidget.classList.add('show');
+      channelWidget.style.display = 'block';
+    }
+  }
+
+  function closeChannel() {
+    if (channelWidget) {
+      channelWidget.classList.remove('show');
+      channelWidget.style.display = 'none';
+    }
+
+    if (channelBackdrop) {
+      channelBackdrop.classList.remove('show');
+      channelBackdrop.style.display = 'none';
+    }
+  }
+
+  function showPayment() {
+    closeChannel();
+
+    if (opening) {
+      opening.classList.add('hidden');
+      opening.style.display = 'none';
+    }
+
+    if (home) {
+      home.classList.add('hidden');
+      home.style.display = 'none';
+    }
+
+    if (payment) {
+      payment.classList.remove('hidden');
+      payment.style.display = '';
+    }
+
+    window.scrollTo(0, 0);
+  }
+
+  // TOMBOL SKIP
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', function (event) {
+      event.preventDefault();
+      showHome();
+    });
+  }
+
+  // PAKSA OPENING SELESAI SETELAH 3 DETIK
+
+  setTimeout(function () {
+    if (opening && !opening.classList.contains('hidden')) {
+      showHome();
+    }
+  }, 3000);
+
+  // TOMBOL POPUP CHANNEL
+
+  if (closeChannelWidget) {
+    closeChannelWidget.addEventListener('click', closeChannel);
+  }
+
+  if (channelBackdrop) {
+    channelBackdrop.addEventListener('click', closeChannel);
+  }
+
+  if (channelWidget) {
+    const channelLink = channelWidget.querySelector('a');
+
+    if (channelLink) {
+      channelLink.href = CHANNEL_URL;
+      channelLink.target = '_blank';
+      channelLink.rel = 'noopener noreferrer';
+    }
+  }
+
+  // FIREBASE
+
+  try {
+    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+      database = firebase.database();
+      auth = firebase.auth();
+
+      auth.signInAnonymously().catch(function (error) {
+        console.error('Firebase Auth:', error);
+      });
+
+      // PENGATURAN TOKO
+
+      database.ref('settings').on('value', function (snapshot) {
+        const settings = snapshot.val();
+
+        if (!settings) return;
+
+        if (settings.siteName) {
+          document.title = settings.siteName;
+
+          document.querySelectorAll(
+            '#siteName, #storeName, .site-name, .store-name'
+          ).forEach(function (element) {
+            element.textContent = settings.siteName;
+          });
+        }
+
+        if (settings.adminWhatsApp) {
+          adminWhatsApp = String(settings.adminWhatsApp)
+            .replace(/\D/g, '');
+        }
+
+        if (settings.primaryColor) {
+          document.documentElement.style.setProperty(
+            '--primary-color',
+            settings.primaryColor
+          );
+        }
+
+        if (settings.backgroundColor) {
+          document.documentElement.style.setProperty(
+            '--background-color',
+            settings.backgroundColor
+          );
+        }
+
+        if (settings.logo) {
+          document.querySelectorAll(
+            '#logo, #storeLogo, .store-logo'
+          ).forEach(function (element) {
+            element.src = settings.logo;
+          });
+        }
+
+        if (settings.banner) {
+          document.querySelectorAll(
+            '#banner, #storeBanner, .store-banner'
+          ).forEach(function (element) {
+            element.src = settings.banner;
+          });
+        }
+      });
+
+      // PRODUK FIREBASE
+
+      database.ref('products').on('value', function (snapshot) {
+        const data = snapshot.val() || {};
+
+        products = Object.entries(data).map(function ([id, item]) {
+          return { id, ...item };
+        });
+
+        renderProducts();
+      });
+    }
+  } catch (error) {
+    console.error('Firebase error:', error);
+  }
+
+  // RENDER PRODUK
 
   function escapeHTML(value) {
     return String(value ?? '').replace(/[&<>"']/g, function (char) {
@@ -34,333 +226,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function formatRupiah(value) {
+  function rupiah(value) {
     return 'Rp' + Number(value || 0).toLocaleString('id-ID');
   }
 
-  function getElement(...selectors) {
-    for (const selector of selectors) {
-      const element = $(selector);
-      if (element) return element;
-    }
-    return null;
-  }
-
-  function showPage(page) {
-    [home, payment].forEach(function (element) {
-      if (element) {
-        element.classList.add('hidden');
-        element.style.display = 'none';
-      }
-    });
-
-    if (page) {
-      page.classList.remove('hidden');
-      page.style.display = '';
-    }
-  }
-
-  function closeInvite() {
-    const popup = getElement(
-      '#channelPopup',
-      '#channel-popup',
-      '.channel-popup',
-      '#invitePopup',
-      '#invite-popup'
-    );
-
-    const backdrop = getElement(
-      '#channelBackdrop',
-      '#channel-backdrop',
-      '.channel-backdrop'
-    );
-
-    if (popup) {
-      popup.classList.remove('show', 'active', 'visible');
-      popup.style.display = 'none';
-    }
-
-    if (backdrop) {
-      backdrop.classList.remove('show', 'active', 'visible');
-      backdrop.style.display = 'none';
-    }
-
-    document.body.classList.remove('popup-open');
-  }
-
-  function showInvite() {
-    if (openingTimer) {
-      clearTimeout(openingTimer);
-      openingTimer = null;
-    }
-
-    if (opening) {
-      opening.classList.add('leaving');
-      opening.style.opacity = '0';
-
-      setTimeout(function () {
-        opening.style.display = 'none';
-        opening.classList.add('hidden');
-      }, 350);
-    }
-
-    if (home) {
-      home.classList.remove('hidden');
-      home.style.display = '';
-    }
-
-    if (payment) {
-      payment.classList.add('hidden');
-      payment.style.display = 'none';
-    }
-
-    const popup = getElement(
-      '#channelPopup',
-      '#channel-popup',
-      '.channel-popup',
-      '#invitePopup',
-      '#invite-popup'
-    );
-
-    const backdrop = getElement(
-      '#channelBackdrop',
-      '#channel-backdrop',
-      '.channel-backdrop'
-    );
-
-    if (popup) {
-      popup.style.display = '';
-      popup.classList.add('show');
-    }
-
-    if (backdrop) {
-      backdrop.style.display = '';
-      backdrop.classList.add('show');
-    }
-  }
-
-  function showHome() {
-    closeInvite();
-
-    if (openingTimer) {
-      clearTimeout(openingTimer);
-      openingTimer = null;
-    }
-
-    if (opening) {
-      opening.style.display = 'none';
-      opening.classList.add('hidden');
-    }
-
-    showPage(home);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function showPayment() {
-    closeInvite();
-
-    if (openingTimer) {
-      clearTimeout(openingTimer);
-      openingTimer = null;
-    }
-
-    if (opening) {
-      opening.style.display = 'none';
-      opening.classList.add('hidden');
-    }
-
-    showPage(payment);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function notify(message) {
-    const toast = getElement('#toast', '#toastMessage', '.toast');
-
-    if (toast) {
-      toast.textContent = message;
-      toast.classList.add('show');
-
-      setTimeout(function () {
-        toast.classList.remove('show');
-      }, 2500);
-    } else {
-      alert(message);
-    }
-  }
-
-  function getFirebase() {
-    if (typeof firebase === 'undefined') return false;
-
-    try {
-      if (!firebase.apps.length) {
-        return false;
-      }
-
-      database = firebase.database();
-      auth = firebase.auth();
-
-      return true;
-    } catch (error) {
-      console.error('Firebase:', error);
-      return false;
-    }
-  }
-
-  function ensureAuth() {
-    if (!auth) return Promise.resolve(null);
-
-    if (auth.currentUser) {
-      return Promise.resolve(auth.currentUser);
-    }
-
-    return auth.signInAnonymously()
-      .then(function (credential) {
-        return credential.user;
-      })
-      .catch(function (error) {
-        console.error('Login anonim gagal:', error);
-        return null;
-      });
-  }
-
-  function saveTransaction(order) {
-    try {
-      const key = 'danzzcenzz_transaction_history';
-      const history = JSON.parse(localStorage.getItem(key) || '[]');
-
-      history.unshift({
-        ...order,
-        savedAt: new Date().toISOString()
-      });
-
-      localStorage.setItem(key, JSON.stringify(history.slice(0, 50)));
-    } catch (error) {
-      console.error('Riwayat transaksi:', error);
-    }
-  }
-
-  function createOrder(product) {
-    const order = {
-      id: 'DZ' + Date.now(),
-      productId: product.id || '',
-      productName: product.name || product.nama || 'Produk',
-      price: Number(product.price || product.harga || 0),
-      status: 'Menunggu pembayaran',
-      createdAt: new Date().toISOString()
-    };
-
-    currentOrder = order;
-    saveTransaction(order);
-
-    return ensureAuth().then(function (user) {
-      if (!database || !user) return order;
-
-      return database.ref('orders').push({
-        ...order,
-        userId: user.uid,
-        createdAt: firebase.database.ServerValue.TIMESTAMP
-      }).then(function (reference) {
-        order.firebaseId = reference.key;
-        currentOrder = order;
-        return order;
-      }).catch(function (error) {
-        console.error('Simpan pesanan gagal:', error);
-        return order;
-      });
-    });
-  }
-
-  function updateText(selectors, value) {
-    const element = getElement(...selectors);
-    if (element && value !== undefined && value !== null) {
-      element.textContent = value;
-    }
-  }
-
-  function updateImage(selectors, url) {
-    const element = getElement(...selectors);
-    if (element && url) {
-      element.src = url;
-      element.style.display = '';
-    }
-  }
-
-  function applySettings(data) {
-    if (!data) return;
-
-    settings = data;
-
-    if (data.siteName) {
-      updateText(
-        ['#siteName', '#storeName', '.site-name', '.store-name'],
-        data.siteName
-      );
-
-      document.title = data.siteName;
-    }
-
-    if (data.adminWhatsApp) {
-      adminWhatsApp = String(data.adminWhatsApp).replace(/\D/g, '');
-    }
-
-    if (data.primaryColor) {
-      document.documentElement.style.setProperty(
-        '--primary-color',
-        data.primaryColor
-      );
-    }
-
-    if (data.backgroundColor) {
-      document.documentElement.style.setProperty(
-        '--background-color',
-        data.backgroundColor
-      );
-    }
-
-    if (data.logo) {
-      updateImage(['#logo', '#storeLogo', '.store-logo'], data.logo);
-    }
-
-    if (data.banner) {
-      updateImage(['#banner', '#storeBanner', '.store-banner'], data.banner);
-    }
-  }
-
-  function renderProducts(items) {
-    products = Array.isArray(items)
-      ? items
-      : Object.entries(items || {}).map(function ([id, item]) {
-          return { id, ...item };
-        });
-
-    const container = getElement(
-      '#productsContainer',
-      '#productList',
-      '#products',
-      '.products-container'
-    );
+  function renderProducts() {
+    const container =
+      $('productsContainer') ||
+      $('productList') ||
+      $('products');
 
     if (!container) return;
 
-    container.innerHTML = products.map(function (item, index) {
-      const name = item.name || item.nama || 'Produk';
-      const price = Number(item.price || item.harga || 0);
-      const image = item.image || item.gambar || item.photo || '';
+    container.innerHTML = products.map(function (product, index) {
+      const name = product.name || product.nama || 'Produk';
+      const price = product.price ?? product.harga ?? 0;
+      const image = product.image || product.gambar || '';
 
       return `
         <div class="product-card">
           ${
             image
               ? `<img src="${escapeHTML(image)}"
-                    alt="${escapeHTML(name)}"
-                    loading="lazy">`
+                     alt="${escapeHTML(name)}"
+                     loading="lazy">`
               : ''
           }
           <h3>${escapeHTML(name)}</h3>
-          <p>${formatRupiah(price)}</p>
+          <p>${rupiah(price)}</p>
           <button type="button"
-            class="buy-product-btn"
-            data-product-index="${index}">
+                  class="buy-product-btn"
+                  data-product-index="${index}">
             Beli Sekarang
           </button>
         </div>
@@ -368,180 +264,211 @@ document.addEventListener('DOMContentLoaded', function () {
     }).join('');
   }
 
-  function openWhatsApp(order) {
-    const message = [
-      'Halo Admin DANZZCENZZ STORE, saya ingin konfirmasi pesanan.',
-      '',
-      'ID Pesanan: ' + order.id,
-      'Produk: ' + order.productName,
-      'Harga: ' + formatRupiah(order.price),
-      'Status: ' + order.status
-    ].join('\n');
+  // PILIH PRODUK
 
-    const url =
-      'https://wa.me/' +
-      adminWhatsApp +
-      '?text=' +
-      encodeURIComponent(message);
-
-    window.open(url, '_blank');
-  }
-
-  function handleBuy(product) {
+  function selectProduct(product) {
     if (!product) return;
 
-    currentProduct = product;
+    pendingService = product;
 
-    const name = product.name || product.nama || 'Produk';
-    const price = Number(product.price || product.harga || 0);
+    if (selectedService) {
+      selectedService.textContent =
+        product.name || product.nama || 'Produk';
+    }
 
-    updateText(
-      ['#paymentProductName', '#selectedProductName', '#productName'],
-      name
-    );
-
-    updateText(
-      ['#paymentPrice', '#selectedProductPrice', '#productPrice'],
-      formatRupiah(price)
-    );
-
-    const paymentImage = getElement(
-      '#paymentProductImage',
-      '#selectedProductImage'
-    );
-
-    if (paymentImage) {
-      const image = product.image || product.gambar || product.photo;
-
-      if (image) {
-        paymentImage.src = image;
-        paymentImage.style.display = '';
-      }
+    if (paymentPrice) {
+      paymentPrice.textContent = rupiah(
+        product.price ?? product.harga ?? 0
+      );
     }
 
     showPayment();
   }
 
   document.addEventListener('click', function (event) {
-    const target = event.target.closest('button, a, [data-action]');
-
-    if (!target) return;
-
-    if (
-      target.matches(
-        '#skipOpening, #skip-opening, .skip-opening, [data-action="skip"]'
-      )
-    ) {
-      event.preventDefault();
-      showHome();
-      return;
-    }
-
-    if (
-      target.matches(
-        '#closePopup, #close-popup, .close-popup, [data-action="close-popup"]'
-      )
-    ) {
-      event.preventDefault();
-      closeInvite();
-      return;
-    }
-
-    if (
-      target.matches(
-        '#joinChannel, #join-channel, .join-channel, [data-action="join-channel"]'
-      )
-    ) {
-      target.setAttribute('target', '_blank');
-      target.setAttribute('rel', 'noopener noreferrer');
-      target.setAttribute('href', CHANNEL_URL);
-      closeInvite();
-      return;
-    }
-
-    if (
-      target.matches(
-        '#backHome, #back-home, .back-home, [data-action="home"]'
-      )
-    ) {
-      event.preventDefault();
-      showHome();
-      return;
-    }
-
-    if (
-      target.matches(
-        '#confirmPayment, #confirm-payment, .confirm-payment, [data-action="confirm-payment"]'
-      )
-    ) {
-      event.preventDefault();
-
-      if (!currentProduct) {
-        notify('Pilih produk terlebih dahulu.');
-        return;
-      }
-
-      createOrder(currentProduct).then(function (order) {
-        openWhatsApp(order);
-      });
-
-      return;
-    }
-
-    const buyButton = target.closest(
+    const button = event.target.closest(
       '.buy-product-btn, .buy-btn, [data-product-index]'
     );
 
-    if (buyButton) {
-      const index = Number(buyButton.dataset.productIndex);
+    if (!button) return;
 
-      if (Number.isInteger(index) && products[index]) {
-        handleBuy(products[index]);
-      }
+    const index = Number(button.dataset.productIndex);
+
+    if (Number.isInteger(index) && products[index]) {
+      selectProduct(products[index]);
     }
   });
 
-  const channelBackdrop = getElement(
-    '#channelBackdrop',
-    '#channel-backdrop',
-    '.channel-backdrop'
-  );
+  // KEMBALI KE BERANDA
 
-  if (channelBackdrop) {
-    channelBackdrop.addEventListener('click', closeInvite);
-  }
-
-  const horizontalPages = getElement(
-    '#horizontalPages',
-    '.horizontal-pages',
-    '.page-container'
-  );
-
-  if (horizontalPages) {
-    horizontalPages.addEventListener('scroll', function () {
-      document.dispatchEvent(new CustomEvent('store:page-scroll'));
-    }, { passive: true });
-  }
-
-  if (getFirebase()) {
-    ensureAuth();
-
-    database.ref('settings').on('value', function (snapshot) {
-      applySettings(snapshot.val());
-    }, function (error) {
-      console.error('Pengaturan gagal dimuat:', error);
-    });
-
-    database.ref('products').on('value', function (snapshot) {
-      renderProducts(snapshot.val() || {});
-    }, function (error) {
-      console.error('Produk gagal dimuat:', error);
+  if (backHome) {
+    backHome.addEventListener('click', function (event) {
+      event.preventDefault();
+      showHome();
     });
   }
+
+  // KONFIRMASI PESANAN
+
+  if (confirmPayment) {
+    confirmPayment.addEventListener('click', async function (event) {
+      event.preventDefault();
+
+      if (!pendingService) {
+        alert('Silakan pilih produk terlebih dahulu.');
+        return;
+      }
+
+      const productName =
+        pendingService.name ||
+        pendingService.nama ||
+        'Produk';
+
+      const price = Number(
+        pendingService.price ?? pendingService.harga ?? 0
+      );
+
+      const order = {
+        id: 'DZ' + Date.now(),
+        productId: pendingService.id || '',
+        productName: productName,
+        price: price,
+        status: 'Menunggu pembayaran',
+        createdAt: new Date().toISOString()
+      };
+
+      pendingOrder = order;
+
+      // SIMPAN RIWAYAT LOKAL
+
+      try {
+        const history = JSON.parse(
+          localStorage.getItem('danzzcenzz_transaction_history') || '[]'
+        );
+
+        history.unshift(order);
+
+        localStorage.setItem(
+          'danzzcenzz_transaction_history',
+          JSON.stringify(history.slice(0, 50))
+        );
+      } catch (error) {
+        console.error('Riwayat:', error);
+      }
+
+      // SIMPAN KE FIREBASE
+
+      if (database && auth && auth.currentUser) {
+        try {
+          const reference = await database.ref('orders').push({
+            ...order,
+            userId: auth.currentUser.uid,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+          });
+
+          order.firebaseId = reference.key;
+        } catch (error) {
+          console.error('Simpan pesanan:', error);
+        }
+      }
+
+      // BUKA WHATSAPP ADMIN
+
+      const message = [
+        'Halo Admin DANZZCENZZ STORE.',
+        '',
+        'ID Pesanan: ' + order.id,
+        'Produk: ' + productName,
+        'Harga: ' + rupiah(price),
+        'Status: ' + order.status
+      ].join('\n');
+
+      window.open(
+        'https://wa.me/' +
+          adminWhatsApp +
+          '?text=' +
+          encodeURIComponent(message),
+        '_blank'
+      );
+    });
+  }
+
+  // NAVIGASI HALAMAN
+
+  const pageIds = {
+    homeNav: 'homePage',
+    historyNav: 'historyPage',
+    profileNav: 'profilePage'
+  };
+
+  Object.entries(pageIds).forEach(function ([navId, pageId]) {
+    const nav = $(navId);
+    const page = $(pageId);
+
+    if (!nav || !page) return;
+
+    nav.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      document.querySelectorAll(
+        '#homePage, #historyPage, #profilePage'
+      ).forEach(function (element) {
+        element.classList.add('hidden');
+      });
+
+      page.classList.remove('hidden');
+
+      document.querySelectorAll(
+        '#homeNav, #historyNav, #profileNav'
+      ).forEach(function (element) {
+        element.classList.remove('active');
+      });
+
+      nav.classList.add('active');
+    });
+  });
+
+  // TAMPILKAN RIWAYAT TRANSAKSI
+
+  function renderHistory() {
+    const container = $('transactionHistory');
+
+    if (!container) return;
+
+    let history = [];
+
+    try {
+      history = JSON.parse(
+        localStorage.getItem('danzzcenzz_transaction_history') || '[]'
+      );
+    } catch (error) {
+      console.error(error);
+    }
+
+    if (!history.length) {
+      container.innerHTML = '<p>Belum ada riwayat transaksi.</p>';
+      return;
+    }
+
+    container.innerHTML = history.map(function (order) {
+      return `
+        <div class="transaction-item">
+          <h3>${escapeHTML(order.productName)}</h3>
+          <p>ID: ${escapeHTML(order.id)}</p>
+          <p>${rupiah(order.price)}</p>
+          <p>${escapeHTML(order.status)}</p>
+        </div>
+      `;
+    }).join('');
+  }
+
+  renderHistory();
+
+  // PASTIKAN HALAMAN AWAL TIDAK TERKUNCI
 
   if (opening) {
-    opening.style.display = '';
     opening.classList.remove('hidden', 'leaving');
+    opening.style.display = '';
   }
 
   if (home) {
@@ -553,8 +480,4 @@ document.addEventListener('DOMContentLoaded', function () {
     payment.classList.add('hidden');
     payment.style.display = 'none';
   }
-
-  openingTimer = setTimeout(function () {
-    showInvite();
-  }, 3000);
 });
