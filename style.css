@@ -742,3 +742,79 @@ box-shadow:4px 4px 0 #080808,0 0 12px #20d36666;
 .bottom-nav {
   z-index: 100 !important;
 }
+
+/* ===== DANZZCENZZ STORE - SMOOTH ANIME THEME ===== */
+
+/* Background halaman utama menyatu dengan video */
+#home {
+  background: linear-gradient(
+    180deg,
+    #101522 0%,
+    #171a2b 18%,
+    #202137 38%,
+    #29253b 58%,
+    #302a40 78%,
+    #29263a 100%
+  ) !important;
+}
+
+/* Video menyatu tanpa garis potongan kaku */
+#home .store-header {
+  position: relative !important;
+  isolation: isolate;
+  overflow: hidden;
+  background: #101522 !important;
+  border: none !important;
+  border-radius: 0 0 24px 24px !important;
+  box-shadow: none !important;
+}
+
+/* Samarkan batas bawah video */
+#home .store-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100px;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(23, 26, 43, 0.35) 35%,
+    rgba(32, 33, 55, 0.75) 68%,
+    #29253b 100%
+  );
+}
+
+/* Background foto dan konten tetap di atas background */
+#home .store-header img,
+#home .store-header h1,
+#home .store-header h2,
+#home .store-header p {
+  position: relative;
+  z-index: 6;
+}
+
+/* Bagian produk mengikuti warna anime */
+#home .product-grid,
+#home .products-container,
+#home .service-list {
+  background: transparent !important;
+}
+
+/* Kartu produk minimalis */
+#home .product-card,
+#home .service-card {
+  background: rgba(20, 24, 42, 0.88) !important;
+  border: 1px solid rgba(151, 130, 255, 0.25) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Judul produk lebih menyatu */
+#home h2,
+#home h3 {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
