@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const HISTORY_KEY = 'danzzcenzz_transaction_history';
 
-    const ADMIN_WHATSAPP = '62882000379621';
+    let ADMIN_WHATSAPP = '62882000379621';
 
     let openingTimer;
     let pendingService = '';
@@ -21,22 +21,33 @@ document.addEventListener('DOMContentLoaded', function () {
     let paymentConfirmed = false;
     let sendingOrder = false;
 
-    // Firebase sudah diinisialisasi di index.html.
     const db = firebase.database();
     const auth = firebase.auth();
 
 
     // ========================================
-    // FORMAT HARGA
+    // FUNGSI BANTUAN
     // ========================================
 
     function formatRupiah(amount) {
         return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
     }
 
+    function escapeHTML(value) {
+        return String(value ?? '').replace(/[&<>"']/g, function (char) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char];
+        });
+    }
+
 
     // ========================================
-    // RIWAYAT TRANSAKSI LOKAL
+    // RIWAYAT TRANSAKSI
     // ========================================
 
     function getTransactions() {
@@ -49,72 +60,53 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
-    function escapeHTML(value) {
-        return String(value ?? '').replace(/[&<>"']/g, function (char) {
-            const entities = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
-            };
-
-            return entities[char];
-        });
-    }
-
-
     function renderTransactions() {
-    const container = document.getElementById('transactionHistory');
+        const container = document.getElementById('transactionHistory');
 
-    if (!container) return;
+        if (!container) return;
 
-    const items = getTransactions();
+        const items = getTransactions();
 
-    if (!items.length) {
-        container.innerHTML =
-            '<p>📂 Belum ada riwayat pesanan.</p>';
-        return;
+        if (!items.length) {
+            container.innerHTML =
+                '<p>📂 Belum ada riwayat pesanan.</p>';
+            return;
+        }
+
+        container.innerHTML = items.map(function (item) {
+            return `
+                <article class="transaction-item">
+                    <strong>🛍️ ${escapeHTML(item.service || 'Pesanan')}</strong>
+                    <small>📅 ${escapeHTML(item.date || '-')}</small>
+                    <small>💵 Harga: ${formatRupiah(item.price)}</small>
+                    <span class="transaction-status">
+                        ${escapeHTML(item.status || 'Menunggu Pembayaran')}
+                    </span>
+                </article>
+            `;
+        }).join('');
     }
-
-    container.innerHTML = items.map(function (item) {
-        return `
-            <article class="transaction-item">
-                <strong>
-                    🛍️ ${escapeHTML(item.service || 'Pesanan')}
-                </strong>
-
-                <small>
-                    📅 ${escapeHTML(item.date || '-')}
-                </small>
-
-                <small>
-                    💵 Harga: ${formatRupiah(item.price)}
-                </small>
-
-                <span class="transaction-status">
-                    ${escapeHTML(
-                        item.status || 'Menunggu Pembayaran'
-                    )}
-                </span>
-            </article>
-        `;
-    }).join('');
-}
-
-
 
     function saveTransaction(order) {
         const items = getTransactions();
 
-        items.unshift({
+        const existingIndex = items.findIndex(function (item) {
+            return item.id === order.id;
+        });
+
+        const transaction = {
             id: order.id,
             service: order.service,
             price: order.price,
             date: order.date,
             status: order.status
-        });
+        };
+
+        if (existingIndex >= 0) {
+            items[existingIndex] = transaction;
+        } else {
+            items.unshift(transaction);
+        }
 
         try {
             localStorage.setItem(
@@ -134,13 +126,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     async function getCustomerUser() {
-
         if (auth.currentUser) {
             return auth.currentUser;
         }
 
         const result = await auth.signInAnonymously();
-
         return result.user;
     }
 
@@ -150,9 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     async function createFirebaseOrder(service, price) {
-
         const user = await getCustomerUser();
-
         const now = Date.now();
 
         const order = {
@@ -181,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     function openChannelPopup() {
-
         if (channelWidget) {
             channelWidget.classList.remove('hidden');
         }
@@ -191,9 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     function closeChannelPopup() {
-
         if (channelWidget) {
             channelWidget.classList.add('hidden');
         }
@@ -209,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     function showHome() {
-
         clearTimeout(openingTimer);
 
         if (opening) {
@@ -229,10 +213,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         closeChannelPopup();
-
         window.scrollTo(0, 0);
     }
-
 
     function showInvite() {
         showHome();
@@ -252,7 +234,6 @@ document.addEventListener('DOMContentLoaded', function () {
             event.stopPropagation();
 
             clearTimeout(openingTimer);
-
             showInvite();
         });
     }
@@ -268,16 +249,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (closeChannelWidget) {
         closeChannelWidget.addEventListener('click', function (event) {
             event.preventDefault();
-
             closeChannelPopup();
         });
     }
 
     if (channelBackdrop) {
-        channelBackdrop.addEventListener(
-            'click',
-            closeChannelPopup
-        );
+        channelBackdrop.addEventListener('click', closeChannelPopup);
     }
 
 
@@ -286,7 +263,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================================
 
     function showPayment(service, price = 5000) {
-
         if (!home || !payment) {
             alert('Halaman pembayaran tidak ditemukan.');
             return;
@@ -310,8 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('selectedService');
 
         if (selectedService) {
-            selectedService.textContent =
-                'Pesanan: ' + service;
+            selectedService.textContent = 'Pesanan: ' + service;
         }
 
         const paymentPrice =
@@ -340,42 +315,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ========================================
     // TOMBOL BELI PRODUK
+    // Mendukung produk lama dan produk baru
     // ========================================
 
-    document.querySelectorAll('.buy-button').forEach(
-        function (button) {
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('.buy-button');
 
-            button.addEventListener('click', function () {
+        if (!button) return;
 
-                showPayment(
-                    button.dataset.service || 'Produk',
-                    Number(button.dataset.price || 10000)
-                );
+        event.preventDefault();
 
-            });
-
-        }
-    );
+        showPayment(
+            button.dataset.service || 'Produk',
+            Number(button.dataset.price || 10000)
+        );
+    });
 
 
     // ========================================
     // TOMBOL LAYANAN
     // ========================================
 
-    document.querySelectorAll('.service-card').forEach(
-        function (button) {
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('.service-card');
 
-            button.addEventListener('click', function () {
+        if (!button) return;
 
-                showPayment(
-                    button.dataset.service || 'Layanan',
-                    Number(button.dataset.price || 5000)
-                );
+        event.preventDefault();
 
-            });
-
-        }
-    );
+        showPayment(
+            button.dataset.service || 'Layanan',
+            Number(button.dataset.price || 5000)
+        );
+    });
 
 
     // ========================================
@@ -386,11 +358,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (backHome) {
         backHome.addEventListener('click', function (event) {
-
             event.preventDefault();
-
             showHome();
-
         });
     }
 
@@ -404,9 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('confirmPayment');
 
     if (confirmPayment) {
-
         confirmPayment.addEventListener('click', async function (event) {
-
             event.preventDefault();
 
             if (!pendingService) {
@@ -420,26 +387,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
             sendingOrder = true;
 
-            confirmPayment.textContent =
-                '⏳ MENYIMPAN PESANAN...';
-
+            confirmPayment.textContent = '⏳ MENYIMPAN PESANAN...';
             confirmPayment.style.pointerEvents = 'none';
 
-            // Siapkan tab WhatsApp ketika klik dilakukan.
-            // Ini membantu mencegah pemblokiran popup browser.
             let whatsappWindow = null;
 
             try {
-
                 whatsappWindow = window.open('about:blank', '_blank');
 
-                // Simpan ke Firebase terlebih dahulu.
                 const order = await createFirebaseOrder(
                     pendingService,
                     pendingPrice
                 );
 
-                // Simpan juga untuk riwayat lokal.
                 saveTransaction(order);
 
                 paymentConfirmed = true;
@@ -460,23 +420,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     encodeURIComponent(message);
 
                 if (whatsappWindow) {
-
                     whatsappWindow.location.href = whatsappURL;
-
                 } else {
-
-                    // Jika tab baru diblokir browser,
-                    // arahkan halaman saat ini ke WhatsApp.
                     window.location.href = whatsappURL;
-
                 }
 
             } catch (error) {
-
-                console.error(
-                    'Gagal membuat pesanan:',
-                    error
-                );
+                console.error('Gagal membuat pesanan:', error);
 
                 if (whatsappWindow) {
                     whatsappWindow.close();
@@ -484,28 +434,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 alert(
                     'Pesanan belum berhasil disimpan ke Firebase.\n\n' +
-                    'Silakan coba lagi.\n\n' +
-                    'Pesan: ' + error.message
+                    'Silakan coba lagi.\n\nPesan: ' + error.message
                 );
 
             } finally {
-
                 sendingOrder = false;
 
                 if (!paymentConfirmed) {
-
                     confirmPayment.textContent =
                         '✓ KONFIRMASI PEMBAYARAN VIA WHATSAPP';
 
                     confirmPayment.style.pointerEvents = '';
                     confirmPayment.style.opacity = '1';
-
                 }
-
             }
-
         });
-
     }
 
 
@@ -528,9 +471,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentStorePage = 0;
 
-
     function goStorePage(index) {
-
         if (!horizontalPages || !storePages.length) {
             return;
         }
@@ -548,37 +489,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         navLinks.forEach(function (link, i) {
-
-            link.classList.toggle(
-                'selected',
-                i === currentStorePage
-            );
-
+            link.classList.toggle('selected', i === currentStorePage);
         });
-
     }
 
-
     navLinks.forEach(function (link, index) {
-
         link.addEventListener('click', function (event) {
-
             event.preventDefault();
-
             goStorePage(index);
-
         });
-
     });
 
-
     if (horizontalPages) {
-
         horizontalPages.addEventListener('scroll', function () {
-
-            if (!horizontalPages.clientWidth) {
-                return;
-            }
+            if (!horizontalPages.clientWidth) return;
 
             const index = Math.round(
                 horizontalPages.scrollLeft /
@@ -586,195 +510,275 @@ document.addEventListener('DOMContentLoaded', function () {
             );
 
             if (index >= 0 && index < storePages.length) {
-
                 currentStorePage = index;
 
                 navLinks.forEach(function (link, i) {
+                    link.classList.toggle('selected', i === index);
+                });
+            }
+        }, { passive: true });
+    }
 
-                    link.classList.toggle(
-                        'selected',
-                        i === index
-                    );
 
+    // ========================================
+    // RIWAYAT PESANAN DARI FIREBASE
+    // ========================================
+
+    renderTransactions();
+
+    auth.onAuthStateChanged(function (user) {
+        if (!user) return;
+
+        db.ref('orders')
+            .orderByChild('customerUid')
+            .equalTo(user.uid)
+            .on('value', function (snapshot) {
+                const firebaseOrders = snapshot.val() || {};
+                const transactions = getTransactions();
+
+                let changed = false;
+
+                transactions.forEach(function (item) {
+                    if (!item.id) return;
+
+                    const firebaseOrder = firebaseOrders[item.id];
+
+                    if (
+                        firebaseOrder &&
+                        firebaseOrder.status &&
+                        item.status !== firebaseOrder.status
+                    ) {
+                        item.status = firebaseOrder.status;
+                        changed = true;
+                    }
                 });
 
-            }
+                if (changed) {
+                    localStorage.setItem(
+                        HISTORY_KEY,
+                        JSON.stringify(transactions)
+                    );
+                }
 
-        }, { passive: true });
+                renderTransactions();
 
-    }
+            }, function (error) {
+                console.error(
+                    'Gagal menyinkronkan status pesanan:',
+                    error
+                );
+            });
+    });
 
 
     // ========================================
     // MULAI WEBSITE
     // ========================================
 
-    // Tampilkan riwayat pembelian
-renderTransactions();
+    openingTimer = setTimeout(function () {
+        showInvite();
+    }, 3000);
 
-// Sinkronkan status pesanan milik pelanggan yang login
-firebase.auth().onAuthStateChanged(function (user) {
-    if (!user) {
-        console.warn('Pelanggan belum login ke Firebase.');
-        return;
+
+    // ========================================
+    // PRODUK FIREBASE
+    // Pertahankan produk HTML yang sudah ada
+    // ========================================
+
+    const productGrid = document.querySelector('.product-grid');
+
+    // Simpan salinan produk bawaan sebelum Firebase dimuat.
+    const originalProductCards = productGrid
+        ? Array.from(productGrid.children).map(function (card) {
+            return card.cloneNode(true);
+        })
+        : [];
+
+    function createFirebaseProductCard(product) {
+        const card = document.createElement('article');
+        card.className = 'product-card firebase-product-card';
+        card.dataset.firebaseProductId = product.id;
+
+        const image = document.createElement('img');
+        image.alt = product.name;
+        image.loading = 'lazy';
+
+        if (product.image) {
+            image.src = product.image;
+        } else {
+            image.style.display = 'none';
+        }
+
+        image.onerror = function () {
+            image.style.display = 'none';
+        };
+
+        const title = document.createElement('h3');
+        title.textContent = product.name;
+
+        const description = document.createElement('p');
+        description.textContent = product.description;
+
+        const price = document.createElement('p');
+        price.className = 'product-price';
+        price.textContent = formatRupiah(product.price);
+
+        const button = document.createElement('button');
+        button.className = 'buy-button';
+        button.dataset.service = product.name;
+        button.dataset.price = String(product.price);
+        button.textContent = 'Beli Sekarang';
+
+        card.appendChild(image);
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(price);
+        card.appendChild(button);
+
+        return card;
     }
 
-    db.ref('orders')
-        .orderByChild('customerUid')
-        .equalTo(user.uid)
-        .on('value', function (snapshot) {
-            const firebaseOrders = snapshot.val() || {};
-            const transactions = getTransactions();
+    if (productGrid) {
+        db.ref('products').on('value', function (snapshot) {
+            // Jika database produk kosong atau gagal berisi data,
+            // jangan hapus produk bawaan website.
+            if (!snapshot.exists()) return;
 
-            let changed = false;
+            const products = [];
 
-            transactions.forEach(function (item) {
-                if (!item.id) return;
+            snapshot.forEach(function (child) {
+                const item = child.val() || {};
 
-                const firebaseOrder = firebaseOrders[item.id];
+                if (item.active === false) return;
 
-                if (
-                    firebaseOrder &&
-                    firebaseOrder.status &&
-                    item.status !== firebaseOrder.status
-                ) {
-                    item.status = firebaseOrder.status;
-                    changed = true;
+                products.push({
+                    id: child.key,
+                    name: item.name || 'Produk',
+                    price: Number(item.price || 0),
+                    image: item.image || '',
+                    description: item.description || ''
+                });
+            });
+
+            // Bangun ulang dari produk bawaan, bukan dari grid kosong.
+            productGrid.replaceChildren();
+
+            originalProductCards.forEach(function (card) {
+                productGrid.appendChild(card.cloneNode(true));
+            });
+
+            // Produk Firebase memperbarui produk bawaan dengan nama sama.
+            products.forEach(function (product) {
+                const existingCard = Array.from(
+                    productGrid.children
+                ).find(function (card) {
+                    if (card.classList.contains('firebase-product-card')) {
+                        return false;
+                    }
+
+                    const title = card.querySelector('h3');
+
+                    const button = card.querySelector('.buy-button');
+
+                    const existingName =
+                        button?.dataset.service ||
+                        title?.textContent?.trim() ||
+                        '';
+
+                    return existingName.toLowerCase() ===
+                        product.name.trim().toLowerCase();
+                });
+
+                const newCard = createFirebaseProductCard(product);
+
+                if (existingCard) {
+                    existingCard.replaceWith(newCard);
+                } else {
+                    productGrid.appendChild(newCard);
                 }
             });
 
-            if (changed) {
-                localStorage.setItem(
-                    HISTORY_KEY,
-                    JSON.stringify(transactions)
-                );
+        }, function (error) {
+            console.error('Gagal memuat produk Firebase:', error);
+        });
+    }
+
+
+    // ========================================
+    // PENGATURAN TAMPILAN DARI FIREBASE
+    // ========================================
+
+    db.ref('settings').on('value', function (snapshot) {
+        const settings = snapshot.val() || {};
+        const appearance = settings.appearance || settings;
+
+        if (settings.siteName) {
+            document.title = settings.siteName;
+
+            const heading = document.querySelector('header h1');
+
+            if (heading) {
+                heading.textContent = settings.siteName;
+            }
+        }
+
+        if (settings.adminWhatsApp) {
+            ADMIN_WHATSAPP = String(settings.adminWhatsApp)
+                .replace(/\D/g, '');
+        }
+
+        if (appearance.primaryColor) {
+            document.documentElement.style.setProperty(
+                '--primary-color',
+                appearance.primaryColor
+            );
+
+            document.querySelectorAll(
+                'button, .buy-button'
+            ).forEach(function (element) {
+                element.style.backgroundColor =
+                    appearance.primaryColor;
+            });
+        }
+
+        if (appearance.backgroundColor) {
+            document.body.style.backgroundColor =
+                appearance.backgroundColor;
+        }
+
+        if (appearance.logo) {
+            const logo = document.querySelector('header img');
+
+            if (logo) {
+                logo.src = appearance.logo;
+            }
+        }
+
+        if (appearance.banner) {
+            let banner = document.getElementById(
+                'firebaseSiteBanner'
+            );
+
+            if (!banner) {
+                banner = document.createElement('img');
+                banner.id = 'firebaseSiteBanner';
+                banner.alt = 'Banner website';
+
+                banner.style.cssText =
+                    'width:100%;max-height:300px;object-fit:cover;' +
+                    'display:block;margin:12px auto;border-radius:12px';
+
+                const header = document.querySelector('header');
+
+                if (header) {
+                    header.insertAdjacentElement('afterend', banner);
+                }
             }
 
-            renderTransactions();
-
-        }, function (error) {
-            console.error(
-                'Gagal menyinkronkan status pesanan:',
-                error
-            );
-        });
-});
-
-openingTimer = setTimeout(function () {
-    showInvite();
-}, 3000);
-
-});
-
-// === SINKRONISASI PRODUK DAN TAMPILAN WEBSITE ===
-(function () {
-  if (typeof firebase === "undefined" || !firebase.database) return;
-
-  const database = firebase.database();
-
-  // Ambil produk dari Firebase dan tampilkan di website
-  database.ref("products").on("value", function (snapshot) {
-    if (!snapshot.exists()) return;
-
-    const grid = document.querySelector(".product-grid");
-    if (!grid) return;
-
-    const products = [];
-
-    snapshot.forEach(function (child) {
-      const product = child.val() || {};
-
-      if (product.active === false) return;
-
-      products.push({
-        id: child.key,
-        name: product.name || "Produk",
-        price: Number(product.price || 0),
-        image: product.image || "",
-        description: product.description || ""
-      });
+            banner.src = appearance.banner;
+        }
+    }, function (error) {
+        console.error('Gagal memuat pengaturan tampilan:', error);
     });
 
-    grid.innerHTML = products.map(function (product) {
-      const name = escapeText(product.name);
-      const image = escapeAttribute(product.image);
-      const description = escapeText(product.description);
-      const price = product.price;
-
-      return `
-        <article class="product-card">
-          <img src="${image}" alt="${name}" loading="lazy"
-               onerror="this.style.display='none'">
-          <h3>${name}</h3>
-          <p>${description}</p>
-          <p class="product-price">Rp${price.toLocaleString("id-ID")}</p>
-          <button class="buy-button"
-                  data-service="${escapeAttribute(product.name)}"
-                  data-price="${price}">
-            Beli Sekarang
-          </button>
-        </article>
-      `;
-    }).join("");
-  });
-
-  // Terapkan pengaturan tampilan dari Firebase
-  database.ref("settings").on("value", function (snapshot) {
-    const settings = snapshot.val() || {};
-    const appearance = settings.appearance || {};
-
-    if (settings.siteName) {
-      document.title = settings.siteName;
-      const heading = document.querySelector("header h1");
-      if (heading) heading.textContent = settings.siteName;
-    }
-
-    if (appearance.primaryColor) {
-      document.documentElement.style.setProperty(
-        "--primary-color", appearance.primaryColor
-      );
-      document.querySelectorAll("button, .buy-button").forEach(function (el) {
-        el.style.backgroundColor = appearance.primaryColor;
-      });
-    }
-
-    if (appearance.backgroundColor) {
-      document.body.style.backgroundColor = appearance.backgroundColor;
-    }
-
-    if (appearance.logo) {
-      const logo = document.querySelector("header img");
-      if (logo) logo.src = appearance.logo;
-    }
-
-    if (appearance.banner) {
-      let banner = document.getElementById("firebaseSiteBanner");
-
-      if (!banner) {
-        banner = document.createElement("img");
-        banner.id = "firebaseSiteBanner";
-        banner.alt = "Banner website";
-        banner.style.cssText =
-          "width:100%;max-height:300px;object-fit:cover;display:block;margin:12px auto;border-radius:12px";
-
-        const header = document.querySelector("header");
-        if (header) header.insertAdjacentElement("afterend", banner);
-      }
-
-      banner.src = appearance.banner;
-    }
-  });
-
-  function escapeText(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function (char) {
-      return {
-        "&": "&amp;", "<": "&lt;", ">": "&gt;",
-        '"': "&quot;", "'": "&#39;"
-      }[char];
-    });
-  }
-
-  function escapeAttribute(value) {
-    return escapeText(value);
-  }
-})();
+});
