@@ -302,3 +302,177 @@ padding: 7px;
 font-size: 12px;
 }
 }
+
+/* ==========================================
+   DANZZCENZZ STORE — NEON PREMIUM EFFECT
+   Warna asli dipertahankan
+   ========================================== */
+
+:root {
+  --neon-cyan: #69eaff;
+  --neon-blue: #1685ff;
+  --neon-soft: rgba(105, 234, 255, .45);
+}
+
+/* Cahaya latar bergerak */
+.opening {
+  isolation: isolate;
+  background:
+    radial-gradient(
+      ellipse at 50% 35%,
+      rgba(22, 133, 255, .24),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 15% 75%,
+      rgba(105, 234, 255, .20),
+      transparent 45%
+    ),
+    var(--yellow);
+}
+
+.opening::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(105, 234, 255, .16),
+    transparent,
+    rgba(22, 133, 255, .18),
+    transparent
+  );
+  filter: blur(55px);
+  animation: neonBackground 16s linear infinite;
+}
+
+@keyframes neonBackground {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Logo menyala */
+.logo-ring::before {
+  box-shadow:
+    0 0 8px rgba(105, 234, 255, .8),
+    0 0 20px rgba(22, 133, 255, .55),
+    0 0 42px rgba(22, 133, 255, .3);
+  animation: ringLoading 3s linear infinite,
+             neonPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.7);
+  }
+}
+
+/* Cahaya pada gambar logo */
+.brand-logo {
+  filter:
+    drop-shadow(0 0 5px rgba(105, 234, 255, .45))
+    drop-shadow(0 0 13px rgba(22, 133, 255, .25));
+}
+
+/* Judul halaman */
+.opening h1,
+.store-header h1 {
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, .8),
+    0 0 12px rgba(105, 234, 255, .5);
+}
+
+/* Kartu layanan dengan cahaya lembut */
+.service-card {
+  border: 1px solid rgba(105, 234, 255, .35);
+  box-shadow:
+    0 0 8px rgba(105, 234, 255, .12),
+    0 8px 20px rgba(0, 0, 0, .20);
+  transition:
+    transform .2s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
+}
+
+.service-card:active {
+  box-shadow:
+    0 0 16px rgba(105, 234, 255, .45);
+}
+
+.service-emoji {
+  box-shadow:
+    0 0 10px rgba(105, 234, 255, .3);
+}
+
+/* Kartu produk */
+.product-card {
+  border: 1px solid rgba(105, 234, 255, .55);
+  box-shadow:
+    0 0 8px rgba(0, 220, 255, .12),
+    0 0 18px rgba(0, 140, 255, .08),
+    0 8px 20px rgba(0, 0, 0, .22);
+  transition:
+    transform .2s ease,
+    box-shadow .25s ease,
+    border-color .25s ease;
+}
+
+.product-card:active {
+  transform: scale(.98);
+  box-shadow:
+    0 0 18px rgba(0, 220, 255, .35);
+}
+
+/* Tombol beli menyala */
+.buy-button {
+  background: linear-gradient(
+    110deg,
+    #00c8e8,
+    #1685ff,
+    #00c8e8
+  );
+  background-size: 200% 100%;
+  box-shadow:
+    0 0 8px rgba(0, 200, 232, .25);
+  animation: buttonGlow 4s ease-in-out infinite;
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 6px rgba(0, 200, 232, .2);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 0 14px rgba(0, 200, 232, .4);
+  }
+}
+
+/* Kartu pembayaran */
+.payment-card {
+  box-shadow:
+    0 0 12px rgba(105, 234, 255, .18),
+    0 8px 0 rgba(0, 0, 0, .85);
+}
+
+/* Navigasi bawah */
+.bottom-nav {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Tetap nyaman untuk pengguna yang mengurangi animasi */
+@media (prefers-reduced-motion: reduce) {
+  .opening::before,
+  .logo-ring::before,
+  .buy-button {
+    animation: none !important;
+  }
+}
