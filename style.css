@@ -656,3 +656,89 @@ box-shadow:4px 4px 0 #080808,0 0 12px #20d36666;
 @media(prefers-reduced-motion:reduce){
 ,::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
 }
+
+/* ===== SMOOTH VIDEO BLEND — DANZZCENZZ STORE ===== */
+
+#home .store-header {
+  position: relative !important;
+  isolation: isolate;
+  overflow: hidden;
+  border: none !important;
+  border-radius: 0 0 30px 30px !important;
+  background: #07111c !important;
+  box-shadow: none !important;
+}
+
+/* Video menyatu dengan header */
+#home .store-header .header-video-bg,
+#home .store-header .home-anime-video {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  z-index: -2 !important;
+  border: none !important;
+}
+
+/* Gradasi lembut, bukan potongan kotak */
+#home .store-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(3, 8, 20, 0.08) 0%,
+      rgba(3, 8, 20, 0.12) 45%,
+      rgba(3, 8, 20, 0.58) 75%,
+      #e8fcff 100%
+    ) !important;
+}
+
+/* Logo dan teks tetap di depan video */
+#home .store-header > * {
+  position: relative;
+}
+
+/* Transisi lembut menuju bagian produk */
+#home .store-header {
+  margin-bottom: 0 !important;
+  padding-bottom: 35px !important;
+}
+
+#home .store-header h1,
+#home .store-header h2,
+#home .store-header p {
+  color: #fff !important;
+  text-shadow:
+    0 0 8px rgba(0, 225, 255, 0.45),
+    0 2px 12px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* Background produk menyatu dengan bagian video */
+#home {
+  background:
+    linear-gradient(
+      to bottom,
+      #e8fcff 0%,
+      #dffaff 45%,
+      #edfdff 100%
+    ) !important;
+}
+
+/* Neon lebih lembut dan minimalis */
+#home .service-card,
+#home .product-card {
+  border: 1px solid rgba(0, 220, 255, 0.65) !important;
+  box-shadow:
+    0 4px 18px rgba(0, 180, 255, 0.13) !important;
+}
+
+/* Hindari perubahan pada navigasi bawah */
+.bottom-nav {
+  z-index: 100 !important;
+}
