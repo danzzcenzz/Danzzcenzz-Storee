@@ -3,31 +3,261 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#eef2f7">
 <title>Admin DANZZCENZZ STORE</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:16px;font-family:Arial,sans-serif;background:#eef2f7;color:#111827}
-.container{max-width:750px;margin:20px auto}
-.card{background:white;padding:20px;border-radius:14px;margin-bottom:16px;box-shadow:0 3px 15px #0000000b}
-h1{font-size:23px;margin-top:0}
-h2{font-size:18px}
-label{display:block;margin-top:12px;font-size:14px;font-weight:bold}
-input,select,button,textarea{width:100%;padding:12px;margin-top:8px;border-radius:8px;font-size:14px}
-input,select,textarea{border:1px solid #cbd5e1;background:white}
+
+:root{
+  --primary:#0891b2;
+  --background:#eef2f7;
+  --card:#fff;
+  --text:#111827;
+  --muted:#64748b;
+  --border:#e2e8f0;
+}
+
+body{
+  margin:0;
+  padding:16px 12px 100px;
+  font-family:Arial,sans-serif;
+  background:var(--background);
+  color:var(--text);
+}
+
+.container{
+  max-width:750px;
+  margin:12px auto;
+}
+
+.card{
+  background:var(--card);
+  padding:18px;
+  border-radius:18px;
+  margin-bottom:14px;
+  box-shadow:0 4px 18px #00000009;
+}
+
+h1{font-size:22px;margin:0 0 10px}
+h2{font-size:18px;margin:0 0 12px}
+
+label{
+  display:block;
+  margin-top:12px;
+  font-size:14px;
+  font-weight:bold;
+}
+
+input,select,button,textarea{
+  width:100%;
+  min-height:44px;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  font-size:14px;
+}
+
+input,select,textarea{
+  border:1px solid #cbd5e1;
+  background:white;
+  color:#111827;
+}
+
 textarea{min-height:75px;resize:vertical}
-button{border:0;background:#0891b2;color:white;font-weight:bold;cursor:pointer}
+
+button{
+  border:0;
+  background:var(--primary);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
 button.delete{background:#dc2626}
 button.logout{background:#475569}
 button.secondary{background:#64748b}
-.order,.product{border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-top:12px;overflow-wrap:anywhere}
-.product img{width:100%;max-width:180px;height:130px;object-fit:contain;display:block;margin:8px 0}
+
+.order,.product{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  margin-top:12px;
+  overflow-wrap:anywhere;
+  background:#fff;
+}
+
+.product img{
+  width:100%;
+  max-width:180px;
+  height:130px;
+  object-fit:contain;
+  display:block;
+  margin:8px 0;
+}
+
 .order p,.product p{margin:7px 0;font-size:14px}
 .status{font-weight:bold;color:#0369a1}
-.small{font-size:12px;color:#64748b;line-height:1.5}
+.small{font-size:12px;color:var(--muted);line-height:1.5}
 .hidden{display:none!important}
-#message,#settingsMessage,#productMessage,#appearanceMessage{overflow-wrap:anywhere;font-size:14px}
-hr{border:0;border-top:1px solid #e2e8f0;margin:20px 0}
+
+#message,#settingsMessage,#productMessage,
+#appearanceMessage,#orderMessage{
+  overflow-wrap:anywhere;
+  font-size:14px;
+}
+
+hr{
+  border:0;
+  border-top:1px solid var(--border);
+  margin:20px 0;
+}
+
+/* LOGIN */
+#loginCard{
+  max-width:440px;
+  margin:8vh auto;
+  padding:24px;
+}
+
+.login-logo{
+  width:66px;
+  height:66px;
+  border-radius:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#cffafe;
+  font-size:32px;
+  margin-bottom:16px;
+}
+
+/* PANEL GESER KANAN-KIRI */
+#adminArea{width:100%}
+
+.admin-header{
+  margin-bottom:14px;
+}
+
+.slide-viewport{
+  width:100%;
+  overflow-x:auto;
+  overflow-y:visible;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  border-radius:18px;
+}
+
+.slide-viewport::-webkit-scrollbar{display:none}
+
+.slide-track{
+  display:flex;
+  align-items:flex-start;
+  width:100%;
+}
+
+.admin-slide{
+  flex:0 0 100%;
+  width:100%;
+  min-width:0;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  padding-bottom:8px;
+}
+
+.admin-slide .card{
+  margin-bottom:0;
+  min-height:200px;
+}
+
+.slide-hint{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  margin:10px 0 0;
+}
+
+/* NAVIGASI BAWAH */
+.bottom-nav{
+  position:fixed;
+  z-index:9999;
+  bottom:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:center;
+  padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.97);
+  border-top:1px solid var(--border);
+  box-shadow:0 -5px 20px #0000000a;
+}
+
+.nav-track{
+  width:100%;
+  max-width:750px;
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+
+.nav-track::-webkit-scrollbar{display:none}
+
+.nav-button{
+  flex:1 0 76px;
+  min-width:76px;
+  min-height:54px;
+  margin:0;
+  padding:7px 5px;
+  background:transparent;
+  color:#64748b;
+  border-radius:12px;
+  font-size:11px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+
+.nav-button .nav-icon{font-size:20px}
+
+.nav-button.active{
+  color:#fff;
+  background:var(--primary);
+}
+
+#adminArea:not(.hidden)~.bottom-nav{display:flex}
+.bottom-nav{display:none}
+
+.toast{
+  position:fixed;
+  z-index:10000;
+  bottom:95px;
+  left:16px;
+  right:16px;
+  max-width:450px;
+  margin:auto;
+  background:#111827;
+  color:#fff;
+  padding:14px 16px;
+  border-radius:12px;
+  box-shadow:0 5px 20px #0003;
+  font-size:14px;
+  text-align:center;
+}
+
+@media(min-width:600px){
+  body{padding:20px 16px 100px}
+  .card{padding:22px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .slide-viewport{scroll-behavior:auto}
+}
 </style>
 </head>
 
@@ -35,114 +265,190 @@ hr{border:0;border-top:1px solid #e2e8f0;margin:20px 0}
 <div class="container">
 
 <section class="card" id="loginCard">
-<h1>🔐 Admin DANZZCENZZ STORE</h1>
-<p class="small">Login menggunakan akun admin Firebase.</p>
+  <div class="login-logo">🔐</div>
+  <h1>Admin DANZZCENZZ STORE</h1>
+  <p class="small">Login menggunakan akun admin Firebase.</p>
 
-<form id="loginForm">
-<input id="email" type="email" placeholder="Email admin" autocomplete="username" required>
-<input id="password" type="password" placeholder="Password admin" autocomplete="current-password" required>
-<button type="submit">Login Admin</button>
-</form>
+  <form id="loginForm">
+    <label>Email Admin</label>
+    <input id="email" type="email" placeholder="Email admin"
+      autocomplete="username" required>
 
-<p id="message" role="status"></p>
+    <label>Password Admin</label>
+    <input id="password" type="password" placeholder="Password admin"
+      autocomplete="current-password" required>
+
+    <button type="submit">Login Admin</button>
+  </form>
+
+  <p id="message" role="status"></p>
 </section>
 
 <div id="adminArea" class="hidden">
 
-<section class="card">
-<h1>📋 Panel Admin</h1>
-<p class="small">Kelola pesanan, produk, dan tampilan website.</p>
-<button class="logout" id="logoutButton">Logout</button>
-</section>
+  <section class="card admin-header">
+    <h1>👋 Panel Admin</h1>
+    <p class="small">Geser layar ke kanan atau kiri, atau pilih menu di bawah.</p>
+    <button class="logout" id="logoutButton">Keluar dari Admin</button>
+  </section>
 
-<section class="card">
-<h2>📦 Tambah / Edit Produk</h2>
-<p class="small">Isi formulir untuk menambah produk. Pilih Edit pada produk yang sudah ada untuk mengubahnya.</p>
+  <div class="slide-viewport" id="slideViewport">
+    <div class="slide-track" id="slideTrack">
 
-<form id="productForm">
-<input id="productId" type="hidden">
+      <!-- HALAMAN PRODUK -->
+      <section class="admin-slide" data-page="produk">
+        <div class="card">
+          <h2>🛍️ Kelola Produk</h2>
+          <p class="small">Tambah produk baru atau edit produk yang sudah ada.</p>
 
-<label>Nama Produk</label>
-<input id="productName" maxlength="150" placeholder="Nama produk" required>
+          <form id="productForm">
+            <input id="productId" type="hidden">
 
-<label>Harga Produk (Rp)</label>
-<input id="productPrice" type="number" min="0" step="1" placeholder="Contoh: 10000" required>
+            <label>Nama Produk</label>
+            <input id="productName" maxlength="150"
+              placeholder="Nama produk" required>
 
-<label>URL Gambar Produk</label>
-<input id="productImage" type="url" placeholder="https://contoh.com/gambar.jpg" required>
+            <label>Harga Produk (Rp)</label>
+            <input id="productPrice" type="number" min="0" step="1"
+              placeholder="Contoh: 10000" required>
 
-<label>Deskripsi Produk</label>
-<textarea id="productDescription" maxlength="1000" placeholder="Deskripsi produk (opsional)"></textarea>
+            <label>URL Gambar Produk</label>
+            <input id="productImage" type="url"
+              placeholder="https://contoh.com/gambar.jpg" required>
 
-<label>Status Produk</label>
-<select id="productActive">
-<option value="true">Ditampilkan</option>
-<option value="false">Disembunyikan</option>
-</select>
+            <label>Deskripsi Produk</label>
+            <textarea id="productDescription" maxlength="1000"
+              placeholder="Deskripsi produk (opsional)"></textarea>
 
-<button id="saveProductButton" type="submit">Simpan Produk</button>
-<button class="secondary hidden" id="cancelEditButton" type="button">Batal Edit</button>
-<p id="productMessage" class="small"></p>
-</form>
+            <label>Status Produk</label>
+            <select id="productActive">
+              <option value="true">Ditampilkan</option>
+              <option value="false">Disembunyikan</option>
+            </select>
 
-<hr>
-<h2>Daftar Produk</h2>
-<div id="products"><p>Memuat produk...</p></div>
-</section>
+            <button id="saveProductButton" type="submit">Simpan Produk</button>
+            <button class="secondary hidden" id="cancelEditButton" type="button">
+              Batal Edit
+            </button>
 
-<section class="card">
-<h2>🎨 Tampilan Website</h2>
+            <p id="productMessage" class="small" role="status"></p>
+          </form>
 
-<form id="appearanceForm">
-<label>Nama Website</label>
-<input id="siteName" maxlength="100" placeholder="DANZZCENZZ STORE" required>
+          <hr>
 
-<label>Nomor WhatsApp Admin</label>
-<input id="adminWhatsApp" type="tel" maxlength="20" placeholder="628123456789" required>
+          <h2>📦 Daftar Produk</h2>
+          <div id="products"><p>Memuat produk...</p></div>
+        </div>
+      </section>
 
-<label>URL Logo</label>
-<input id="siteLogo" type="url" placeholder="https://contoh.com/logo.png">
+      <!-- HALAMAN TAMPILAN WEBSITE -->
+      <section class="admin-slide" data-page="tampilan">
+        <div class="card">
+          <h2>🎨 Tampilan Website</h2>
+          <p class="small">Atur identitas dan warna website utama.</p>
 
-<label>URL Banner</label>
-<input id="siteBanner" type="url" placeholder="https://contoh.com/banner.jpg">
+          <form id="appearanceForm">
+            <label>Nama Website</label>
+            <input id="siteName" maxlength="100"
+              placeholder="DANZZCENZZ STORE" required>
 
-<label>Warna Utama</label>
-<input id="siteColor" type="color" value="#0891b2">
+            <label>Nomor WhatsApp Admin</label>
+            <input id="adminWhatsApp" type="tel" maxlength="20"
+              placeholder="628123456789" required>
 
-<label>Warna Latar Website</label>
-<input id="siteBackground" type="color" value="#eef2f7">
+            <label>URL Logo</label>
+            <input id="siteLogo" type="url"
+              placeholder="https://contoh.com/logo.png">
 
-<button type="submit">💾 Simpan Tampilan</button>
-<p id="appearanceMessage" class="small"></p>
-</form>
-</section>
+            <label>URL Banner</label>
+            <input id="siteBanner" type="url"
+              placeholder="https://contoh.com/banner.jpg">
 
-<section class="card">
-<h2>➕ Tambah Pesanan Manual</h2>
+            <label>Warna Utama</label>
+            <input id="siteColor" type="color" value="#0891b2">
 
-<form id="orderForm">
-<input id="customer" placeholder="Nama pelanggan" maxlength="100" required>
-<input id="service" placeholder="Nama pesanan / layanan" maxlength="150" required>
-<input id="price" type="number" placeholder="Harga (Rp)" min="0" required>
+            <label>Warna Latar Website</label>
+            <input id="siteBackground" type="color" value="#eef2f7">
 
-<select id="status">
-<option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
-<option value="Terverifikasi">Terverifikasi</option>
-<option value="Selesai">Selesai</option>
-</select>
+            <button type="submit">💾 Simpan Tampilan</button>
+            <p id="appearanceMessage" class="small" role="status"></p>
+          </form>
 
-<button type="submit">Simpan Pesanan</button>
-</form>
-</section>
+          <hr>
+          <h2>💡 Petunjuk</h2>
+          <p class="small">
+            Setelah disimpan, pengaturan masuk ke Firebase.
+            Website utama harus membaca data pengaturan tersebut
+            agar perubahan tampil di sana.
+          </p>
+        </div>
+      </section>
 
-<section class="card">
-<h2>📋 Daftar Pesanan</h2>
-<p id="total">Total pesanan: 0</p>
-<div id="orders"><p>Memuat pesanan...</p></div>
-</section>
+      <!-- HALAMAN PESANAN -->
+      <section class="admin-slide" data-page="pesanan">
+        <div class="card">
+          <h2>➕ Tambah Pesanan Manual</h2>
 
+          <form id="orderForm">
+            <label>Nama Pelanggan</label>
+            <input id="customer" placeholder="Nama pelanggan"
+              maxlength="100" required>
+
+            <label>Nama Pesanan / Layanan</label>
+            <input id="service" placeholder="Nama pesanan / layanan"
+              maxlength="150" required>
+
+            <label>Harga (Rp)</label>
+            <input id="price" type="number" placeholder="Harga (Rp)"
+              min="0" step="1" required>
+
+            <label>Status Pesanan</label>
+            <select id="status">
+              <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
+              <option value="Terverifikasi">Terverifikasi</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+
+            <button type="submit">Simpan Pesanan</button>
+            <p id="orderMessage" class="small" role="status"></p>
+          </form>
+
+          <hr>
+
+          <h2>📋 Daftar Pesanan</h2>
+          <p id="total">Total pesanan: 0</p>
+          <div id="orders"><p>Memuat pesanan...</p></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <p class="slide-hint">↔️ Geser kanan-kiri untuk berpindah menu</p>
 </div>
 </div>
+
+<!-- NAVIGASI BAWAH -->
+<nav class="bottom-nav" id="bottomNav" aria-label="Navigasi admin">
+  <div class="nav-track">
+    <button type="button" class="nav-button active" data-go="0">
+      <span class="nav-icon">🛍️</span>
+      <span>Produk</span>
+    </button>
+
+    <button type="button" class="nav-button" data-go="1">
+      <span class="nav-icon">🎨</span>
+      <span>Tampilan</span>
+    </button>
+
+    <button type="button" class="nav-button" data-go="2">
+      <span class="nav-icon">📦</span>
+      <span>Pesanan</span>
+    </button>
+  </div>
+</nav>
+
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -165,7 +471,6 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.database();
 const ADMIN_UID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
-
 const $ = id => document.getElementById(id);
 
 const loginCard = $("loginCard");
@@ -178,9 +483,19 @@ const message = $("message");
 let ordersListener = null;
 let productsListener = null;
 let editingProductId = null;
+let toastTimer = null;
 
 function showMessage(text) {
   message.textContent = text;
+}
+
+function showToast(text) {
+  const toast = $("toast");
+  toast.textContent = text;
+  toast.classList.remove("hidden");
+
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.add("hidden"), 2800);
 }
 
 function escapeHTML(value) {
@@ -201,7 +516,47 @@ function isAdmin() {
   return !!auth.currentUser && auth.currentUser.uid === ADMIN_UID;
 }
 
-/* LOGIN ADMIN: TETAP DIPERTAHANKAN */
+/* NAVIGASI GESER */
+
+const viewport = $("slideViewport");
+const slides = Array.from(document.querySelectorAll(".admin-slide"));
+const navButtons = Array.from(document.querySelectorAll(".nav-button"));
+
+function goToPage(index) {
+  const safeIndex = Math.max(0, Math.min(index, slides.length - 1));
+  viewport.scrollTo({
+    left: slides[safeIndex].offsetLeft - slides[0].offsetLeft,
+    behavior: "smooth"
+  });
+  setActivePage(safeIndex);
+}
+
+function setActivePage(index) {
+  navButtons.forEach((button, i) => {
+    const active = i === index;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-current", active ? "page" : "false");
+  });
+}
+
+navButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    goToPage(Number(button.dataset.go));
+  });
+});
+
+let scrollTimer = null;
+
+viewport.addEventListener("scroll", () => {
+  clearTimeout(scrollTimer);
+
+  scrollTimer = setTimeout(() => {
+    const index = Math.round(viewport.scrollLeft / viewport.clientWidth);
+    setActivePage(index);
+  }, 80);
+});
+
+/* LOGIN ADMIN */
 
 loginForm.addEventListener("submit", async event => {
   event.preventDefault();
@@ -231,6 +586,7 @@ auth.onAuthStateChanged(async user => {
   if (!user) {
     loginCard.classList.remove("hidden");
     adminArea.classList.add("hidden");
+    $("bottomNav").style.display = "none";
     stopListeners();
     return;
   }
@@ -243,10 +599,16 @@ auth.onAuthStateChanged(async user => {
 
   loginCard.classList.add("hidden");
   adminArea.classList.remove("hidden");
+  $("bottomNav").style.display = "flex";
 
   startOrdersListener();
   startProductsListener();
   loadWebsiteSettings();
+
+  requestAnimationFrame(() => {
+    viewport.scrollLeft = 0;
+    setActivePage(0);
+  });
 });
 
 function stopListeners() {
@@ -302,8 +664,8 @@ function renderOrders(snapshot) {
         <option value="Selesai" ${order.status==="Selesai"?"selected":""}>Selesai</option>
       </select>
 
-      <button data-update-id="${escapeHTML(order.id)}">Ubah Status</button>
-      <button class="delete" data-delete-id="${escapeHTML(order.id)}">Hapus Pesanan</button>
+      <button type="button" data-update-id="${escapeHTML(order.id)}">Ubah Status</button>
+      <button type="button" class="delete" data-delete-id="${escapeHTML(order.id)}">Hapus Pesanan</button>
     </article>
   `).join("");
 }
@@ -322,7 +684,7 @@ orderForm.addEventListener("submit", async event => {
   event.preventDefault();
 
   if (!isAdmin()) {
-    alert("Silakan login sebagai admin.");
+    $("orderMessage").textContent = "Silakan login sebagai admin.";
     return;
   }
 
@@ -332,32 +694,41 @@ orderForm.addEventListener("submit", async event => {
   const status = $("status").value;
 
   if (!customer || !service || !Number.isFinite(price) || price < 0) {
-    alert("Periksa nama pelanggan, pesanan, dan harga.");
+    $("orderMessage").textContent = "Periksa nama pelanggan, pesanan, dan harga.";
     return;
   }
 
+  $("orderMessage").textContent = "Menyimpan pesanan...";
+
   try {
     await db.ref("orders").push({
-      customer, service, price, status,
+      customer,
+      service,
+      price,
+      status,
       date: new Date().toLocaleString("id-ID"),
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      customerUid: ADMIN_UID
     });
 
     orderForm.reset();
-    alert("Pesanan berhasil disimpan.");
+    $("orderMessage").textContent = "Pesanan berhasil disimpan.";
   } catch (error) {
-    alert("Gagal menyimpan pesanan: " + error.message);
+    $("orderMessage").textContent = "Gagal menyimpan pesanan: " + error.message;
   }
 });
 
 ordersContainer.addEventListener("click", async event => {
   if (!isAdmin()) {
-    alert("Silakan login sebagai admin.");
+    showToast("Silakan login sebagai admin.");
     return;
   }
 
-  const updateId = event.target.dataset.updateId;
-  const deleteId = event.target.dataset.deleteId;
+  const target = event.target.closest("button");
+  if (!target) return;
+
+  const updateId = target.dataset.updateId;
+  const deleteId = target.dataset.deleteId;
 
   if (updateId) {
     const select = ordersContainer.querySelector(
@@ -368,16 +739,18 @@ ordersContainer.addEventListener("click", async event => {
 
     try {
       await db.ref("orders/" + updateId).update({status:select.value});
+      showToast("Status pesanan berhasil diubah.");
     } catch (error) {
-      alert("Gagal mengubah status: " + error.message);
+      showToast("Gagal mengubah status: " + error.message);
     }
   }
 
   if (deleteId && confirm("Yakin ingin menghapus pesanan ini?")) {
     try {
       await db.ref("orders/" + deleteId).remove();
+      showToast("Pesanan berhasil dihapus.");
     } catch (error) {
-      alert("Gagal menghapus pesanan: " + error.message);
+      showToast("Gagal menghapus pesanan: " + error.message);
     }
   }
 });
@@ -415,10 +788,10 @@ function renderProducts(snapshot) {
       <b>${escapeHTML(product.name || "Produk tanpa nama")}</b>
       <p>Harga: ${rupiah(product.price)}</p>
       <p>Status: ${product.active === false ? "Disembunyikan" : "Ditampilkan"}</p>
-      ${product.image ? `<img src="${escapeHTML(product.image)}" alt="Gambar produk" loading="lazy">` : ""}
+      ${product.image ? `<img src="${escapeHTML(product.image)}" alt="Gambar produk" loading="lazy" onerror="this.style.display='none'">` : ""}
       <p>${escapeHTML(product.description || "")}</p>
-      <button data-edit-product="${escapeHTML(product.id)}">Edit Produk</button>
-      <button class="delete" data-delete-product="${escapeHTML(product.id)}">Hapus Produk</button>
+      <button type="button" data-edit-product="${escapeHTML(product.id)}">Edit Produk</button>
+      <button type="button" class="delete" data-delete-product="${escapeHTML(product.id)}">Hapus Produk</button>
     </article>
   `).join("");
 }
@@ -451,6 +824,11 @@ $("productForm").addEventListener("submit", async event => {
     return;
   }
 
+  if (!/^https?:\/\//i.test(image)) {
+    $("productMessage").textContent = "URL gambar harus dimulai dengan https:// atau http://.";
+    return;
+  }
+
   const data = {
     name,
     price,
@@ -459,6 +837,8 @@ $("productForm").addEventListener("submit", async event => {
     active,
     updatedAt: Date.now()
   };
+
+  $("saveProductButton").disabled = true;
 
   try {
     if (editingProductId) {
@@ -471,16 +851,22 @@ $("productForm").addEventListener("submit", async event => {
     }
 
     resetProductForm();
+    showToast("Data produk berhasil disimpan.");
   } catch (error) {
     $("productMessage").textContent = "Gagal menyimpan produk: " + error.message;
+  } finally {
+    $("saveProductButton").disabled = false;
   }
 });
 
 $("products").addEventListener("click", async event => {
   if (!isAdmin()) return;
 
-  const editId = event.target.dataset.editProduct;
-  const deleteId = event.target.dataset.deleteProduct;
+  const target = event.target.closest("button");
+  if (!target) return;
+
+  const editId = target.dataset.editProduct;
+  const deleteId = target.dataset.deleteProduct;
 
   if (editId) {
     try {
@@ -499,7 +885,8 @@ $("products").addEventListener("click", async event => {
       $("saveProductButton").textContent = "Simpan Perubahan Produk";
       $("cancelEditButton").classList.remove("hidden");
       $("productMessage").textContent = "Sedang mengedit produk.";
-      $("productForm").scrollIntoView({behavior:"smooth"});
+
+      $("productForm").scrollIntoView({behavior:"smooth",block:"start"});
     } catch (error) {
       $("productMessage").textContent = "Gagal membuka produk: " + error.message;
     }
@@ -511,13 +898,18 @@ $("products").addEventListener("click", async event => {
       $("productMessage").textContent = "Produk berhasil dihapus.";
 
       if (editingProductId === deleteId) resetProductForm();
+
+      showToast("Produk berhasil dihapus.");
     } catch (error) {
       $("productMessage").textContent = "Gagal menghapus produk: " + error.message;
     }
   }
 });
 
-$("cancelEditButton").addEventListener("click", resetProductForm);
+$("cancelEditButton").addEventListener("click", () => {
+  resetProductForm();
+  $("productMessage").textContent = "Edit dibatalkan.";
+});
 
 /* PENGATURAN WEBSITE */
 
@@ -535,7 +927,8 @@ function loadWebsiteSettings() {
       $("siteBackground").value = appearance.backgroundColor || "#eef2f7";
     })
     .catch(error => {
-      $("appearanceMessage").textContent = "Gagal memuat pengaturan: " + error.message;
+      $("appearanceMessage").textContent =
+        "Gagal memuat pengaturan: " + error.message;
     });
 }
 
@@ -551,7 +944,8 @@ $("appearanceForm").addEventListener("submit", async event => {
   const adminWhatsApp = $("adminWhatsApp").value.trim();
 
   if (!siteName || !adminWhatsApp) {
-    $("appearanceMessage").textContent = "Nama website dan WhatsApp wajib diisi.";
+    $("appearanceMessage").textContent =
+      "Nama website dan WhatsApp wajib diisi.";
     return;
   }
 
@@ -572,6 +966,8 @@ $("appearanceForm").addEventListener("submit", async event => {
 
     $("appearanceMessage").textContent =
       "Pengaturan berhasil disimpan ke Firebase.";
+
+    showToast("Pengaturan website berhasil disimpan.");
   } catch (error) {
     $("appearanceMessage").textContent =
       "Gagal menyimpan pengaturan: " + error.message;
