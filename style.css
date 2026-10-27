@@ -841,3 +841,71 @@ box-shadow:4px 4px 0 #080808,0 0 12px #20d36666;
     transparent 100%
   ) !important;
 }
+
+/* FIX FINAL VIDEO HEADER DAN SPASI BAWAH */
+
+#home .store-header {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding-bottom: 35px !important;
+  background: #29253b !important;
+  box-shadow: none !important;
+}
+
+#home .store-header .home-anime-video,
+#home .store-header .header-video-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  margin: 0 !important;
+  z-index: -1 !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+#home .store-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 110px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(41, 37, 59, 0.45) 40%,
+    #29253b 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+#home .store-header .small-logo,
+#home .store-header h1,
+#home .store-header p {
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+#home {
+  background: #29253b !important;
+}
+
+#home .horizontal-pages {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#home .store-page {
+  background: transparent !important;
+}
