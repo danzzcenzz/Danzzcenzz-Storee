@@ -156,3 +156,505 @@ button.logout{background:#475569}
 </div>
 </nav>
 <div id="toast" class="toast hidden" role="status"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig={
+  apiKey:"AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
+  authDomain:"danzzcenzz-store.firebaseapp.com",
+  databaseURL:"https://danzzcenzz-store-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"danzzcenzz-store",
+  storageBucket:"danzzcenzz-store.firebasestorage.app",
+  messagingSenderId:"28505785159",
+  appId:"1:28505785159:web:f605c1ea4a881741a04262",
+  measurementId:"G-R0G2QBF8J8"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth=firebase.auth();
+const db=firebase.database();
+const ADMIN_UID="2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
+const $=id=>document.getElementById(id);
+
+let productsListener=null;
+let ordersListener=null;
+let editingProductId=null;
+let toastTimer=null;
+let importingLegacy=false;
+
+function isAdmin(){
+  return !!auth.currentUser && auth.currentUser.uid===ADMIN_UID;
+}
+
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function rupiah(v){
+  return "Rp"+Number(v||0).toLocaleString("id-ID");
+}
+
+function toast(t){
+  $("toast").textContent=t;
+  $("toast").classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$("toast").classList.add("hidden"),2800);
+}
+
+const viewport=$("slideViewport");
+const slides=Array.from(document.querySelectorAll(".admin-slide"));
+const navButtons=Array.from(document.querySelectorAll(".nav-button"));
+
+function goToPage(i){
+  i=Math.max(0,Math.min(i,slides.length-1));
+  viewport.scrollTo({
+    left:slides[i].offsetLeft-slides[0].offsetLeft,
+    behavior:"smooth"
+  });
+  navButtons.forEach((b,j)=>b.classList.toggle("active",i===j));
+}
+
+navButtons.forEach(b=>{
+  b.addEventListener("click",()=>goToPage(Number(b.dataset.go)));
+});
+
+viewport.addEventListener("scroll",()=>{
+  const i=Math.round(viewport.scrollLeft/viewport.clientWidth);
+  navButtons.forEach((b,j)=>b.classList.toggle("active",i===j));
+},{passive:true});
+
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  $("message").textContent="Sedang login...";
+
+  try{
+    const r=await auth.signInWithEmailAndPassword(
+      $("email").value.trim(),
+      $("password").value
+    );
+
+    if(r.user.uid!==ADMIN_UID){
+      await auth.signOut();
+      $("message").textContent="Akun ini tidak memiliki izin admin.";
+      return;
+    }
+
+    $("password").value="";
+  }catch(err){
+    $("message").textContent="Login gagal: "+err.message;
+  }
+});
+
+auth.onAuthStateChanged(async user=>{
+  if(!user){
+    $("loginCard").classList.remove("hidden");
+    $("adminArea").classList.add("hidden");
+    $("bottomNav").style.display="none";
+    stopListeners();
+    return;
+  }
+
+  if(user.uid!==ADMIN_UID){
+    await auth.signOut();
+    $("message").textContent="Akun ini bukan akun admin.";
+    return;
+  }
+
+  $("loginCard").classList.add("hidden");
+  $("adminArea").classList.remove("hidden");
+  $("bottomNav").style.display="flex";
+
+  startProductsListener();
+  startOrdersListener();
+  loadSettings();
+  goToPage(0);
+});
+
+function stopListeners(){
+  if(productsListener){
+    db.ref("products").off("value",productsListener);
+    productsListener=null;
+  }
+
+  if(ordersListener){
+    db.ref("orders").off("value",ordersListener);
+    ordersListener=null;
+  }
+}
+
+$("logoutButton").addEventListener("click",async()=>{
+  stopListeners();
+  await auth.signOut();
+  $("loginForm").reset();
+  $("message").textContent="Kamu sudah logout.";
+});
+
+/* Produk lama */
+const legacyProducts=[
+  {name:"Video viral adik Kaka di mobil",price:10000,image:"https://i.imgur.com/0KuKRAt.jpeg",description:"Video viral adik Kaka di mobil"},
+  {name:"Video Viral Ade kaka di mobil",price:10000,image:"https://i.imgur.com/0KuKRAt.jpeg",description:"Video viral Ade kaka di mobil"},
+  {name:"Video Viral 3",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"},
+  {name:"SEGERA!",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk segera tersedia"},
+  {name:"Video Viral 5",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"},
+  {name:"Video Viral 6",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"},
+  {name:"Video Viral 7",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"},
+  {name:"Video Viral 8",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"},
+  {name:"Video Viral 9",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"},
+  {name:"Video Viral 10",price:10000,image:"https://i.imgur.com/5glTUQl.jpeg",description:"Produk video viral"}
+];
+
+async function importLegacy(snapshot){
+  if(importingLegacy||!isAdmin())return;
+
+  const existing=new Set();
+
+  snapshot.forEach(c=>{
+    const p=c.val()||{};
+    if(p.name)existing.add(String(p.name).trim().toLowerCase());
+  });
+
+  const missing=legacyProducts.filter(
+    p=>!existing.has(p.name.toLowerCase())
+  );
+
+  if(!missing.length)return;
+
+  importingLegacy=true;
+
+  try{
+    for(const p of missing){
+      await db.ref("products").push({
+        ...p,
+        active:true,
+        createdAt:Date.now(),
+        updatedAt:Date.now()
+      });
+      existing.add(p.name.toLowerCase());
+    }
+  }catch(e){
+    $("productMessage").textContent=
+      "Produk lama belum berhasil disalin: "+e.message;
+  }finally{
+    importingLegacy=false;
+  }
+}
+
+function startProductsListener(){
+  if(productsListener){
+    db.ref("products").off("value",productsListener);
+  }
+
+  productsListener=snapshot=>{
+    renderProducts(snapshot);
+    importLegacy(snapshot);
+  };
+
+  db.ref("products").on(
+    "value",
+    productsListener,
+    error=>$("products").textContent="Gagal membaca produk: "+error.message
+  );
+}
+
+function renderProducts(snapshot){
+  const list=[];
+
+  snapshot.forEach(c=>{
+    list.push({id:c.key,...(c.val()||{})});
+  });
+
+  if(!list.length){
+    $("products").innerHTML="<p>Menyiapkan produk lama...</p>";
+    return;
+  }
+
+  $("products").innerHTML=list.map(p=>`
+    <article class="product">
+      <b>${esc(p.name||"Produk tanpa nama")}</b>
+      <p>Harga: ${rupiah(p.price)}</p>
+      <p>Status: ${p.active===false?"Disembunyikan":"Ditampilkan"}</p>
+      ${p.image?`<img src="${esc(p.image)}" alt="Gambar produk" loading="lazy" onerror="this.style.display='none'">`:""}
+      <p>${esc(p.description||"")}</p>
+      <button type="button" data-edit-product="${esc(p.id)}">Edit Produk</button>
+      <button type="button" class="delete" data-delete-product="${esc(p.id)}">Hapus Produk</button>
+    </article>
+  `).join("");
+}
+
+function resetProduct(){
+  editingProductId=null;
+  $("productId").value="";
+  $("productForm").reset();
+  $("productActive").value="true";
+  $("saveProductButton").textContent="Simpan Produk";
+  $("cancelEditButton").classList.add("hidden");
+}
+
+$("productForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!isAdmin())return;
+
+  const name=$("productName").value.trim();
+  const price=Number($("productPrice").value);
+  const image=$("productImage").value.trim();
+  const description=$("productDescription").value.trim();
+  const active=$("productActive").value==="true";
+
+  if(!name||!image||!Number.isFinite(price)||price<0){
+    $("productMessage").textContent="Periksa nama, harga, dan URL gambar.";
+    return;
+  }
+
+  const data={name,price,image,description,active,updatedAt:Date.now()};
+  $("saveProductButton").disabled=true;
+
+  try{
+    if(editingProductId){
+      await db.ref("products/"+editingProductId).update(data);
+    }else{
+      await db.ref("products").push({...data,createdAt:Date.now()});
+    }
+
+    $("productMessage").textContent=
+      editingProductId?"Produk diperbarui.":"Produk ditambahkan.";
+
+    resetProduct();
+    toast("Produk berhasil disimpan.");
+  }catch(err){
+    $("productMessage").textContent="Gagal menyimpan: "+err.message;
+  }finally{
+    $("saveProductButton").disabled=false;
+  }
+});
+
+$("products").addEventListener("click",async e=>{
+  if(!isAdmin())return;
+
+  const b=e.target.closest("button");
+  if(!b)return;
+
+  const edit=b.dataset.editProduct;
+  const del=b.dataset.deleteProduct;
+
+  if(edit){
+    try{
+      const s=await db.ref("products/"+edit).once("value");
+      const p=s.val();
+      if(!p)return;
+
+      editingProductId=edit;
+      $("productId").value=edit;
+      $("productName").value=p.name||"";
+      $("productPrice").value=p.price??0;
+      $("productImage").value=p.image||"";
+      $("productDescription").value=p.description||"";
+      $("productActive").value=p.active===false?"false":"true";
+
+      $("saveProductButton").textContent="Simpan Perubahan Produk";
+      $("cancelEditButton").classList.remove("hidden");
+      $("productMessage").textContent="Sedang mengedit produk.";
+
+      $("productForm").scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+    }catch(err){
+      $("productMessage").textContent="Gagal membuka produk: "+err.message;
+    }
+  }
+
+  if(del&&confirm("Yakin ingin menghapus produk ini?")){
+    try{
+      await db.ref("products/"+del).remove();
+      if(editingProductId===del)resetProduct();
+      toast("Produk dihapus.");
+    }catch(err){
+      $("productMessage").textContent="Gagal menghapus: "+err.message;
+    }
+  }
+});
+
+$("cancelEditButton").addEventListener("click",()=>{
+  resetProduct();
+  $("productMessage").textContent="Edit dibatalkan.";
+});
+<script>
+(function () {
+  const database = firebase.database();
+  const authentication = firebase.auth();
+  const adminUID = "2eqPyp0AG9dJ6TDLPUhpEOSVZfo2";
+
+  const get = id => document.getElementById(id);
+
+  function notify(text) {
+    const box = get("toast");
+    if (!box) {
+      alert(text);
+      return;
+    }
+    box.textContent = text;
+    box.style.display = "block";
+    setTimeout(() => box.style.display = "none", 3000);
+  }
+
+  authentication.onAuthStateChanged(function (user) {
+    if (!user || user.uid !== adminUID) return;
+
+    // PENGATURAN WEBSITE
+    database.ref("settings").on("value", function (snapshot) {
+      const settings = snapshot.val() || {};
+
+      if (get("siteName")) get("siteName").value = settings.siteName || "";
+      if (get("adminWhatsApp")) get("adminWhatsApp").value = settings.adminWhatsApp || "";
+      if (get("siteLogo")) get("siteLogo").value = settings.siteLogo || "";
+      if (get("siteBanner")) get("siteBanner").value = settings.siteBanner || "";
+      if (get("siteColor")) get("siteColor").value = settings.siteColor || "#2563eb";
+      if (get("siteBackground")) get("siteBackground").value = settings.siteBackground || "#eef2f7";
+    });
+
+    if (get("appearanceForm")) {
+      get("appearanceForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        try {
+          await database.ref("settings").update({
+            siteName: get("siteName").value.trim(),
+            adminWhatsApp: get("adminWhatsApp").value.trim(),
+            siteLogo: get("siteLogo").value.trim(),
+            siteBanner: get("siteBanner").value.trim(),
+            siteColor: get("siteColor").value,
+            siteBackground: get("siteBackground").value
+          });
+
+          notify("Pengaturan berhasil disimpan!");
+        } catch (error) {
+          notify("Gagal menyimpan: " + error.message);
+        }
+      });
+    }
+
+    // PESANAN
+    const ordersRef = database.ref("orders");
+
+    ordersRef.on("value", function (snapshot) {
+      const list = get("orders");
+      if (!list) return;
+
+      list.innerHTML = "";
+      let total = 0;
+
+      if (!snapshot.exists()) {
+        list.innerHTML = "<p>Belum ada pesanan.</p>";
+        if (get("total")) get("total").textContent = "0";
+        return;
+      }
+
+      snapshot.forEach(function (child) {
+        const order = child.val() || {};
+        const id = child.key;
+        const price = Number(order.price || order.harga || 0);
+
+        total += price;
+
+        const item = document.createElement("div");
+        item.style.cssText =
+          "background:white;padding:12px;margin:10px 0;border-radius:10px;border:1px solid #ddd;overflow-wrap:anywhere";
+
+        const title = document.createElement("strong");
+        title.textContent = order.service || order.product || order.namaProduk || "Pesanan";
+        item.appendChild(title);
+
+        const details = document.createElement("p");
+        details.textContent =
+          "Pelanggan: " + (order.customer || order.customerName || order.nama || "-") +
+          " | Harga: Rp" + price.toLocaleString("id-ID") +
+          " | Status: " + (order.status || "Menunggu");
+        item.appendChild(details);
+
+        const select = document.createElement("select");
+        ["Menunggu", "Diproses", "Selesai", "Dibatalkan"].forEach(function (status) {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          if ((order.status || "Menunggu") === status) option.selected = true;
+          select.appendChild(option);
+        });
+
+        select.addEventListener("change", async function () {
+          try {
+            await ordersRef.child(id).update({ status: select.value });
+            notify("Status pesanan diperbarui.");
+          } catch (error) {
+            notify("Gagal: " + error.message);
+          }
+        });
+
+        item.appendChild(select);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.textContent = "Hapus Pesanan";
+        remove.style.cssText =
+          "margin-left:8px;padding:8px;background:#dc2626;color:white;border:0;border-radius:6px";
+
+        remove.addEventListener("click", async function () {
+          if (!confirm("Yakin ingin menghapus pesanan ini?")) return;
+
+          try {
+            await ordersRef.child(id).remove();
+            notify("Pesanan dihapus.");
+          } catch (error) {
+            notify("Gagal menghapus: " + error.message);
+          }
+        });
+
+        item.appendChild(remove);
+        list.appendChild(item);
+      });
+
+      if (get("total")) {
+        get("total").textContent = "Rp" + total.toLocaleString("id-ID");
+      }
+    });
+
+    // TAMBAH PESANAN MANUAL
+    if (get("orderForm")) {
+      get("orderForm").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const customer = get("customer").value.trim();
+        const service = get("service").value.trim();
+        const price = Number(get("price").value);
+        const status = get("status").value;
+
+        if (!customer || !service || !Number.isFinite(price) || price < 0) {
+          notify("Periksa data pesanan.");
+          return;
+        }
+
+        try {
+          await ordersRef.push({
+            customer: customer,
+            service: service,
+            price: price,
+            status: status,
+            createdAt: Date.now()
+          });
+
+          get("orderForm").reset();
+          notify("Pesanan berhasil ditambahkan.");
+        } catch (error) {
+          notify("Gagal menambahkan pesanan: " + error.message);
+        }
+      });
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
