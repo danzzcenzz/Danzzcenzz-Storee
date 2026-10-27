@@ -818,3 +818,26 @@ box-shadow:4px 4px 0 #080808,0 0 12px #20d36666;
 #home h3 {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
+
+/* VIDEO HEADER: TIDAK BULAT, TANPA JARAK BAWAH, FADE HALUS */
+.home-anime-video {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  clip-path: none !important;
+  margin: 0 !important;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 55%,
+    transparent 100%
+  ) !important;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 55%,
+    transparent 100%
+  ) !important;
+}
