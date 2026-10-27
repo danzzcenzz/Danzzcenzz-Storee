@@ -665,3 +665,116 @@ openingTimer = setTimeout(function () {
 }, 3000);
 
 });
+
+// === SINKRONISASI PRODUK DAN TAMPILAN WEBSITE ===
+(function () {
+  if (typeof firebase === "undefined" || !firebase.database) return;
+
+  const database = firebase.database();
+
+  // Ambil produk dari Firebase dan tampilkan di website
+  database.ref("products").on("value", function (snapshot) {
+    if (!snapshot.exists()) return;
+
+    const grid = document.querySelector(".product-grid");
+    if (!grid) return;
+
+    const products = [];
+
+    snapshot.forEach(function (child) {
+      const product = child.val() || {};
+
+      if (product.active === false) return;
+
+      products.push({
+        id: child.key,
+        name: product.name || "Produk",
+        price: Number(product.price || 0),
+        image: product.image || "",
+        description: product.description || ""
+      });
+    });
+
+    grid.innerHTML = products.map(function (product) {
+      const name = escapeText(product.name);
+      const image = escapeAttribute(product.image);
+      const description = escapeText(product.description);
+      const price = product.price;
+
+      return `
+        <article class="product-card">
+          <img src="${image}" alt="${name}" loading="lazy"
+               onerror="this.style.display='none'">
+          <h3>${name}</h3>
+          <p>${description}</p>
+          <p class="product-price">Rp${price.toLocaleString("id-ID")}</p>
+          <button class="buy-button"
+                  data-service="${escapeAttribute(product.name)}"
+                  data-price="${price}">
+            Beli Sekarang
+          </button>
+        </article>
+      `;
+    }).join("");
+  });
+
+  // Terapkan pengaturan tampilan dari Firebase
+  database.ref("settings").on("value", function (snapshot) {
+    const settings = snapshot.val() || {};
+    const appearance = settings.appearance || {};
+
+    if (settings.siteName) {
+      document.title = settings.siteName;
+      const heading = document.querySelector("header h1");
+      if (heading) heading.textContent = settings.siteName;
+    }
+
+    if (appearance.primaryColor) {
+      document.documentElement.style.setProperty(
+        "--primary-color", appearance.primaryColor
+      );
+      document.querySelectorAll("button, .buy-button").forEach(function (el) {
+        el.style.backgroundColor = appearance.primaryColor;
+      });
+    }
+
+    if (appearance.backgroundColor) {
+      document.body.style.backgroundColor = appearance.backgroundColor;
+    }
+
+    if (appearance.logo) {
+      const logo = document.querySelector("header img");
+      if (logo) logo.src = appearance.logo;
+    }
+
+    if (appearance.banner) {
+      let banner = document.getElementById("firebaseSiteBanner");
+
+      if (!banner) {
+        banner = document.createElement("img");
+        banner.id = "firebaseSiteBanner";
+        banner.alt = "Banner website";
+        banner.style.cssText =
+          "width:100%;max-height:300px;object-fit:cover;display:block;margin:12px auto;border-radius:12px";
+
+        const header = document.querySelector("header");
+        if (header) header.insertAdjacentElement("afterend", banner);
+      }
+
+      banner.src = appearance.banner;
+    }
+  });
+
+  function escapeText(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (char) {
+      return {
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      }[char];
+    });
+  }
+
+  function escapeAttribute(value) {
+    return escapeText(value);
+  }
+})();
