@@ -342,10 +342,10 @@ button { cursor: pointer; }
   scroll-snap-align: start;
   padding: 12px 8px 20px;
   scrollbar-width: none;
-  background:
-    radial-gradient(ellipse at 10% 10%, rgba(0,234,255,.13), transparent 42%),
-    radial-gradient(ellipse at 90% 50%, rgba(176,0,255,.12), transparent 45%),
-    linear-gradient(160deg, #101522, #16243b 55%, #101522);
+
+  /* Biru cerah yang menyatu dengan video */
+  background: #163653;
+
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
@@ -375,7 +375,7 @@ button { cursor: pointer; }
   flex-direction: column;
   padding: 9px;
   border-radius: 14px;
-  background: linear-gradient(145deg, rgba(32,33,55,.78), rgba(16,21,34,.78));
+ background: #214968;
   border: 2px solid #00eaff;
   box-shadow: 0 0 0 1px #ffe600, 0 0 15px #00eaff55, 5px 5px 0 #080808;
   transition: transform .2s, box-shadow .2s;
