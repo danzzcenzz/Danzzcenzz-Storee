@@ -365,7 +365,47 @@
   const opening = document.getElementById("opening");
   const home = document.getElementById("home");
   const skipBtn = document.getElementById("skipBtn");
+  const popup = document.getElementById("channelWidget");
+  const backdrop = document.getElementById("channelBackdrop");
+  const closeBtn = document.getElementById("closeChannelWidget");
+
   let opened = false;
+
+  function closePopup() {
+    if (popup) {
+      popup.classList.add("hidden");
+      popup.style.display = "none";
+      popup.setAttribute("aria-hidden", "true");
+    }
+
+    if (backdrop) {
+      backdrop.classList.add("hidden");
+      backdrop.style.display = "none";
+      backdrop.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  function showPopup() {
+    if (popup) {
+      popup.classList.remove("hidden");
+      popup.style.display = "block";
+      popup.style.zIndex = "10001";
+      popup.setAttribute("aria-hidden", "false");
+    }
+
+    if (backdrop) {
+      backdrop.classList.remove("hidden");
+      backdrop.style.display = "block";
+      backdrop.style.zIndex = "10000";
+      backdrop.setAttribute("aria-hidden", "false");
+    }
+
+    if (closeBtn) {
+      closeBtn.style.position = "absolute";
+      closeBtn.style.zIndex = "10002";
+      closeBtn.style.pointerEvents = "auto";
+    }
+  }
 
   function showHome() {
     if (opened) return;
@@ -378,36 +418,32 @@
 
     if (home) {
       home.classList.remove("hidden");
-      home.style.display = "flex";
+      home.style.display = "";
     }
 
     document.body.classList.remove("opening-active");
 
-    // Tampilkan popup WhatsApp jika elemennya tersedia.
-    setTimeout(function () {
-      const popup = document.getElementById("channelWidget");
-      const backdrop = document.getElementById("channelBackdrop");
-
-      if (popup) {
-        popup.classList.remove("hidden");
-        popup.style.display = "block";
-        popup.setAttribute("aria-hidden", "false");
-      }
-
-      if (backdrop) {
-        backdrop.classList.remove("hidden");
-        backdrop.style.display = "block";
-        backdrop.setAttribute("aria-hidden", "false");
-      }
-    }, 500);
+    setTimeout(showPopup, 500);
   }
 
   if (skipBtn) {
     skipBtn.addEventListener("click", showHome);
   }
 
-  // Opening otomatis selesai setelah 4 detik.
-  setTimeout(showHome, 4000);
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      closePopup();
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener("click", closePopup);
+  }
+
+  // Opening otomatis selesai dalam 3 detik.
+  setTimeout(showHome, 3000);
 })();
 </script>
 
