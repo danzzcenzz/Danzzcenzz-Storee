@@ -898,8 +898,8 @@ z-index: 100;
   }
 
   #home .store-header {
-    min-height: 250px;
-  }
+  min-height: 235px;
+}
 
   #home .small-logo {
     width: 90px;
