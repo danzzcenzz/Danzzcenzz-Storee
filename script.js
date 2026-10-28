@@ -44,22 +44,27 @@ function escapeHTML(value) {
   });
 }
 
-/* VIDEO HEADER */
+/* VIDEO HEADER DAN MUSIK */
 
 if (headerVideo) {
-headerVideo.muted = true;
-headerVideo.playsInline = true;
+  headerVideo.playsInline = true;
+  headerVideo.muted = true;
+  headerVideo.volume = 1;
 }
 
-async function playHeaderVideo() {
-if (!headerVideo) return;
+async function playHeaderVideo(withSound = false) {
+  if (!headerVideo) return;
 
-try {
-  await headerVideo.play();
-} catch (error) {
-  console.warn('Video belum dapat diputar:', error);
-}
+  try {
+    if (withSound) {
+      headerVideo.muted = false;
+      headerVideo.volume = 1;
+    }
 
+    await headerVideo.play();
+  } catch (error) {
+    console.warn('Video atau musik belum dapat diputar:', error);
+  }
 }
 
 /* POPUP WHATSAPP */
