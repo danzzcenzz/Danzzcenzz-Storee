@@ -11,6 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
   let pendingService = null, database = null, auth = null;
   let adminWhatsApp = '62882000379621', isSubmitting = false, openingFinished = false, channelShown = false;
   const rupiah = value => 'Rp' + Number(value || 0).toLocaleString('id-ID');
+  function normalizeWhatsApp(value) {
+    let digits = String(value || '').replace(/\D/g, '');
+    if (digits.startsWith('00')) digits = digits.slice(2);
+    if (digits.startsWith('0')) digits = '62' + digits.slice(1);
+    else if (digits.startsWith('8')) digits = '62' + digits;
+    return digits;
+  }
   function escapeHTML(value) {
     return String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   }
@@ -64,7 +71,16 @@ document.addEventListener('DOMContentLoaded', function () {
   if (skipBtn) skipBtn.addEventListener('click', event => { event.preventDefault(); if (!openingFinished) showHome(true); });
   window.setTimeout(() => { if (!openingFinished) showHome(true); }, 3000);
 
-  if (closeChannelWidget) closeChannelWidget.addEventListener('click', event => { event.preventDefault(); closeChannel(); });
+  if (closeChannelWidget) closeChannelWidget.addEventListener('click', event => {
+    event.preventDefault();
+    closeChannel();
+    if (headerVideo) {
+      headerVideo.muted = false;
+      headerVideo.volume = 1;
+      const playback = headerVideo.play();
+      if (playback && playback.catch) playback.catch(error => console.warn('Audio video tidak dapat diputar oleh browser:', error));
+    }
+  });
   if (channelBackdrop) channelBackdrop.addEventListener('click', closeChannel);
 
   // Firebase: jika konfigurasi tidak tersedia, toko tetap dapat digunakan.
@@ -74,13 +90,32 @@ document.addEventListener('DOMContentLoaded', function () {
       auth.signInAnonymously().catch(error => console.error('Firebase login:', error));
       database.ref('settings').on('value', snapshot => {
         const settings = snapshot.val(); if (!settings) return;
-        if (settings.adminWhatsApp) adminWhatsApp = String(settings.adminWhatsApp).replace(/\D/g, '');
+        if (settings.adminWhatsApp) adminWhatsApp = normalizeWhatsApp(settings.adminWhatsApp);
         if (settings.siteName) document.title = settings.siteName;
         if (settings.primaryColor) document.documentElement.style.setProperty('--primary-color', settings.primaryColor);
         if (settings.backgroundColor) document.documentElement.style.setProperty('--background-color', settings.backgroundColor);
       }, error => console.error('Pengaturan Firebase:', error));
+      database.ref('products').on('value', renderProducts, error => console.error('Katalog Firebase tidak dapat dimuat; memakai produk bawaan:', error));
     }
   } catch (error) { console.error('Firebase:', error); }
+
+  // Sinkronkan katalog dari Firebase; jika gagal, produk HTML yang sudah ada tetap tampil.
+  const productGrid = $('productGrid');
+  function renderProducts(snapshot) {
+    if (!productGrid || !snapshot || !snapshot.exists()) return;
+    const data = snapshot.val() || {};
+    const products = Object.entries(data).map(([id, product]) => ({ id, ...(product || {}) }))
+      .filter(product => product.active !== false && product.hidden !== true && product.name && Number.isFinite(Number(product.price)))
+      .sort((a, b) => Number(a.sortOrder ?? a.createdAt ?? 0) - Number(b.sortOrder ?? b.createdAt ?? 0));
+    if (!products.length) return;
+    productGrid.innerHTML = products.map(product => {
+      const name = escapeHTML(product.name);
+      const price = Number(product.price);
+      const image = escapeHTML(product.image || product.imageUrl || 'https://i.imgur.com/5glTUQl.jpeg');
+      const description = escapeHTML(product.description || '');
+      return `<article class="product-card"><img src="${image}" alt="${name}" loading="lazy" onerror="this.onerror=null;this.src='https://i.imgur.com/5glTUQl.jpeg'"><h3>${name}</h3><p class="product-price">${rupiah(price)}</p><button class="buy-button" data-product-id="${escapeHTML(product.id)}" data-service="${name}" data-price="${price}" ${description ? `aria-label="Beli ${name}"` : ''}>BELI SEKARANG</button></article>`;
+    }).join('');
+  }
 
   function selectProduct(name, price, productId = '') {
     const numericPrice = Number(price);
@@ -148,7 +183,12 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) { console.error('Firebase menyimpan pesanan:', error); }
       }
       const message = ['Halo Admin DANZZCENZZ STORE.','','Saya ingin konfirmasi pesanan.','ID Pesanan: ' + order.id,'Produk: ' + order.productName,'Harga: ' + rupiah(order.price),'Status: ' + order.status,'','Saya akan mengirimkan bukti pembayaran.'].join('\n');
-      window.location.href = 'https://wa.me/' + adminWhatsApp + '?text=' + encodeURIComponent(message);
+      const phone = normalizeWhatsApp(adminWhatsApp);
+      if (!phone || phone.length < 10 || phone.length > 15) {
+        alert('Nomor WhatsApp admin belum valid. Periksa pengaturan Nomor WhatsApp Admin di aplikasi admin.');
+        return;
+      }
+      window.location.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message);
     } catch (error) { console.error('Konfirmasi pesanan:', error); alert('Terjadi kesalahan saat memproses pesanan.'); }
     finally { isSubmitting = false; confirmPayment.style.pointerEvents = ''; }
   });
