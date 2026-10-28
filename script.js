@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let auth = null;
   let adminWhatsApp = '62882000379621';
   let isSubmitting = false;
+  let openingFinished = false;
+  let channelShown = false;
 
   const rupiah = value =>
     'Rp' + Number(value || 0).toLocaleString('id-ID');
@@ -42,18 +44,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // POPUP CHANNEL
   function closeChannel() {
     [channelWidget, channelBackdrop].forEach(function (element) {
       if (!element) return;
+
       element.classList.add('hidden');
       element.classList.remove('show');
       element.style.display = 'none';
+      element.setAttribute('aria-hidden', 'true');
     });
   }
 
-  function showHome() {
+  function openChannel() {
+    if (channelShown || !channelWidget || !channelBackdrop) return;
+
+    channelShown = true;
+
+    channelWidget.classList.remove('hidden');
+    channelBackdrop.classList.remove('hidden');
+
+    channelWidget.classList.add('show');
+    channelBackdrop.classList.add('show');
+
+    channelWidget.style.display = '';
+    channelBackdrop.style.display = '';
+
+    channelWidget.setAttribute('aria-hidden', 'false');
+    channelBackdrop.setAttribute('aria-hidden', 'false');
+
+    const channelLink = channelWidget.querySelector('.channel-join');
+
+    if (channelLink) {
+      channelLink.href = CHANNEL_URL;
+      channelLink.target = '_blank';
+      channelLink.rel = 'noopener noreferrer';
+      channelLink.textContent = 'MASUK CHANNEL';
+    }
+  }
+
+  // BERANDA
+  function showHome(showInvite = false) {
     if (opening) {
       opening.classList.add('hidden');
+      opening.classList.remove('leaving');
       opening.style.display = 'none';
     }
 
@@ -67,7 +101,14 @@ document.addEventListener('DOMContentLoaded', function () {
       home.style.display = '';
     }
 
-    closeChannel();
+    openingFinished = true;
+
+    if (showInvite) {
+      openChannel();
+    } else {
+      closeChannel();
+    }
+
     window.scrollTo(0, 0);
   }
 
@@ -86,26 +127,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!payment) {
       alert('Halaman pembayaran tidak ditemukan.');
-      showHome();
+      showHome(false);
       return;
     }
 
     payment.classList.remove('hidden');
     payment.style.display = '';
+
     window.scrollTo(0, 0);
   }
 
   if (skipBtn) {
     skipBtn.addEventListener('click', function (event) {
       event.preventDefault();
-      showHome();
+
+      if (!openingFinished) {
+        showHome(true);
+      }
     });
   }
 
-  setTimeout(showHome, 3000);
+  // Opening otomatis selesai setelah 3 detik.
+  setTimeout(function () {
+    if (!openingFinished) {
+      showHome(true);
+    }
+  }, 3000);
 
   if (closeChannelWidget) {
-    closeChannelWidget.addEventListener('click', closeChannel);
+    closeChannelWidget.addEventListener('click', function (event) {
+      event.preventDefault();
+      closeChannel();
+    });
   }
 
   if (channelBackdrop) {
@@ -193,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.addEventListener('click', function (event) {
     const target = event.target;
+
     if (!(target instanceof Element)) return;
 
     const buyButton = target.closest(
@@ -203,8 +257,10 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
 
       selectProduct(
-        buyButton.dataset.service || buyButton.dataset.productName,
-        buyButton.dataset.price
+        buyButton.dataset.service ||
+        buyButton.dataset.productName,
+        buyButton.dataset.price,
+        buyButton.dataset.productId || ''
       );
 
       return;
@@ -229,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (backHome) {
     backHome.addEventListener('click', function (event) {
       event.preventDefault();
-      showHome();
+      showHome(false);
     });
   }
 
@@ -253,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
         HISTORY_KEY,
         JSON.stringify(history.slice(0, 50))
       );
+
       return true;
     } catch (error) {
       console.error('Menyimpan riwayat:', error);
@@ -340,6 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
               });
 
               const updatedHistory = getHistory();
+
               const index = updatedHistory.findIndex(
                 item => item.id === order.id
               );
@@ -371,6 +429,7 @@ document.addEventListener('DOMContentLoaded', function () {
           adminWhatsApp +
           '?text=' +
           encodeURIComponent(message);
+
       } catch (error) {
         console.error('Konfirmasi pesanan:', error);
         alert('Terjadi kesalahan saat memproses pesanan.');
@@ -417,6 +476,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // KONDISI AWAL
   renderHistory();
+  closeChannel();
 
   if (opening) {
     opening.classList.remove('hidden', 'leaving');
