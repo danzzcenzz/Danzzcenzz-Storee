@@ -204,22 +204,34 @@ showHome(true);
 
 /* TOMBOL X POPUP DAN MUSIK */
 
-if (closeChannelWidget) {
-closeChannelWidget.addEventListener('click', async function (event) {
+async function closePopupAndPlayMusic(event) {
+if (event) {
 event.preventDefault();
 event.stopPropagation();
+}
 
 closeChannel();
 
-if (headerVideo) {
-  headerVideo.muted = false;
-  headerVideo.volume = 1;
+if (!headerVideo) {
+console.error('Elemen video header tidak ditemukan.');
+return;
+}
 
-  try {
-    await headerVideo.play();
-  } catch (error) {
-    console.error('Musik gagal diputar:', error);
-  }
+try {
+headerVideo.muted = false;
+headerVideo.volume = 1;
+await headerVideo.play();
+} catch (error) {
+console.error('Musik gagal diputar:', error);
+}
+}
+
+if (closeChannelWidget) {
+closeChannelWidget.addEventListener('click', closePopupAndPlayMusic);
+}
+
+if (channelBackdrop) {
+channelBackdrop.addEventListener('click', closePopupAndPlayMusic);
 }
 
 });
