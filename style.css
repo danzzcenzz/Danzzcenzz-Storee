@@ -171,3 +171,57 @@ body {
     padding: 12px 2px;
   }
 }
+
+/* FIX FINAL NAVIGASI BERANDA, RIWAYAT, PROFIL */
+html body main#home.page nav.bottom-nav,
+html body main#home.page nav.bottom-nav * {
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+html body main#home.page nav.bottom-nav {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+  gap: 0 !important;
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom)) !important;
+  background: #101522 !important;
+  z-index: 99999 !important;
+}
+
+html body main#home.page nav.bottom-nav > a,
+html body main#home.page nav.bottom-nav > a:link,
+html body main#home.page nav.bottom-nav > a:visited,
+html body main#home.page nav.bottom-nav > a:hover,
+html body main#home.page nav.bottom-nav > a:focus,
+html body main#home.page nav.bottom-nav > a:active,
+html body main#home.page nav.bottom-nav > a.selected,
+html body main#home.page nav.bottom-nav > a.active {
+  flex: 1 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 12px 4px !important;
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  font-size: 12px !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+html body main#home.page nav.bottom-nav > a.selected,
+html body main#home.page nav.bottom-nav > a.active {
+  color: #00eaff !important;
+  background: transparent !important;
+}
