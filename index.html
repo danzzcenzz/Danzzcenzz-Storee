@@ -360,5 +360,56 @@
 
 <script src="script.js"></script>
 
+<script>
+(function () {
+  const opening = document.getElementById("opening");
+  const home = document.getElementById("home");
+  const skipBtn = document.getElementById("skipBtn");
+  let opened = false;
+
+  function showHome() {
+    if (opened) return;
+    opened = true;
+
+    if (opening) {
+      opening.classList.add("hidden");
+      opening.style.display = "none";
+    }
+
+    if (home) {
+      home.classList.remove("hidden");
+      home.style.display = "flex";
+    }
+
+    document.body.classList.remove("opening-active");
+
+    // Tampilkan popup WhatsApp jika elemennya tersedia.
+    setTimeout(function () {
+      const popup = document.getElementById("channelWidget");
+      const backdrop = document.getElementById("channelBackdrop");
+
+      if (popup) {
+        popup.classList.remove("hidden");
+        popup.style.display = "block";
+        popup.setAttribute("aria-hidden", "false");
+      }
+
+      if (backdrop) {
+        backdrop.classList.remove("hidden");
+        backdrop.style.display = "block";
+        backdrop.setAttribute("aria-hidden", "false");
+      }
+    }, 500);
+  }
+
+  if (skipBtn) {
+    skipBtn.addEventListener("click", showHome);
+  }
+
+  // Opening otomatis selesai setelah 4 detik.
+  setTimeout(showHome, 4000);
+})();
+</script>
+
 </body>
 </html>
