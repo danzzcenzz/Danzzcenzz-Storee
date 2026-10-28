@@ -239,7 +239,7 @@ button { cursor: pointer; }
   position: relative;
   isolation: isolate;
   flex: 0 0 auto;
-  min-height: 230px;
+  min-height: 220px;
   margin: 0;
   padding: 18px 14px 20px;
   display: flex;
