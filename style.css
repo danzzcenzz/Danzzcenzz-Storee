@@ -987,3 +987,31 @@ box-shadow: none;
     scroll-behavior: auto !important;
   }
 }
+
+/* PAKSA NAVIGASI BAWAH MENYATU */
+.bottom-nav {
+background: #163653 !important;
+border: none !important;
+border-radius: 0 !important;
+box-shadow: none !important;
+backdrop-filter: none !important;
+-webkit-backdrop-filter: none !important;
+}
+
+.bottom-nav a,
+.bottom-nav a.selected,
+.bottom-nav a:focus,
+.bottom-nav a:active {
+background: transparent !important;
+border: none !important;
+border-radius: 0 !important;
+box-shadow: none !important;
+}
+
+.bottom-nav a {
+color: #fff !important;
+}
+
+.bottom-nav a.selected {
+color: #00eaff !important;
+}
