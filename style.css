@@ -39,3 +39,14 @@ button,a{font:inherit}button{cursor:pointer}.hidden{display:none!important}
 @media(max-width:480px){.opening .brand-logo{width:120px;height:120px}.logo-ring{width:150px;height:150px}#home .store-header{height:190px;flex-basis:190px}#home .small-logo{width:60px;height:60px}.product-grid{gap:9px;padding:10px 1px}.product-card{padding:7px;border-radius:12px}.product-card h3{font-size:12px}.product-price{font-size:12px}.buy-button{min-height:36px;padding:7px 4px;font-size:11px}.service-card{gap:10px;padding:13px 10px;min-height:92px}.service-emoji{width:52px;height:52px;font-size:27px}.bottom-nav a{font-size:11px;padding:9px 2px}.channel-widget{width:calc(100vw - 28px);padding:23px 12px 15px}.channel-magazine-head{gap:6px;padding-right:39px;font-size:9px}.channel-active{padding:5px 8px}.channel-dash{margin:16px 0 19px}.channel-content{gap:10px}.channel-copy h2{font-size:20px;margin:4px 0 10px}.channel-join{font-size:13px}}
 @media(max-width:360px){.product-grid{gap:7px}.product-card h3{font-size:11px}.buy-button{font-size:10px}.channel-widget{width:calc(100vw - 24px);padding:22px 10px 14px}.channel-content{gap:9px}.channel-wa-icon{flex-basis:41px;width:41px;height:41px}.channel-wa-icon svg{width:29px;height:29px}.channel-copy h2{font-size:18px}.channel-copy p{font-size:10px}.channel-join{font-size:12px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+
+/* FIX 2026-10: logo opening berbentuk bulat seperti logo header */
+#opening .logo-ring{overflow:visible}
+#opening .logo-ring .brand-logo{display:block;width:125px;height:125px;max-width:100%;border-radius:50%!important;object-fit:cover!important;overflow:hidden;clip-path:circle(50% at 50% 50%);background:#000;position:relative;z-index:1}
+@media(max-width:480px){#opening .logo-ring .brand-logo{width:120px;height:120px}}
+/* Navigasi bawah: kartu putih membulat seperti contoh referensi */
+#home .bottom-nav{left:14px;right:14px;bottom:10px;gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#fff;border:3px solid #080808;border-radius:28px;box-shadow:5px 6px 0 #080808;z-index:1000}
+#home .bottom-nav a{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:5px;color:#111;background:transparent;border:0;border-radius:18px;padding:11px 4px;font-size:12px;font-weight:900;white-space:nowrap;text-shadow:none}
+#home .bottom-nav a.selected,#home .bottom-nav a.active{color:#087cff;background:#e8f4ff;border:0;box-shadow:inset 0 0 0 1px #b8dcff}
+#home .bottom-nav a:focus-visible{outline:3px solid #00cfff;outline-offset:2px}
+@media(max-width:360px){#home .bottom-nav{left:8px;right:8px;bottom:7px;padding-left:4px;padding-right:4px}#home .bottom-nav a{font-size:10px;gap:2px}}
