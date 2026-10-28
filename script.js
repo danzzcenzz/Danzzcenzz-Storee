@@ -742,4 +742,22 @@ payment.style.display = 'none';
 document.body.classList.add('opening-active');
 
 setActiveNav(navItems[0]);
+
+/* PASTIKAN OPENING BISA DILEWATI */
+
+if (skipBtn) {
+skipBtn.onclick = function (event) {
+event.preventDefault();
+openingFinished = true;
+showHome(true);
+};
+}
+
+window.setTimeout(function () {
+if (!openingFinished) {
+openingFinished = true;
+showHome(true);
+}
+}, 3000);
+
 });
