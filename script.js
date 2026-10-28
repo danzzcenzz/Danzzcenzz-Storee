@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // POPUP CHANNEL
+  // POPUP WHATSAPP
   function closeChannel() {
     [channelWidget, channelBackdrop].forEach(function (element) {
       if (!element) return;
@@ -110,6 +110,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.scrollTo(0, 0);
+
+    // Pastikan video background mulai diputar.
+    const headerVideo = home
+      ? home.querySelector('.header-video-bg')
+      : null;
+
+    if (headerVideo) {
+      const playPromise = headerVideo.play();
+
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function () {
+          // Browser mungkin membatasi autoplay.
+        });
+      }
+    }
   }
 
   function showPayment() {
@@ -147,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Opening otomatis selesai setelah 3 detik.
+  // Opening selesai setelah 3 detik.
   setTimeout(function () {
     if (!openingFinished) {
       showHome(true);
@@ -163,16 +178,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (channelBackdrop) {
     channelBackdrop.addEventListener('click', closeChannel);
-  }
-
-  if (channelWidget) {
-    const channelLink = channelWidget.querySelector('.channel-join');
-
-    if (channelLink) {
-      channelLink.href = CHANNEL_URL;
-      channelLink.target = '_blank';
-      channelLink.rel = 'noopener noreferrer';
-    }
   }
 
   // FIREBASE
@@ -218,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error('Firebase:', error);
   }
 
-  // PRODUK
+  // PILIH PRODUK
   function selectProduct(name, price, productId = '') {
     const numericPrice = Number(price);
 
