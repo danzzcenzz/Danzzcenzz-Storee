@@ -593,23 +593,23 @@ z-index: 100;
 }
 
 .bottom-nav a {
-  flex: 1;
-  text-align: center;
-  background: #fff;
-  color: #07111f;
-  border: 1px solid #b0eaff;
-  border-radius: 15px;
-  text-decoration: none;
-  padding: 9px 4px;
-  font-size: 12px;
-  white-space: nowrap;
+flex: 1;
+text-align: center;
+background: transparent;
+color: #fff;
+border: none;
+border-radius: 0;
+text-decoration: none;
+padding: 9px 4px;
+font-size: 12px;
+white-space: nowrap;
 }
 
 .bottom-nav a.selected {
-  color: #005dff;
-  background: #d7fbff;
-  border-color: #00bfff;
-  box-shadow: inset 0 0 0 1px #00bfff, 0 0 9px #00d9ff66;
+color: #00eaff;
+background: transparent;
+border: none;
+box-shadow: none;
 }
 
 /* PEMBAYARAN */
