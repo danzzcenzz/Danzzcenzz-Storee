@@ -234,9 +234,6 @@ if (channelBackdrop) {
 channelBackdrop.addEventListener('click', closePopupAndPlayMusic);
 }
 
-});
-}
-
 /* KLIK AREA GELAP UNTUK MENUTUP POPUP */
 
 if (channelBackdrop) {
