@@ -271,79 +271,279 @@ else{preview.classList.add("hidden");preview.removeAttribute("src");header.textC
 }
 $("appLogo").addEventListener("input",()=>updateLogo($("appLogo").value.trim()));
 function startSettings(){
-if(settingsListener)db.ref("settings").off("value",settingsListener);
-settingsListener=s=>{
-const d=s.val()||{};
-settingFields.forEach(id=>{if(d[id]!==undefined)$(id).value=d[id];else if(id==="siteColor")$(id).value="#9b5cff";else if(id==="siteBackground")$(id).value="#eef2f7";else $(id).value=""});
-updateLogo(d.appLogo||"");
-};
-db.ref("settings").on("value",settingsListener,e=>msg("appearanceMessage","Gagal membaca pengaturan: "+e.message,true));
+    if(settingsListener){
+        db.ref("settings").off("value", settingsListener);
+    }
+
+    settingsListener = snapshot => {
+        const settings = snapshot.val() || {};
+
+        settingFields.forEach(field => {
+            const element = $(field);
+
+            if(!element) return;
+
+            if(settings[field] !== undefined && settings[field] !== null){
+                element.value = settings[field];
+            }
+        });
+
+        updateLogo($("appLogo").value.trim());
+    };
+
+    db.ref("settings").on(
+        "value",
+        settingsListener,
+        error => {
+            msg(
+                "appearanceMessage",
+                "Gagal membaca pengaturan: " + error.message,
+                true
+            );
+        }
+    );
 }
-$("appearanceForm").addEventListener("submit",async e=>{
-e.preventDefault();if(!isAdmin())return msg("appearanceMessage","Login admin diperlukan.",true);
-const b=$("saveAppearanceButton");b.disabled=true;
-try{const d={};settingFields.forEach(id=>d[id]=$(id).value.trim());await db.ref("settings").update(d);msg("appearanceMessage","Pengaturan berhasil disimpan.");toast("Pengaturan disimpan")}
-catch(err){msg("appearanceMessage","Gagal menyimpan: "+err.message,true)}
-finally{b.disabled=false}
+
+/* SIMPAN PENGATURAN WEBSITE */
+$("appearanceForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    if(!isAdmin()){
+        return msg(
+            "appearanceMessage",
+            "Login admin diperlukan.",
+            true
+        );
+    }
+
+    const settings = {};
+
+    settingFields.forEach(field => {
+        settings[field] = $(field).value.trim();
+    });
+
+    $("saveAppearanceButton").disabled = true;
+
+    try{
+        await db.ref("settings").update(settings);
+
+        msg(
+            "appearanceMessage",
+            "Pengaturan berhasil disimpan."
+        );
+
+        toast("Pengaturan website berhasil disimpan.");
+    }catch(error){
+        msg(
+            "appearanceMessage",
+            "Gagal menyimpan pengaturan: " + error.message,
+            true
+        );
+    }finally{
+        $("saveAppearanceButton").disabled = false;
+    }
 });
 
 /* PESANAN */
 function startOrders(){
-if(ordersListener)db.ref("orders").off("value",ordersListener);
-ordersListener=s=>{
-const list=$("orders");list.innerHTML="";let total=0;
-if(!s.exists()){list.textContent="Belum ada pesanan."; $("total").textContent="Rp0";return}
-s.forEach(c=>{
-const o=c.val()||{},id=c.key,price=Number(o.price||o.harga||0);total+=price;
-const item=document.createElement("article");item.className="order";
-const title=document.createElement("b");title.textContent=o.service||o.product||o.namaProduk||"Pesanan";item.appendChild(title);
-const detail=document.createElement("p");detail.textContent="Pelanggan: "+(o.customer||o.customerName||o.nama||"-")+" | Harga: "+rupiah(price)+" | Status: "+(o.status||"Menunggu Pembayaran");item.appendChild(detail);
-const select=document.createElement("select");
-statusValues.forEach(st=>{const opt=document.createElement("option");opt.value=st;opt.textContent=st;opt.selected=(o.status||"Menunggu Pembayaran")===st;select.appendChild(opt)});
-select.addEventListener("change",async()=>{if(!isAdmin())return;select.disabled=true;try{await db.ref("orders/"+id).update({status:select.value});toast("Status pesanan diperbarui")}catch(err){toast("Gagal mengubah status: "+err.message)}finally{select.disabled=false}});
-item.appendChild(select);
-const remove=document.createElement("button");remove.type="button";remove.className="delete";remove.textContent="Hapus Pesanan";
-remove.addEventListener("click",async()=>{if(!isAdmin()||!confirm("Yakin ingin menghapus pesanan ini?"))return;remove.disabled=true;try{await db.ref("orders/"+id).remove();toast("Pesanan dihapus")}catch(err){toast("Gagal menghapus: "+err.message);remove.disabled=false}});
-item.appendChild(remove);list.appendChild(item);
-});
-$("total").textContent=rupiah(total);
-};
-db.ref("orders").on("value",ordersListener,e=>{$("orders").textContent="Gagal membaca pesanan: "+e.message});
+    if(ordersListener){
+        db.ref("orders").off("value", ordersListener);
+    }
+
+    ordersListener = snapshot => renderOrders(snapshot);
+
+    db.ref("orders").on(
+        "value",
+        ordersListener,
+        error => {
+            msg(
+                "orderMessage",
+                "Gagal membaca pesanan: " + error.message,
+                true
+            );
+        }
+    );
 }
 
-/* TAMBAH PESANAN MANUAL — SUDAH DISESUAIKAN DENGAN RULES */
-$("orderForm").addEventListener("submit",async e=>{
-e.preventDefault();
-if(!isAdmin())return msg("orderMessage","Silakan login menggunakan akun admin.",true);
-const customer=$("customer").value.trim();
-const service=$("service").value.trim();
-const price=Number($("price").value);
-const status=$("status").value;
-if(!customer||!service||!Number.isFinite(price)||price<0)return msg("orderMessage","Periksa nama pelanggan, layanan, dan harga.",true);
-if(!statusValues.includes(status))return msg("orderMessage","Status pesanan tidak valid.",true);
-const button=$("saveOrderButton");button.disabled=true;button.textContent="Menyimpan...";
-try{
-const now=Date.now();
-await db.ref("orders").push({
-customer:customer,
-customerUid:auth.currentUser.uid,
-service:service,
-price:price,
-status:status,
-date:new Date(now).toLocaleString("id-ID"),
-createdAt:now
-});
-$("orderForm").reset();
-msg("orderMessage","Pesanan berhasil ditambahkan.");
-toast("Pesanan berhasil ditambahkan.");
-}catch(err){
-console.error("Gagal menambahkan pesanan:",err);
-msg("orderMessage","Gagal menambahkan pesanan: "+err.message,true);
-}finally{button.disabled=false;button.textContent="＋ Simpan Pesanan"}
+function renderOrders(snapshot){
+    const items = [];
+
+    snapshot.forEach(child => {
+        items.push({
+            id: child.key,
+            ...(child.val() || {})
+        });
+    });
+
+    const total = items.reduce(
+        (sum, order) => sum + (Number(order.price) || 0),
+        0
+    );
+
+    $("total").textContent = rupiah(total);
+
+    if(!items.length){
+        $("orders").textContent = "Belum ada pesanan.";
+        return;
+    }
+
+    $("orders").innerHTML = items.map(order => `
+        <article class="order">
+            <div class="product-name">
+                ${esc(order.customer || order.name || "Pelanggan")}
+            </div>
+
+            <p>
+                Pesanan:
+                <b>${esc(order.service || order.productName || "-")}</b>
+            </p>
+
+            <p>
+                Harga:
+                <b>${rupiah(order.price)}</b>
+            </p>
+
+            <p>
+                Status:
+                <b>${esc(order.status || "Menunggu Pembayaran")}</b>
+            </p>
+
+            <label>Ubah Status Pesanan</label>
+
+            <select data-status="${esc(order.id)}">
+                ${statusValues.map(status => `
+                    <option
+                        value="${esc(status)}"
+                        ${status === order.status ? "selected" : ""}
+                    >${esc(status)}</option>
+                `).join("")}
+            </select>
+
+            <button
+                type="button"
+                data-update-order="${esc(order.id)}"
+            >
+                Simpan Status
+            </button>
+
+            <button
+                type="button"
+                class="delete"
+                data-delete-order="${esc(order.id)}"
+            >
+                Hapus Pesanan
+            </button>
+        </article>
+    `).join("");
+}
+
+/* TAMBAH PESANAN MANUAL */
+$("orderForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    if(!isAdmin()){
+        return msg(
+            "orderMessage",
+            "Login admin diperlukan.",
+            true
+        );
+    }
+
+    const customer = $("customer").value.trim();
+    const service = $("service").value.trim();
+    const price = Number($("price").value);
+    const status = $("status").value;
+
+    if(
+        !customer ||
+        !service ||
+        !Number.isFinite(price) ||
+        price < 0
+    ){
+        return msg(
+            "orderMessage",
+            "Periksa nama pelanggan, pesanan, dan harga.",
+            true
+        );
+    }
+
+    $("saveOrderButton").disabled = true;
+
+    try{
+        await db.ref("orders").push({
+            customer,
+            service,
+            price,
+            status,
+            createdAt: Date.now()
+        });
+
+        $("orderForm").reset();
+
+        msg("orderMessage", "Pesanan berhasil ditambahkan.");
+        toast("Pesanan berhasil disimpan.");
+    }catch(error){
+        msg(
+            "orderMessage",
+            "Gagal menyimpan pesanan: " + error.message,
+            true
+        );
+    }finally{
+        $("saveOrderButton").disabled = false;
+    }
 });
 
-window.addEventListener("error",e=>console.error("JavaScript:",e.error||e.message));
-window.addEventListener("unhandledrejection",e=>console.error("Proses gagal:",e.reason));
+/* UBAH STATUS DAN HAPUS PESANAN */
+$("orders").addEventListener("click", async e => {
+    const button = e.target.closest("button");
+
+    if(!button || !isAdmin()) return;
+
+    const updateId = button.dataset.updateOrder;
+    const deleteId = button.dataset.deleteOrder;
+
+    if(updateId){
+        const select = $("orders").querySelector(
+            `select[data-status="${CSS.escape(updateId)}"]`
+        );
+
+        if(!select) return;
+
+        const status = select.value;
+
+        if(!statusValues.includes(status)){
+            return toast("Status pesanan tidak valid.");
+        }
+
+        button.disabled = true;
+
+        try{
+            await db.ref("orders/" + updateId).update({
+                status,
+                updatedAt: Date.now()
+            });
+
+            toast("Status pesanan berhasil diperbarui.");
+        }catch(error){
+            toast("Gagal memperbarui status pesanan.");
+        }finally{
+            button.disabled = false;
+        }
+    }
+
+    if(deleteId && confirm("Yakin ingin menghapus pesanan ini?")){
+        button.disabled = true;
+
+        try{
+            await db.ref("orders/" + deleteId).remove();
+            toast("Pesanan berhasil dihapus.");
+        }catch(error){
+            toast("Gagal menghapus pesanan.");
+        }finally{
+            button.disabled = false;
+        }
+    }
+});
 </script>
 </body>
 </html>
