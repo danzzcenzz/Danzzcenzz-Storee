@@ -270,279 +270,95 @@ if(url){preview.src=url;preview.classList.remove("hidden");preview.onerror=()=>p
 else{preview.classList.add("hidden");preview.removeAttribute("src");header.textContent="✦"}
 }
 $("appLogo").addEventListener("input",()=>updateLogo($("appLogo").value.trim()));
+
 function startSettings(){
-    if(settingsListener){
-        db.ref("settings").off("value", settingsListener);
-    }
-
-    settingsListener = snapshot => {
-        const settings = snapshot.val() || {};
-
-        settingFields.forEach(field => {
-            const element = $(field);
-
-            if(!element) return;
-
-            if(settings[field] !== undefined && settings[field] !== null){
-                element.value = settings[field];
-            }
-        });
-
-        updateLogo($("appLogo").value.trim());
-    };
-
-    db.ref("settings").on(
-        "value",
-        settingsListener,
-        error => {
-            msg(
-                "appearanceMessage",
-                "Gagal membaca pengaturan: " + error.message,
-                true
-            );
-        }
-    );
+if(settingsListener)db.ref("settings").off("value",settingsListener);
+settingsListener=snapshot=>{
+const settings=snapshot.val()||{};
+settingFields.forEach(field=>{
+const element=$(field);
+if(element&&settings[field]!==undefined&&settings[field]!==null)element.value=String(settings[field]);
+});
+updateLogo($("appLogo").value.trim());
+};
+db.ref("settings").on("value",settingsListener,error=>{
+msg("appearanceMessage","Gagal membaca pengaturan: "+error.message,true);
+});
 }
 
-/* SIMPAN PENGATURAN WEBSITE */
-$("appearanceForm").addEventListener("submit", async e => {
-    e.preventDefault();
-
-    if(!isAdmin()){
-        return msg(
-            "appearanceMessage",
-            "Login admin diperlukan.",
-            true
-        );
-    }
-
-    const settings = {};
-
-    settingFields.forEach(field => {
-        settings[field] = $(field).value.trim();
-    });
-
-    $("saveAppearanceButton").disabled = true;
-
-    try{
-        await db.ref("settings").update(settings);
-
-        msg(
-            "appearanceMessage",
-            "Pengaturan berhasil disimpan."
-        );
-
-        toast("Pengaturan website berhasil disimpan.");
-    }catch(error){
-        msg(
-            "appearanceMessage",
-            "Gagal menyimpan pengaturan: " + error.message,
-            true
-        );
-    }finally{
-        $("saveAppearanceButton").disabled = false;
-    }
+$("appearanceForm").addEventListener("submit",async e=>{
+e.preventDefault();
+if(!isAdmin())return msg("appearanceMessage","Login admin diperlukan.",true);
+const settings={};
+settingFields.forEach(field=>{const element=$(field);if(element)settings[field]=element.value.trim();});
+$("saveAppearanceButton").disabled=true;
+try{
+await db.ref("settings").update(settings);
+msg("appearanceMessage","Pengaturan berhasil disimpan.");
+toast("Pengaturan website berhasil disimpan.");
+}catch(error){
+msg("appearanceMessage","Gagal menyimpan pengaturan: "+error.message,true);
+}finally{$("saveAppearanceButton").disabled=false;}
 });
 
 /* PESANAN */
 function startOrders(){
-    if(ordersListener){
-        db.ref("orders").off("value", ordersListener);
-    }
-
-    ordersListener = snapshot => renderOrders(snapshot);
-
-    db.ref("orders").on(
-        "value",
-        ordersListener,
-        error => {
-            msg(
-                "orderMessage",
-                "Gagal membaca pesanan: " + error.message,
-                true
-            );
-        }
-    );
-}
-
-function renderOrders(snapshot){
-    const items = [];
-
-    snapshot.forEach(child => {
-        items.push({
-            id: child.key,
-            ...(child.val() || {})
-        });
-    });
-
-    const total = items.reduce(
-        (sum, order) => sum + (Number(order.price) || 0),
-        0
-    );
-
-    $("total").textContent = rupiah(total);
-
-    if(!items.length){
-        $("orders").textContent = "Belum ada pesanan.";
-        return;
-    }
-
-    $("orders").innerHTML = items.map(order => `
-        <article class="order">
-            <div class="product-name">
-                ${esc(order.customer || order.name || "Pelanggan")}
-            </div>
-
-            <p>
-                Pesanan:
-                <b>${esc(order.service || order.productName || "-")}</b>
-            </p>
-
-            <p>
-                Harga:
-                <b>${rupiah(order.price)}</b>
-            </p>
-
-            <p>
-                Status:
-                <b>${esc(order.status || "Menunggu Pembayaran")}</b>
-            </p>
-
-            <label>Ubah Status Pesanan</label>
-
-            <select data-status="${esc(order.id)}">
-                ${statusValues.map(status => `
-                    <option
-                        value="${esc(status)}"
-                        ${status === order.status ? "selected" : ""}
-                    >${esc(status)}</option>
-                `).join("")}
-            </select>
-
-            <button
-                type="button"
-                data-update-order="${esc(order.id)}"
-            >
-                Simpan Status
-            </button>
-
-            <button
-                type="button"
-                class="delete"
-                data-delete-order="${esc(order.id)}"
-            >
-                Hapus Pesanan
-            </button>
-        </article>
-    `).join("");
-}
-
-/* TAMBAH PESANAN MANUAL */
-$("orderForm").addEventListener("submit", async e => {
-    e.preventDefault();
-
-    if(!isAdmin()){
-        return msg(
-            "orderMessage",
-            "Login admin diperlukan.",
-            true
-        );
-    }
-
-    const customer = $("customer").value.trim();
-    const service = $("service").value.trim();
-    const price = Number($("price").value);
-    const status = $("status").value;
-
-    if(
-        !customer ||
-        !service ||
-        !Number.isFinite(price) ||
-        price < 0
-    ){
-        return msg(
-            "orderMessage",
-            "Periksa nama pelanggan, pesanan, dan harga.",
-            true
-        );
-    }
-
-    $("saveOrderButton").disabled = true;
-
-    try{
-        await db.ref("orders").push({
-            customer,
-            service,
-            price,
-            status,
-            createdAt: Date.now()
-        });
-
-        $("orderForm").reset();
-
-        msg("orderMessage", "Pesanan berhasil ditambahkan.");
-        toast("Pesanan berhasil disimpan.");
-    }catch(error){
-        msg(
-            "orderMessage",
-            "Gagal menyimpan pesanan: " + error.message,
-            true
-        );
-    }finally{
-        $("saveOrderButton").disabled = false;
-    }
+if(ordersListener)db.ref("orders").off("value",ordersListener);
+ordersListener=snapshot=>renderOrders(snapshot);
+db.ref("orders").on("value",ordersListener,error=>{
+msg("orderMessage","Gagal membaca pesanan: "+error.message,true);
 });
-
-/* UBAH STATUS DAN HAPUS PESANAN */
-$("orders").addEventListener("click", async e => {
-    const button = e.target.closest("button");
-
-    if(!button || !isAdmin()) return;
-
-    const updateId = button.dataset.updateOrder;
-    const deleteId = button.dataset.deleteOrder;
-
-    if(updateId){
-        const select = $("orders").querySelector(
-            `select[data-status="${CSS.escape(updateId)}"]`
-        );
-
-        if(!select) return;
-
-        const status = select.value;
-
-        if(!statusValues.includes(status)){
-            return toast("Status pesanan tidak valid.");
-        }
-
-        button.disabled = true;
-
-        try{
-            await db.ref("orders/" + updateId).update({
-                status,
-                updatedAt: Date.now()
-            });
-
-            toast("Status pesanan berhasil diperbarui.");
-        }catch(error){
-            toast("Gagal memperbarui status pesanan.");
-        }finally{
-            button.disabled = false;
-        }
-    }
-
-    if(deleteId && confirm("Yakin ingin menghapus pesanan ini?")){
-        button.disabled = true;
-
-        try{
-            await db.ref("orders/" + deleteId).remove();
-            toast("Pesanan berhasil dihapus.");
-        }catch(error){
-            toast("Gagal menghapus pesanan.");
-        }finally{
-            button.disabled = false;
-        }
-    }
+}
+function renderOrders(snapshot){
+const items=[];
+snapshot.forEach(child=>items.push({id:child.key,...(child.val()||{})}));
+const total=items.reduce((sum,order)=>sum+(Number(order.price)||0),0);
+$("total").textContent=rupiah(total);
+if(!items.length){$("orders").textContent="Belum ada pesanan.";return;}
+$("orders").innerHTML=items.map(order=>`
+<article class="order">
+<div class="product-name">${esc(order.customer||order.name||"Pelanggan")}</div>
+<p>Pesanan: <b>${esc(order.service||order.productName||"-")}</b></p>
+<p>Harga: <b>${rupiah(order.price)}</b></p>
+<p>Status: <b>${esc(order.status||"Menunggu Pembayaran")}</b></p>
+<label>Ubah Status Pesanan</label>
+<select data-status="${esc(order.id)}">${statusValues.map(status=>`<option value="${esc(status)}" ${status===(order.status||"Menunggu Pembayaran")?"selected":""}>${esc(status)}</option>`).join("")}</select>
+<button type="button" data-update-order="${esc(order.id)}">Simpan Status</button>
+<button type="button" class="delete" data-delete-order="${esc(order.id)}">Hapus Pesanan</button>
+</article>`).join("");
+}
+$("orderForm").addEventListener("submit",async e=>{
+e.preventDefault();
+if(!isAdmin())return msg("orderMessage","Login admin diperlukan.",true);
+const customer=$("customer").value.trim(),service=$("service").value.trim(),price=Number($("price").value),status=$("status").value;
+if(!customer||!service||!Number.isFinite(price)||price<0)return msg("orderMessage","Periksa nama pelanggan, pesanan, dan harga.",true);
+$("saveOrderButton").disabled=true;
+try{
+await db.ref("orders").push({customer,service,price,status,createdAt:Date.now()});
+$("orderForm").reset();
+msg("orderMessage","Pesanan berhasil ditambahkan.");
+toast("Pesanan berhasil disimpan.");
+}catch(error){msg("orderMessage","Gagal menyimpan pesanan: "+error.message,true);}
+finally{$("saveOrderButton").disabled=false;}
+});
+$("orders").addEventListener("click",async e=>{
+const button=e.target.closest("button");
+if(!button||!isAdmin())return;
+const updateId=button.dataset.updateOrder,deleteId=button.dataset.deleteOrder;
+if(updateId){
+const select=[...$("orders").querySelectorAll("select[data-status]")].find(item=>item.dataset.status===updateId);
+if(!select)return;
+button.disabled=true;
+try{await db.ref("orders/"+updateId).update({status:select.value,updatedAt:Date.now()});toast("Status pesanan berhasil diperbarui.");}
+catch(error){toast("Gagal memperbarui status pesanan: "+error.message);}
+finally{button.disabled=false;}
+}
+if(deleteId&&confirm("Yakin ingin menghapus pesanan ini?")){
+button.disabled=true;
+try{await db.ref("orders/"+deleteId).remove();toast("Pesanan berhasil dihapus.");}
+catch(error){toast("Gagal menghapus pesanan: "+error.message);}
+finally{button.disabled=false;}
+}
 });
 </script>
 </body>
