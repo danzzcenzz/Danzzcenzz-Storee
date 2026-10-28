@@ -205,6 +205,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
   renderHistory();
+  // Pulihkan tampilan dengan benar saat halaman dipulihkan dari cache browser.
+  window.addEventListener('pageshow', function () {
+    if (!openingFinished) { document.body.classList.add('opening-active'); }
+  });
   closeChannel();
   if (opening) { opening.classList.remove('hidden','leaving'); opening.style.display = ''; }
   if (home) { home.classList.add('hidden'); home.style.display = 'none'; }
