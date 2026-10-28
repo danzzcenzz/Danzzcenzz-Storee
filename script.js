@@ -202,22 +202,48 @@ showHome(true);
 }
 }, 3000);
 
-/* TOMBOL X POPUP */
+/* TOMBOL X POPUP DAN MUSIK */
 
 if (closeChannelWidget) {
-closeChannelWidget.addEventListener('click', function (event) {
+closeChannelWidget.addEventListener('click', async function (event) {
 event.preventDefault();
 event.stopPropagation();
+
 closeChannel();
+
+if (headerVideo) {
+  headerVideo.muted = false;
+  headerVideo.volume = 1;
+
+  try {
+    await headerVideo.play();
+  } catch (error) {
+    console.error('Musik gagal diputar:', error);
+  }
+}
+
 });
 }
 
 /* KLIK AREA GELAP UNTUK MENUTUP POPUP */
 
 if (channelBackdrop) {
-channelBackdrop.addEventListener('click', function (event) {
+channelBackdrop.addEventListener('click', async function (event) {
 event.preventDefault();
+
 closeChannel();
+
+if (headerVideo) {
+  headerVideo.muted = false;
+  headerVideo.volume = 1;
+
+  try {
+    await headerVideo.play();
+  } catch (error) {
+    console.error('Musik gagal diputar:', error);
+  }
+}
+
 });
 }
 
