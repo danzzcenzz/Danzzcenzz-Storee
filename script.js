@@ -33,15 +33,15 @@ const rupiah = value =>
 'Rp' + Number(value || 0).toLocaleString('id-ID');
 
 function escapeHTML(value) {
-return String(value ?? '').replace(/[&<>"']/g, function (char) {
-return {
-'&': '&',
-'<': '<',
-'>': '>',
-'"': '"',
-"'": '''
-}[char];
-});
+  return String(value ?? '').replace(/[&<>"']/g, function (char) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char];
+  });
 }
 
 /* VIDEO HEADER */
