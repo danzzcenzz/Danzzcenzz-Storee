@@ -1,330 +1,357 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#9bdcf0">
+<meta name="theme-color" content="#b8e5e8">
 <title>DANZZCENZZ-STORE</title>
-<link rel="stylesheet" href="style.css"><style>
-/* ===== OPENING TANPA VIDEO ===== */
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* OPENING */
 #opening {
-  position: relative !important;
-  isolation: isolate !important;
-  overflow: hidden !important;
   background: #b8e5e8 !important;
-}
-
-#opening .opening-content {
-  position: relative !important;
-  z-index: 2 !important;
-}
-
-#opening #skipBtn {
-  position: absolute !important;
-  z-index: 5 !important;
-}
-
-#opening .logo-ring {
-  box-shadow:
-    0 0 12px #69b9cf,
-    0 0 28px rgba(105,185,207,0.85),
-    0 0 45px rgba(255,49,105,0.45) !important;
-}
-
-#opening .opening-content h1 {
-  text-shadow:
-    0 0 5px #ffffff,
-    0 0 12px #69b9cf,
-    0 0 25px rgba(105,185,207,0.9) !important;
-}
-
-#opening .loading-card {
   position: relative;
-  z-index: 2;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.8);
-  box-shadow:
-    0 0 15px rgba(105,185,207,0.45),
-    0 0 25px rgba(255,49,105,0.18);
+  isolation: isolate;
+  overflow: hidden;
 }
+#opening .opening-content { position: relative; z-index: 2; }
+#opening #skipBtn { z-index: 5; }
 
-/* ===== VIDEO BACKGROUND HALAMAN UTAMA ===== */
-#home {
-  position: relative !important;
-  isolation: isolate !important;
-  background: transparent !important;
-}
-
+/* VIDEO KOTAK 1:1, BUKAN BACKGROUND */
 #home .home-anime-video {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  width: min(100%, 340px) !important;
+  height: auto !important;
+  aspect-ratio: 1 / 1 !important;
   object-fit: cover !important;
   object-position: center !important;
-  z-index: -2 !important;
-  pointer-events: none !important;
+  margin: 14px auto 20px !important;
+  border: 3px solid #ffe600 !important;
+  border-radius: 20px !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+  background: #080808;
+  box-shadow: 0 0 0 2px #080808,
+              0 0 18px #00eaff,
+              0 0 28px #ff31d2,
+              6px 6px 0 #080808 !important;
 }
 
-#home .home-video-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  background: rgba(184,229,232,0.35) !important;
-  z-index: -1 !important;
-  pointer-events: none !important;
+#home .home-video-overlay { display: none !important; }
+
+#home .store-page {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+#home .product-heading {
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 0 8px #00eaff, 0 0 15px #ff31d2;
 }
 
 #home .product-card {
-  box-shadow:
-    0 0 0 1px rgba(105,185,207,0.55),
-    0 0 12px rgba(105,185,207,0.22);
+  border-color: #00eaff;
+  box-shadow: 0 0 0 1px #ffe600,
+              0 0 15px #00eaff55,
+              5px 5px 0 #080808;
 }
 
-#home .buy-button {
-  box-shadow: 0 0 12px rgba(105,185,207,0.3);
+#channelBackdrop { z-index: 9998 !important; }
+
+#channelWidget {
+  z-index: 9999 !important;
+  border-color: #ffe600 !important;
+  box-shadow: 0 0 22px #ffe60099, 7px 8px 0 #080808 !important;
 }
 
-#home .buy-button:active {
-  transform: scale(0.97);
+#channelWidget .channel-join {
+  background: #20d366 !important;
+  color: #052d17 !important;
+  border: 2px solid #080808 !important;
+  box-shadow: 4px 4px 0 #080808, 0 0 12px #20d36666 !important;
 }
 
-/* ===== GERAKAN MINIMAL ===== */
-@media (prefers-reduced-motion: reduce) {
-  #home .home-anime-video {
-    animation: none !important;
-  }
+@media(max-width:480px) {
+  #home .home-anime-video { width: min(100%, 300px) !important; }
 }
-</style></head><body><!-- OPENING --><section id="opening" class="opening salted-bg" aria-label="Opening">  <button type="button" id="skipBtn" class="skip-btn">
-    SKIP ⏭
-  </button>  <div class="opening-content"><div class="logo-ring">
-  <img
-    class="brand-logo"
-    src="https://i.imgur.com/YEiVvJp.png"
-    alt="Logo DANZZCENZZ STORE">
-</div>
+</style>
+</head>
 
-<h1>DANZZCENZZ-STORE</h1>
-<p class="tagline">SELL VIDEO DAN DLL</p>
+<body>
 
-<div class="loading-card">
-  <div class="loading-bar"><span></span></div>
-  <strong>MOHON TUNGGU SEBENTAR</strong>
-  <span>SEDANG MEMUAT...</span>
-</div>
+<!-- OPENING -->
+<section id="opening" class="opening salted-bg" aria-label="Opening">
+  <button type="button" id="skipBtn" class="skip-btn">SKIP ⏭</button>
+
+  <div class="opening-content">
+    <div class="logo-ring">
+      <img class="brand-logo"
+        src="https://i.imgur.com/YEiVvJp.png"
+        alt="Logo DANZZCENZZ STORE">
+    </div>
+
+    <h1>DANZZCENZZ-STORE</h1>
+    <p class="tagline">SELL VIDEO DAN DLL</p>
+
+    <div class="loading-card">
+      <div class="loading-bar"><span></span></div>
+      <strong>MOHON TUNGGU SEBENTAR</strong>
+      <span>SEDANG MEMUAT...</span>
+    </div>
+  </div>
+</section>
+
+<!-- BERANDA -->
+<main id="home" class="page salted-bg hidden">
+
+  <header class="store-header">
+    <img class="brand-logo small-logo"
+      src="https://i.imgur.com/YEiVvJp.png"
+      alt="Logo DANZZCENZZ STORE">
+
+    <h1>@danzzcenzz-store</h1>
+    <p>⚡ SELL VIDEO VIRAL/HOT TENTU ⚡ DENGAN HARGA MURAH MERIAH ⚡</p>
+  </header>
+
+  <div class="horizontal-pages" id="horizontalPages">
+
+    <!-- PRODUK -->
+    <section class="store-page home-page" id="homePage" aria-label="Beranda">
+
+      <!-- VIDEO BERADA DI DALAM HALAMAN PRODUK -->
+      <video class="home-anime-video"
+        autoplay muted loop playsinline controls
+        preload="metadata"
+        aria-label="Video anime DANZZCENZZ STORE">
+        <source
+          src="https://www.image2url.com/r2/default/videos/1793098104903-3453c8f1-6912-4acd-92e2-9621a855d0d8.mp4"
+          type="video/mp4">
+        Browser kamu tidak mendukung video.
+      </video>
+
+      <h2 class="product-heading">🔥 PRODUK VIDEO VIRAL 🔥</h2>
+
+      <section class="product-grid" aria-label="Daftar produk">
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/0KuKRAt.jpeg" alt="Video Viral adik Kaka di mobil">
+          <h3>Video Viral adik Kaka di mobil</h3>
+          <p class="product-price">Rp10.000</p>
+          <button class="buy-button" data-service="Video viral adik Kaka di mobil" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/0KuKRAt.jpeg" alt="Video Viral Ade kaka di mobil">
+          <h3>Video Viral Ade kaka di mobil</h3>
+          <p class="product-price">Rp10.000</p>
+          <button class="buy-button" data-service="Video Viral Ade kaka di mobil" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 3" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="SEGERA!" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 5" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 6" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 7" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 8" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 9" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+        <article class="product-card">
+          <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA">
+          <h3>SEGERA!</h3>
+          <p class="product-price">Rp---</p>
+          <button class="buy-button" data-service="Video Viral 10" data-price="10000">🛒 BELI SEKARANG</button>
+        </article>
+
+      </section>
+
+      <!-- LAYANAN -->
+      <section class="service-list" aria-label="Layanan lainnya">
+
+        <button class="service-card" data-service="SEGERA!" data-description="Hubungi admin langsung">
+          <span class="service-emoji">🚀</span>
+          <span class="service-copy">
+            <strong>SEGERA!!</strong>
+            <small>Hubungi Admin Langsung</small>
+          </span>
+          <span class="arrow">➜</span>
+        </button>
+
+        <button class="service-card" data-service="SEGERA!!" data-description="Mulai dari Rp 5.000">
+          <span class="service-emoji">👥</span>
+          <span class="service-copy">
+            <strong>SEGERA!!</strong>
+            <small>Mulai dari Rp 5.000</small>
+          </span>
+          <span class="arrow">➜</span>
+        </button>
+
+        <button class="service-card" data-service="SEGERA!!." data-description="Harga bersaing & layanan cepat">
+          <span class="service-emoji">🎮</span>
+          <span class="service-copy">
+            <strong>SEGERA!!</strong>
+            <small>Harga Bersaing & Layanan Cepat</small>
+          </span>
+          <span class="arrow">➜</span>
+        </button>
+
+      </section>
+    </section>
+
+    <!-- RIWAYAT -->
+    <section class="store-page history-page" id="historyPage" aria-label="Riwayat">
+      <section class="info-panel">
+        <h2>🧾 RIWAYAT TRANSAKSI</h2>
+        <div id="transactionHistory">
+          <p>📂 Belum ada riwayat pesanan.</p>
+        </div>
+      </section>
+    </section>
+
+    <!-- PROFIL -->
+    <section class="store-page profile-page" id="profilePage" aria-label="Profil">
+      <section class="info-panel profile-panel">
+        <h2>👤 PROFIL TOKO</h2>
+        <h3>DANZZCENZZ-STORE</h3>
+        <p>Status Akun: <strong class="verified">Verified Partner</strong></p>
+        <div class="dash"></div>
+        <p>Terima kasih telah mempercayai layanan digital kami!</p>
+      </section>
+    </section>
 
   </div>
-</section><!-- BERANDA TOKO --><main id="home" class="page salted-bg hidden">  <!-- VIDEO BACKGROUND KHUSUS HALAMAN UTAMA --><video
-class="home-anime-video"
-autoplay
-muted
-loop
-playsinline
-preload="auto"
-aria-hidden="true">
-<source
-src="https://www.image2url.com/r2/default/videos/1793098104903-3453c8f1-6912-4acd-92e2-9621a855d0d8.mp4"
-type="video/mp4">
-</video>
 
-  <div class="home-video-overlay" aria-hidden="true"></div>  <header class="store-header">
-    <img
-      class="brand-logo small-logo"
-      src="https://i.imgur.com/YEiVvJp.png"
-      alt="Logo DANZZCENZZ STORE"><h1>@danzzcenzz-store</h1>
-<p>⚡ SELL VIDEO VIRAL/HOT TENTU⚡ ⚡DENGAN HARGA MURAH MERIAH ⚡</p>
-
-  </header>  <div class="horizontal-pages" id="horizontalPages"><!-- HALAMAN PRODUK -->
-<section
-  class="store-page home-page"
-  id="homePage"
-  aria-label="Beranda">
-
-  <h2 class="product-heading">🔥 PRODUK VIDEO VIRAL🔥</h2>
-
-  <section class="product-grid" aria-label="Daftar produk">
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/0KuKRAt.jpeg" alt="Video Viral adik Kaka di mobil">
-      <h3>Video Viral adik Kaka di mobil</h3>
-      <p class="product-price">Rp10.000</p>
-      <button class="buy-button" data-service="Video viral adik Kaka di mobil" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/0KuKRAt.jpeg" alt="Video Viral Ade kaka di mobil">
-      <h3>Video Viral Ade kaka di mobil</h3>
-      <p class="product-price">Rp10.000</p>
-      <button class="buy-button" data-service="Video Viral Ade kaka di mobil" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 3" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="SEGERA!" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 5" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 6" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 7" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 8" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 9" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-    <article class="product-card">
-      <img src="https://i.imgur.com/5glTUQl.jpeg" alt="SEGERA!">
-      <h3>SEGERA!</h3>
-      <p class="product-price">Rp---</p>
-      <button class="buy-button" data-service="Video Viral 10" data-price="10000">🛒 BELI SEKARANG</button>
-    </article>
-
-  </section>
-
-  <!-- LAYANAN -->
-  <section class="service-list" aria-label="Layanan lainnya">
-
-    <button class="service-card" data-service="SEGERA!" data-description="Hubungi admin langsung">
-      <span class="service-emoji">🚀</span>
-      <span class="service-copy">
-        <strong>SEGERA!!-</strong>
-        <small>Hubungi Admin Langsung</small>
-      </span>
-      <span class="arrow">➜</span>
-    </button>
-
-    <button class="service-card" data-service="SEGERA!!" data-description="Mulai dari Rp 5.000">
-      <span class="service-emoji">👥</span>
-      <span class="service-copy">
-        <strong>SEGERA!!</strong>
-        <small>Mulai dari Rp 5.000</small>
-      </span>
-      <span class="arrow">➜</span>
-    </button>
-
-    <button class="service-card" data-service="SEGERA!!." data-description="Harga bersaing & layanan cepat">
-      <span class="service-emoji">🎮</span>
-      <span class="service-copy">
-        <strong>SEGERA!!.</strong>
-        <small>Harga Bersaing & Layanan Cepat</small>
-      </span>
-      <span class="arrow">➜</span>
-    </button>
-
-  </section>
-</section>
-
-<!-- RIWAYAT -->
-<section class="store-page history-page" id="historyPage" aria-label="Riwayat">
-  <section class="info-panel">
-    <h2>🧾 RIWAYAT TRANSAKSI</h2>
-    <div id="transactionHistory">
-      <p>📂 Belum ada riwayat pesanan.</p>
-    </div>
-  </section>
-</section>
-
-<!-- PROFIL -->
-<section class="store-page profile-page" id="profilePage" aria-label="Profil">
-  <section class="info-panel profile-panel">
-    <h2>👤 PROFIL TOKO</h2>
-    <h3>DANZZCENZZ-STORE</h3>
-    <p>Status Akun: <strong class="verified">Verified Partner</strong></p>
-    <div class="dash"></div>
-    <p>Terima kasih telah mempercayai layanan digital kami!</p>
-  </section>
-</section>
-
-  </div>  <!-- NAVIGASI BAWAH -->  <nav class="bottom-nav">
+  <!-- NAVIGASI BAWAH -->
+  <nav class="bottom-nav">
     <a href="#homePage" id="homeNav" class="selected">🏠 Beranda</a>
     <a href="#historyPage" id="historyNav">⏱️ Riwayat</a>
     <a href="#profilePage" id="profileNav">👤 Profil</a>
-  </nav></main><!-- POPUP CHANNEL WHATSAPP --><div id="channelBackdrop" class="channel-backdrop hidden" aria-hidden="true"></div><aside
-  id="channelWidget"
+  </nav>
+</main>
+
+<!-- POPUP WHATSAPP -->
+<div id="channelBackdrop" class="channel-backdrop hidden" aria-hidden="true"></div>
+
+<aside id="channelWidget"
   class="channel-widget hidden"
   aria-label="Undangan Channel WhatsApp"
   role="dialog"
-  aria-modal="true"><button id="closeChannelWidget" class="channel-close" type="button" aria-label="Tutup">×</button>
+  aria-modal="true"
+  aria-hidden="true">
+
+  <button id="closeChannelWidget" class="channel-close" type="button" aria-label="Tutup">×</button>
 
   <div class="channel-magazine-head">
     <span>UNDANGAN EKSKLUSIF</span>
     <span class="channel-active"><i></i> ACTIVE</span>
-  </div>  <div class="channel-dash"></div>  <div class="channel-content"><div class="channel-wa-icon" aria-hidden="true">
-  <svg viewBox="0 0 32 32">
-    <path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-    <path d="M11.1 9.8c-.5 0-1 .2-1.3.7-.5.5-1.2 1.3-1.2 3.1s1.2 3.6 1.4 3.9c.2.3 2.4 3.8 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.4-.3-.9-.6l-2.2-1.1c-.3-.1-.6-.2-.8.2l-1 1.2c-.2.3-.4.3-.8.1a9.8 9.8 0 0 1-2.9-1.8 10.8 10.8 0 0 1-2-2.5c-.2-.4 0-.6.1-.8l.7-.8c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7l-1-2.3c-.3-.6-.6-.6-.9-.6Z" fill="currentColor"/>
-  </svg>
-</div>
+  </div>
 
-<div class="channel-copy">
-  <h2>Gabung Channel<br>WhatsApp</h2>
-  <p>MASUK SALURAN UNTUK<br>INFORMASI UPDATE, DLL.</p>
-</div>
+  <div class="channel-dash"></div>
 
-  </div><a class="channel-join" href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W" target="_blank" rel="noopener">JOIN SALURAN</a>
+  <div class="channel-content">
+    <div class="channel-wa-icon" aria-hidden="true">
+      <svg viewBox="0 0 32 32">
+        <path d="M16 3.2A12.3 12.3 0 0 0 5.4 21.7L3.8 28l6.5-1.7A12.3 12.3 0 1 0 16 3.2Z"
+          fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="M11.1 9.8c-.5 0-1 .2-1.3.7-.5.5-1.2 1.3-1.2 3.1s1.2 3.6 1.4 3.9c.2.3 2.4 3.8 5.9 5.1 2.9 1.1 3.5.9 4.1.8.6-.1 2-.8 2.3-1.6.3-.8.3-1.5.2-1.6-.1-.2-.4-.3-.9-.6l-2.2-1.1c-.3-.1-.6-.2-.8.2l-1 1.2c-.2.3-.4.3-.8.1a9.8 9.8 0 0 1-2.9-1.8 10.8 10.8 0 0 1-2-2.5c-.2-.4 0-.6.1-.8l.7-.8c.2-.2.2-.4.3-.6.1-.2 0-.5 0-.7l-1-2.3c-.3-.6-.6-.6-.9-.6Z"
+          fill="currentColor"/>
+      </svg>
+    </div>
 
-</aside><!-- PEMBAYARAN --><main id="payment" class="page salted-bg hidden"><button id="backHome" class="back-btn">← Kembali ke toko</button>
+    <div class="channel-copy">
+      <h2>Gabung Channel<br>WhatsApp</h2>
+      <p>MASUK SALURAN UNTUK<br>INFORMASI UPDATE, DLL.</p>
+    </div>
+  </div>
 
-  <section class="payment-card"><span class="eyebrow">DANZZCENZZ-STORE • PEMBAYARAN</span>
+  <a class="channel-join"
+    href="https://whatsapp.com/channel/0029Vb90a8bLY6dGF3QxZR0W"
+    target="_blank" rel="noopener noreferrer">MASUK CHANNEL</a>
+</aside>
 
-<h1>Scan QRIS untuk Membayar</h1>
+<!-- PEMBAYARAN -->
+<main id="payment" class="page salted-bg hidden">
+  <button id="backHome" class="back-btn">← Kembali ke toko</button>
 
-<p id="selectedService" class="selected-service">Layanan pilihan Anda</p>
+  <section class="payment-card">
+    <span class="eyebrow">DANZZCENZZ-STORE • PEMBAYARAN</span>
+    <h1>Scan QRIS untuk Membayar</h1>
+    <p id="selectedService" class="selected-service">Layanan pilihan Anda</p>
+    <div id="paymentPrice" class="payment-price">Harga: Rp10.000</div>
 
-<div id="paymentPrice" class="payment-price">Harga: Rp10.000</div>
+    <img class="qris-image"
+      src="https://i.imgur.com/QpNpbLx.jpeg"
+      alt="QRIS pembayaran DANZZCENZZ-STORE">
 
-<img class="qris-image" src="https://i.imgur.com/QpNpbLx.jpeg" alt="QRIS pembayaran DANZZCENZZ-STORE">
+    <div class="payment-alternative">
+      <p>Alternatif No. Rekening / Dana / E-Wallet:</p>
+      <strong>081284867763</strong>
+    </div>
 
-<div class="payment-alternative">
-  <p>Alternatif No. Rekening / Dana / E-Wallet:</p>
-  <strong>081284867763</strong>
-</div>
+    <div class="payment-warning">
+      <strong>⚠️ PENTING</strong>
+      <p>Pastikan nominal dan nama merchant sudah benar sebelum membayar. Simpan bukti pembayaran untuk konfirmasi.</p>
+    </div>
 
-<div class="payment-warning">
-  <strong>⚠️ PENTING</strong>
-  <p>Pastikan nominal dan nama merchant sudah benar sebelum membayar. Simpan bukti pembayaran untuk konfirmasi.</p>
-</div>
+    <a id="confirmPayment" class="btn confirm-btn" href="#">
+      ✓ KONFIRMASI PEMBAYARAN VIA WHATSAPP
+    </a>
 
-<a id="confirmPayment" class="btn confirm-btn" href="#" target="_blank" rel="noopener">✓ KONFIRMASI PEMBAYARAN VIA WHATSAPP</a>
-
-<p class="tiny-note">Setelah membayar, tekan tombol konfirmasi untuk mengirim detail pesanan ke admin.</p>
-
+    <p class="tiny-note">Setelah membayar, tekan tombol konfirmasi untuk mengirim detail pesanan ke admin.</p>
   </section>
-</main><!-- FIREBASE --><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script>
+</main>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyAiYj8ZHaZWBFOzmTgNNMeeq3Ugw5CbZBY",
   authDomain: "danzzcenzz-store.firebaseapp.com",
@@ -339,12 +366,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const appCheck = firebase.appCheck();
-
 appCheck.activate(
   new firebase.appCheck.ReCaptchaEnterpriseProvider(
     "6Ld_SQEuAAAAAEnQCWl7s4KFW47ed3DwN7JPaymt"
   ),
   true
 );
-</script><script src="script.js"></script></body>
+</script>
+
+<script src="script.js"></script>
+</body>
 </html>
