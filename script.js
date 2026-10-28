@@ -309,6 +309,80 @@ auth = firebase.auth();
 console.error('Firebase:', error);
 }
 
+/* SINKRONISASI PRODUK DARI FIREBASE */
+
+const productGrid = document.getElementById('productGrid');
+
+function loadFirebaseProducts() {
+if (!database || !productGrid) return;
+
+database.ref('products').on('value', function(snapshot) {
+const products = snapshot.val();
+productGrid.innerHTML = '';
+
+if (!products || typeof products !== 'object') {
+  productGrid.innerHTML =
+    '<p>Belum ada produk. Silakan tambahkan melalui admin.</p>';
+  return;
+}
+
+const entries = Object.entries(products).filter(function(entry) {
+  const product = entry[1];
+
+  return product &&
+    product.active !== false &&
+    product.active !== 'false' &&
+    product.name &&
+    Number.isFinite(Number(product.price));
+});
+
+if (entries.length === 0) {
+  productGrid.innerHTML = '<p>Belum ada produk aktif.</p>';
+  return;
+}
+
+productGrid.innerHTML = entries.map(function(entry) {
+  const id = entry[0];
+  const product = entry[1];
+  const name = escapeHTML(product.name);
+  const price = Number(product.price);
+  const image = escapeHTML(
+    product.image || 'https://i.imgur.com/5glTUQl.jpeg'
+  );
+  const description = escapeHTML(product.description || '');
+
+  return `
+    <article class="product-card">
+      <img
+        src="${image}"
+        alt="${name}"
+        loading="lazy"
+        onerror="this.onerror=null;this.src='https://i.imgur.com/5glTUQl.jpeg';"
+      >
+      <h3>${name}</h3>
+      <p class="product-price">${rupiah(price)}</p>
+      ${description ? `<p class="product-description">${description}</p>` : ''}
+      <button
+        class="buy-button"
+        data-service="${name}"
+        data-price="${price}"
+        data-product-id="${escapeHTML(id)}"
+        type="button"
+      >🛒 BELI SEKARANG</button>
+    </article>
+  `;
+}).join('');
+
+}, function(error) {
+console.error('Gagal memuat produk Firebase:', error);
+productGrid.innerHTML =
+'<p>Produk gagal dimuat. Periksa koneksi Firebase.</p>';
+});
+}
+
+/* JALANKAN PEMUAT PRODUK */
+loadFirebaseProducts();
+
 /* PILIH PRODUK */
 
 function selectProduct(name, price, productId = '') {
