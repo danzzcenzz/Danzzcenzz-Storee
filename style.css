@@ -44,9 +44,41 @@ button,a{font:inherit}button{cursor:pointer}.hidden{display:none!important}
 #opening .logo-ring{overflow:visible}
 #opening .logo-ring .brand-logo{display:block;width:125px;height:125px;max-width:100%;border-radius:50%!important;object-fit:cover!important;overflow:hidden;clip-path:circle(50% at 50% 50%);background:#000;position:relative;z-index:1}
 @media(max-width:480px){#opening .logo-ring .brand-logo{width:120px;height:120px}}
-/* Navigasi bawah: kartu putih membulat seperti contoh referensi */
-#home .bottom-nav{left:14px;right:14px;bottom:10px;gap:4px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:#fff;border:3px solid #080808;border-radius:28px;box-shadow:5px 6px 0 #080808;z-index:1000}
-#home .bottom-nav a{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:5px;color:#111;background:transparent;border:0;border-radius:18px;padding:11px 4px;font-size:12px;font-weight:900;white-space:nowrap;text-shadow:none}
-#home .bottom-nav a.selected,#home .bottom-nav a.active{color:#087cff;background:#e8f4ff;border:0;box-shadow:inset 0 0 0 1px #b8dcff}
-#home .bottom-nav a:focus-visible{outline:3px solid #00cfff;outline-offset:2px}
-@media(max-width:360px){#home .bottom-nav{left:8px;right:8px;bottom:7px;padding-left:4px;padding-right:4px}#home .bottom-nav a{font-size:10px;gap:2px}}
+/* Navigasi bawah: glass lembut, ringan, dan tidak menutupi produk */
+#home .bottom-nav{left:16px;right:16px;bottom:calc(9px + env(safe-area-inset-bottom));gap:5px;padding:6px;background:rgba(248,252,255,.88);-webkit-backdrop-filter:blur(16px) saturate(145%);backdrop-filter:blur(16px) saturate(145%);border:1px solid rgba(255,255,255,.95);border-radius:25px;box-shadow:0 7px 24px rgba(25,105,170,.20),inset 0 1px 0 rgba(255,255,255,.9);z-index:1000}
+#home .bottom-nav a{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:5px;color:#24425f;background:transparent;border:1px solid transparent;border-radius:19px;padding:10px 4px;font-size:12px;font-weight:800;white-space:nowrap;text-shadow:none;transition:background .18s ease,color .18s ease,transform .18s ease}
+#home .bottom-nav a.selected,#home .bottom-nav a.active{color:#087cff;background:linear-gradient(135deg,rgba(218,239,255,.96),rgba(235,246,255,.92));border-color:rgba(132,196,246,.45);box-shadow:0 2px 8px rgba(39,139,220,.10)}
+#home .bottom-nav a:active{transform:scale(.97)}
+#home .bottom-nav a:focus-visible{outline:2px solid #55baff;outline-offset:1px}
+@media(max-width:480px){#home .bottom-nav{left:12px;right:12px;bottom:calc(7px + env(safe-area-inset-bottom));gap:3px;padding:5px}#home .bottom-nav a{font-size:11px;padding:10px 3px;gap:4px}}
+@media(max-width:360px){#home .bottom-nav{left:8px;right:8px;gap:1px;padding:4px}#home .bottom-nav a{font-size:10px;padding:9px 2px;gap:2px}}
+
+/* DESAIN VISUAL BARU: netral lavender, tidak biru/putih; fungsi tetap sama */
+:root{--catalog-bg:#b8b0c1;--card-bg:#c9c1cf;--card-border:#a49aaa;--text-main:#302b37;--muted-lilac:#d0c8d8}
+#home{background:#b8b0c1!important}
+#home .store-header{flex-basis:220px;height:220px;padding:14px 12px}
+#home .header-content{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;gap:4px}
+#home .small-logo{display:block;width:72px;height:72px;object-fit:contain;margin:0 auto 4px;border-radius:50%;order:0}
+#home .store-header h1{order:1;margin:0 0 4px;font-size:clamp(21px,5.5vw,30px)}
+#home .store-header p{order:2;max-width:95%;font-size:clamp(10px,2.9vw,13px);line-height:1.35}
+#home .store-page{background:linear-gradient(145deg,#c6bfce 0%,#b8b0c1 52%,#c9c1cf 100%)!important}
+#home .product-heading{color:#3a3342;text-shadow:none;font-weight:900}
+#home .product-grid{gap:12px;padding:12px 3px}
+#home .product-card{padding:9px;border-radius:17px;background:linear-gradient(145deg,rgba(218,211,224,.96),rgba(184,175,196,.96));border:1px solid rgba(117,101,130,.55);box-shadow:0 5px 14px rgba(55,43,66,.16),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .2s,box-shadow .2s}
+#home .product-card:active{box-shadow:0 3px 9px rgba(55,43,66,.2);transform:scale(.985)}
+#home .product-card img{border-radius:12px;aspect-ratio:1;object-fit:cover}
+#home .product-card h3{color:#332d3b;font-size:14px;line-height:1.35}
+#home .product-price{color:#008f7b;font-size:14px}
+#home .buy-button{border:0;border-radius:12px;background:linear-gradient(110deg,#368fe0,#7565d9);box-shadow:0 3px 9px rgba(74,83,160,.23);animation:none}
+#home .buy-button:active{filter:brightness(.94);transform:scale(.98)}
+/* Navigasi bawah kaca berwarna smoky-lavender, bukan putih atau biru */
+#home .bottom-nav{left:14px;right:14px;bottom:calc(8px + env(safe-area-inset-bottom));gap:5px;padding:6px;background:rgba(202,194,211,.88);-webkit-backdrop-filter:blur(18px) saturate(125%);backdrop-filter:blur(18px) saturate(125%);border:1px solid rgba(245,239,248,.78);border-radius:25px;box-shadow:0 7px 22px rgba(48,38,58,.2),inset 0 1px 0 rgba(255,255,255,.5)}
+#home .bottom-nav a{color:#393242;background:transparent;border:1px solid transparent;border-radius:19px;text-shadow:none;font-weight:800}
+#home .bottom-nav a.selected,#home .bottom-nav a.active{color:#493b60;background:rgba(226,216,235,.82);border-color:rgba(147,128,165,.36);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+/* Popup WhatsApp ikut warna netral yang sama, tanpa bingkai hitam/kuning mencolok */
+.channel-widget{background:rgba(213,205,221,.97);border:1px solid rgba(128,111,145,.65);border-radius:22px;box-shadow:0 16px 45px rgba(35,28,43,.28),inset 0 1px 0 rgba(255,255,255,.65);color:#302b37}
+.channel-close{background:#b9a9c8;color:#302b37;border:1px solid #8e7b9e;box-shadow:0 2px 5px rgba(45,35,55,.18)}
+.channel-magazine-head{color:#62576d}
+.channel-dash{border-top:2px dashed rgba(95,78,111,.5)}
+.channel-join{background:linear-gradient(110deg,#368fe0,#7565d9);color:#fff;border:0;border-radius:13px;box-shadow:0 4px 10px rgba(74,83,160,.24)}
+@media(max-width:480px){#home .store-header{height:210px;flex-basis:210px}#home .small-logo{width:68px;height:68px}#home .product-grid{gap:9px;padding:10px 2px}#home .product-card{padding:7px;border-radius:15px}#home .product-card h3{font-size:12px}#home .product-price{font-size:12px}#home .bottom-nav{left:10px;right:10px;bottom:calc(7px + env(safe-area-inset-bottom));padding:5px}#home .bottom-nav a{font-size:11px;padding:10px 3px}}
